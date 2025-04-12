@@ -2,19 +2,15 @@ import { useState } from 'react'
 import Header from '../Header'
 import { Outlet } from 'react-router-dom'
 
-
-
  export default () => {
-
-
 
   return (
     <>
-      <Header/>
-      
+      <Header/> 
       <div className='body' >
-      <Outlet/>
+        <Outlet/>
       </div>
     </>
   )
+
 }
