@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from './pages/web/components/Layout';
 
-import Home from './pages/web/Home';
-import About from './pages/web/About';
+import Home from './pages/web/pages/home';
+import About from './pages/web/pages/about';
 
 
 
@@ -21,9 +21,9 @@ const appRouter = createBrowserRouter([
         element: (<About/>),
       },
     ]
-  }]
+  },
+]);
 
-);
 
 
 function App() {
