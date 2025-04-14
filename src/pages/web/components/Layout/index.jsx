@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Header from '../Header'
+import Footer from '../Footer'
+
 import { Outlet } from 'react-router-dom'
 
  export default () => {
@@ -7,9 +9,10 @@ import { Outlet } from 'react-router-dom'
   return (
     <>
       <Header/> 
-      <div className='body' >
+      <div className='body bg-black' >
         <Outlet/>
       </div>
+      <Footer/>
     </>
   )
 
