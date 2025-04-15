@@ -17,7 +17,7 @@ export default [
                 image: './images/bmw.jpg',
                 name: '2021 Ford Mustang GT',
                 is_featured:1,
-                type: 'Coupe',
+                type: 'Sedan',
                 kms: '12,000',
                 fuel: 'Diesel',
                 transmission: 'Automatic',

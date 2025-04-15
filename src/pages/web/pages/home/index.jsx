@@ -58,13 +58,13 @@ import Slider from './slider/index.jsx';
 
        <Slider />
   
-    <div className="App bg-danger" style={{ textAlign: 'center', padding: '2rem' }}>
+    {/* <div className="App bg-danger" style={{ textAlign: 'center', padding: '2rem' }}>
       <h1>Redux Counter</h1>
       <h2>{count}</h2>
       <button onClick={() => dispatch(decrement())}>-</button>
       <button onClick={() => dispatch(increment())}>+</button>
       <button onClick={() => dispatch(incrementByAmount(5))}>+5</button>
-    </div>
+    </div> */}
 
       <div style={containerStyle}>
         <div className="row g-3">

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams ,useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 const specs = [
   { label: 'Make', value: 'Lamborghini' },
@@ -13,58 +14,16 @@ const specs = [
   { label: 'No. of Cylinders', value: '03' },
 ];
 
-const suggestedCars = [
-  {
-    type: 'Sedan',
-    name: '2017 BMW X1 xDrive 20',
-    kms: '72,491',
-    fuel: 'Diesel',
-    transmission: 'Automatic',
-    price: '$73,000',
-    owner: 'Kathryn Murphy',
-    year: '2024',
-    image: '/src/assets/porsche.png',
-  },
-  {
-    type: 'Sedan',
-    name: '2018 Audi A4 Premium',
-    kms: '45,000',
-    fuel: 'Diesel',
-    transmission: 'Automatic',
-    price: '$32,000',
-    owner: 'John Doe',
-    year: '2024',
-    image: '/src/assets/porsche.png',
-  },
-  {
-    type: 'Coupe',
-    name: '2020 Mercedes-Benz',
-    kms: '30,000',
-    fuel: 'Diesel',
-    transmission: 'Automatic',
-    price: '$55,000',
-    owner: 'Alice Smith',
-    year: '2024',
-    image: '/src/assets/porsche.png',
-  },
-  {
-    type: 'Sedan',
-    name: '2019 Toyota Camry Hybrid',
-    kms: '60,000',
-    fuel: 'Diesel',
-    transmission: 'Automatic',
-    price: '$28,000',
-    owner: 'David Johnson',
-    year: '2024',
-    image: '/src/assets/porsche.png',
-  },
-];
 
-export default () => {
+export default function Detail  () {
   const navigate = useNavigate();
-  const viewDetail = ()=>{
-    navigate('/detail');
-  }
+  
+  
+  const { id } = useParams();
+  const cars = useSelector((state) => state.product.data);
+  const car = cars.find((c) => String(c.id) === String(id));
+  const suggestedCars = cars.filter((c) => c.type === car.type && c.id !== car.id);
+
   return (
 
 
@@ -90,14 +49,14 @@ export default () => {
 
             <div className="col-md-8">
               <img
-                src="/src/assets/audi.jpg"
-                alt="Car"
+      src={`/images/${car.image.replace('./images/', '')}`}
+                alt={car.name}
                 className="img-fluid rounded"
               />
 
               {/* Car Info */}
               <div className="border-top border-white mt-4 pt-3">
-                <h5 className="text-warning mb-3">Car Info</h5>
+                <h5 className="text-warning mb-3">{car.name}</h5>
                 <div className="row text-center text-white">
                   <div className="col-3">
                     <i className="fas fa-tachometer-alt"></i>
@@ -289,7 +248,7 @@ export default () => {
               <div className="col-md-3" key={index}>
                 <div className="card h-100 shadow-sm rounded-4">
                   <div className="position-relative">
-                    <img src={car.image} alt={car.name} className="card-img-top rounded-top-4" />
+                    <img src={`/images/${car.image.replace('./images/', '')}`}alt={car.name} className="card-img-top rounded-top-4" />
                     <span className="badge bg-warning text-dark position-absolute top-0 start-0 m-2">
                       Featured
                     </span>
@@ -315,7 +274,7 @@ export default () => {
 
                     <div className="d-flex justify-content-between align-items-center mt-3">
                       <span className="text-muted" style={{ fontSize: '0.9rem' }}>👤 {car.owner}</span>
-                      <button onClick={viewDetail}   className="btn btn-outline-warning btn-sm rounded-pill px-3">
+                      <button onClick={() => navigate(`/detail/${car.id}`)}   className="btn btn-outline-warning btn-sm rounded-pill px-3">
                         View More
                       </button>
                     </div>
