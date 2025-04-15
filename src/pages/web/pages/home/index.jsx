@@ -1,14 +1,19 @@
 import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { increment, decrement, incrementByAmount } from '../../../../store/slices/counterSlice.js';
+
 import CarFilters from '../../components/car/CarFilters.jsx';
 import CarList from '../..//components/car/CarList.jsx';
 
+import Slider from './slider/index.jsx';
 
-import lamborghini1 from '/src/assets/lamborghini.png'; 
-import lamborghini2 from '/src/assets/ferrari.png';
-import lamborghini3 from '/src/assets/tesla.png'; 
-import bgImage from '/src/assets/background.avif'
 
- export default () => {
+ export default function Home () {
+
+  const count = useSelector((state) => state.counter.value);
+
+  const dispatch = useDispatch();
+
   const [filters, setFilters] = useState({
     brand: 'Infinity',
     model: 'Sedanx50',
@@ -34,6 +39,7 @@ import bgImage from '/src/assets/background.avif'
     width: '100%',
   };
 
+
   const iconBtnStyle = {
     backgroundColor: '#1f2937',
     border: '1px solid #374151',
@@ -43,89 +49,21 @@ import bgImage from '/src/assets/background.avif'
     cursor: 'pointer',
   };
 
-  const cars = [
-    {
-      name: 'Aventador SVJ',
-      brand: 'Lamborghini',
-      img: lamborghini1,
-    },
-    {
-      name: 'Huracán EVO',
-      brand: 'Lamborghini',
-      img: lamborghini2,
-    },
-    {
-      name: 'Revuelto',
-      brand: 'Lamborghini',
-      img: lamborghini3,
-    },
-  ];
-
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
   return (
     <div className="container bg-black">
- <div
-      id="carCarousel"
-      className="carousel slide"
-      data-bs-ride="carousel"
-      style={{ height: '550px', overflow: 'hidden' }}
-    >
-      <div className="carousel-inner h-100">
-        {cars.map((car, index) => (
-          <div
-            className={`carousel-item h-100 ${index === 0 ? 'active' : ''}`}
-            key={index}
-            style={{
-              backgroundImage: `url(${bgImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              color: 'white',
-            }}
-          >
-            <h2 style={{ color: '#d1d5db', fontSize: '2rem' }}>{car.brand}</h2>
-            <h1 style={{ fontWeight: 'bold', fontSize: '3rem' }}>{car.name}</h1>
-            <img
-              src={car.img}
-              alt={car.name}
-              style={{ maxWidth: '350px', marginTop: '20px' }}
-            />
-          </div>
-        ))}
-      </div>
 
-      {/* Arrows */}
-      <button
-        className="carousel-control-prev"
-        type="button"
-        data-bs-target="#carCarousel"
-        data-bs-slide="prev"
-      >
-        <span
-          className="carousel-control-prev-icon bg-dark rounded-circle"
-          aria-hidden="true"
-        ></span>
-        <span className="visually-hidden">Previous</span>
-      </button>
-      <button
-        className="carousel-control-next"
-        type="button"
-        data-bs-target="#carCarousel"
-        data-bs-slide="next"
-      >
-        <span
-          className="carousel-control-next-icon bg-dark rounded-circle"
-          aria-hidden="true"
-        ></span>
-        <span className="visually-hidden">Next</span>
-      </button>
+       <Slider />
+  
+    <div className="App bg-danger" style={{ textAlign: 'center', padding: '2rem' }}>
+      <h1>Redux Counter</h1>
+      <h2>{count}</h2>
+      <button onClick={() => dispatch(decrement())}>-</button>
+      <button onClick={() => dispatch(increment())}>+</button>
+      <button onClick={() => dispatch(incrementByAmount(5))}>+5</button>
     </div>
 
       <div style={containerStyle}>
