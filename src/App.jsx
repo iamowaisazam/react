@@ -8,6 +8,7 @@ import About from './pages/web/pages/about';
 import Vault from './pages/web/pages/vault';
 import Faq from './pages/web/pages/faq';
 import Contact from './pages/web/pages/contact';
+import Detail from './pages/web/pages/detail';
 
 
 
@@ -35,6 +36,10 @@ const appRouter = createBrowserRouter([
       {
         path:"/contact",
         element: (<Contact/>)
+      },
+      {
+        path:"/detail",
+        element: (<Detail/>)
       }
     ]
   },
