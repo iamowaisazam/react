@@ -1,6 +1,11 @@
 import React from 'react';
-
+import { useNavigate } from 'react-router-dom';
 export default function CarCard({ car }) {
+  const navigate = useNavigate();
+
+  const handleViewMore = () => {
+    navigate(`/detail`); 
+  };
   return (
     <div className="card mb-4 shadow-sm" style={{ borderRadius: '15px' }}>
       <div className="position-relative">
@@ -18,7 +23,7 @@ export default function CarCard({ car }) {
         <h5 className="text-dark fw-bold">${car.price}</h5>
         <div className="d-flex align-items-center justify-content-between">
           <small className="text-muted">👤 {car.owner}</small>
-          <button className="btn btn-outline-warning btn-sm">View More</button>
+          <button onClick={handleViewMore} className="btn btn-outline-warning btn-sm">View More</button>
         </div>
       </div>
     </div>
