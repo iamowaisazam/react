@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import CarFilters from '../../components/car/CarFilters.jsx';
-import CarList from '../..//components/car/CarList.jsx';
+
+
+import Search from '../home/search';
  export default () => {
 
   return (
@@ -24,15 +25,10 @@ import CarList from '../..//components/car/CarList.jsx';
       </div>
 
       <div className="container-fluid bg-black text-white py-4">
-      <div className="row">
-        <div className="col-md-3">
-          <CarFilters />
-        </div>
-        <div className="col-md-9">
-          <CarList />
-        </div>
+
+        <Search/>
       </div>
-    </div>
+
     </div>
   );
 

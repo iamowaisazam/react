@@ -20,6 +20,8 @@ const labelStyle = {
 };
 
 export default function CarFilters() {
+
+  
   return (
     <div style={filterBoxStyle}>
       <div className="d-flex justify-content-between align-items-center mb-2">

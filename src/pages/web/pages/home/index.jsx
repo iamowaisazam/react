@@ -1,10 +1,7 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { increment, decrement, incrementByAmount } from '../../../../store/slices/counterSlice.js';
-
-import CarFilters from '../../components/car/CarFilters.jsx';
-import CarList from '../..//components/car/CarList.jsx';
-import Topsearch from "./topsearch/index.jsx";
+import Search from "./search";
 import Slider from './slider/index.jsx';
 
 
@@ -27,20 +24,10 @@ import Slider from './slider/index.jsx';
       <button onClick={() => dispatch(incrementByAmount(5))}>+5</button>
     </div> */}
 
-    <Topsearch />
+    <Search />
 
 
 
-      <div className="container-fluid bg-black text-white py-4">
-      <div className="row">
-        <div className="col-md-3">
-          <CarFilters />
-        </div>
-        <div className="col-md-9">
-          <CarList />
-        </div>
-      </div>
-    </div>
 
     </div>
 
