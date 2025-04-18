@@ -5,7 +5,7 @@ import Search from "./search";
 import Slider from './slider/index.jsx';
 
 
- export default function Home () {
+export default function Home() {
 
   const count = useSelector((state) => state.counter.value);
 
@@ -14,9 +14,9 @@ import Slider from './slider/index.jsx';
   return (
     <div className="container bg-black">
 
-       <Slider />
-  
-    {/* <div className="App bg-danger" style={{ textAlign: 'center', padding: '2rem' }}>
+      <Slider />
+
+      {/* <div className="App bg-danger" style={{ textAlign: 'center', padding: '2rem' }}>
       <h1>Redux Counter</h1>
       <h2>{count}</h2>
       <button onClick={() => dispatch(decrement())}>-</button>
@@ -24,14 +24,14 @@ import Slider from './slider/index.jsx';
       <button onClick={() => dispatch(incrementByAmount(5))}>+5</button>
     </div> */}
 
-    <Search />
+      <Search showTop={true} />
 
 
 
 
     </div>
 
-    
+
   );
 
 

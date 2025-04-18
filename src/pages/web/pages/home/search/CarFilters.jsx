@@ -1,5 +1,6 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter, searchCar } from '../../../../../store/slices/productSlice';
 const filterBoxStyle = {
   border: '2px solid yellow',
   padding: '15px',
@@ -20,8 +21,23 @@ const labelStyle = {
 };
 
 export default function CarFilters() {
+  const dispatch = useDispatch();
 
-  
+  const [filters, setFilters] = useState({
+    brand: 'Infinity',
+    model: 'Sedanx50',
+    type: 'Door',
+    color: 'Red',
+    category: 'Sedan',
+  })
+  const data = useSelector((state) => state.product);
+
+  const cars = useSelector((state) => state.product.full);
+  const prices = cars.map(c => c.price);
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  const colors = useSelector((state) => state.color.data);
+
   return (
     <div style={filterBoxStyle}>
       <div className="d-flex justify-content-between align-items-center mb-2">
@@ -29,26 +45,202 @@ export default function CarFilters() {
         <span className="text-info" style={{ cursor: 'pointer' }}>Clear</span>
       </div>
 
-      {["Make", "Models", "Body", "Fuel Type"].map((filter, i) => (
-        <select key={i} className="form-select" style={selectStyle}>
-          <option>{filter}</option>
-        </select>
-      ))}
+      <select name="make"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'make', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.make}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Select Make</option>
+        <option value={'honda'} >Honda</option>
+        <option value={'suzuki'} >Suzuki</option>
+        <option value={'Toyota'}>Toyota</option>
+      </select>
+
+
+
+      <select name="model"
+        className="form-select"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'model', value: parseInt(e.target.value) || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.model}
+        style={selectStyle}>
+        <option value="">Select Model</option>
+        <option value={1}>Furtunar </option>
+        <option value={2} >Yaris</option>
+        <option value={3} >Corola</option>
+        <option value={4} >Aqua</option>
+      </select>
+
+
+      <select name="version"
+        className="form-select"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'version', value: parseInt(e.target.value) || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.version}
+        style={selectStyle}>
+        <option value="">Select Version</option>
+        <option value={1}>Grandi</option>
+        <option value={2} >Altis</option>
+
+      </select>
+
+
+
+      <select name="category"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'model', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.category}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Body</option>
+        <option value={1}>Sedan</option>
+        <option value={2}>SUV</option>
+        <option value={3}>Truck</option>
+      </select>
+
+
+      <select name="fuel"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'fuel', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.fuel}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Fuel Type</option>
+        <option value={1}>Petrol</option>
+        <option value={2}>Diesel</option>
+        <option value={3}>Electric</option>
+        <option value={4}>Hybrid</option>
+      </select>
+
+
 
       <label style={labelStyle}>Price:</label>
-      <p className="text-white">$0 — $50000</p>
+      <p className="text-white">
+        ${minPrice.toLocaleString()} — ${maxPrice.toLocaleString()}
+      </p>
+      <label className="text-white">Min Price: ${data.filters.minrange}</label>
+      <input
+        type="range"
+        className="form-range text-warning"
+        min={minPrice}
+        max={maxPrice}
+        step="100"
+        value={data.filters.minrange}
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'minrange', value: parseInt(e.target.value) }));
+          dispatch(searchCar());
+        }}
+      />
 
-      <label className="text-white">Min Price</label>
-      <input type="range" className="form-range text-warning" min="0" max="50000" />
+      <label className="text-white mt-2">Max Price: ${data.filters.maxrange}</label>
+      <input
+        type="range"
+        className="form-range text-warning"
+        min={minPrice}
+        max={maxPrice}
+        step="100"
+        value={data.filters.maxrange}
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'maxrange', value: parseInt(e.target.value) }));
+          dispatch(searchCar());
+        }}
+      />
 
-      <label className="text-white mt-2">Max Price</label>
-      <input type="range" className="form-range text-warning" min="0" max="50000" />
 
-      {["Transmission", "Driver Type", "Door", "Cylinder", "Color"].map((filter, i) => (
-        <select key={i} className="form-select" style={selectStyle}>
-          <option>{filter}</option>
-        </select>
-      ))}
+
+
+
+      <select name="transmission"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'transmission', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.transmission}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Transmission</option>
+        <option value={"Automatic"}>Automatic</option>
+        <option value={"Manual"}>Manual</option>
+
+      </select>
+
+      <select name="driver_type"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'driver_type', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.driver_type}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Driver Type</option>
+        <option value={1}>FWD</option>
+        <option value={2}>RWD</option>
+        <option value={3}>AWD</option>
+      </select>
+
+      <select name="door"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'door', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.door}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Door</option>
+        <option value={2} >2</option>
+        <option value={4} >4</option>
+      </select>
+
+
+      <select name="cylinder"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'cylinder', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.cylinder}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Cylinder</option>
+        <option value={3}>3</option>
+        <option value={4}>4</option>
+        <option value={6}>6</option>
+        <option value={8}>8</option>
+      </select>
+
+      <select name="color"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'color', value: e.target.value }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.color}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Select Color</option>
+        {colors.map((color) => (
+          <option key={color.id} value={color.id}>
+            {color.name}
+          </option>
+        ))}
+      </select>
 
       <label style={labelStyle}>Featured</label>
       <div className="form-check text-white">

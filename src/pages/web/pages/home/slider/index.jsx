@@ -52,7 +52,7 @@ export default function Slider (){
           src={car.image}
           alt={car.name}
           style={{
-            maxWidth: '350px',
+            maxWidth: '40%',
             marginTop: '30px',
             borderRadius: '10px',
             boxShadow: '0 0 25px rgba(255,255,255,0.1)',
