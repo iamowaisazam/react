@@ -20,10 +20,14 @@ const initialState = {
     make: '',
     door: '',
     fuel: '',
+    year: '',
     driver_type: '',
     version: '',
     transmission: '',
     cylinder: '',
+    country: '',
+    city: '',
+    area: '',
     minrange: 0,
     maxrange: 50000000,
   }
@@ -99,6 +103,26 @@ export const productSlice = createSlice({
         }
         if (state.filters.version != "") {
           if (item.version_id != state.filters.version) {
+            return false;
+          }
+        }
+        if (state.filters.year != "") {
+          if (item.year != state.filters.year) {
+            return false;
+          }
+        }
+        if (state.filters.country != "") {
+          if (item.country != state.filters.country) {
+            return false;
+          }
+        }
+        if (state.filters.city != "") {
+          if (item.city != state.filters.city) {
+            return false;
+          }
+        }
+        if (state.filters.area != "") {
+          if (item.area != state.filters.area) {
             return false;
           }
         }

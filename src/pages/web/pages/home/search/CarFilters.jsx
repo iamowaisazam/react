@@ -45,59 +45,17 @@ export default function CarFilters() {
         <span className="text-info" style={{ cursor: 'pointer' }}>Clear</span>
       </div>
 
-      <select name="make"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'make', value: e.target.value || '' }));
-          dispatch(searchCar());
-        }}
-        value={data.filters.make}
-        className="form-select"
-        style={selectStyle}>
-        <option value="">Select Make</option>
-        <option value={'honda'} >Honda</option>
-        <option value={'suzuki'} >Suzuki</option>
-        <option value={'Toyota'}>Toyota</option>
-      </select>
 
 
 
-      <select name="model"
-        className="form-select"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'model', value: parseInt(e.target.value) || '' }));
-          dispatch(searchCar());
-        }}
-
-        value={data.filters.model}
-        style={selectStyle}>
-        <option value="">Select Model</option>
-        <option value={1}>Furtunar </option>
-        <option value={2} >Yaris</option>
-        <option value={3} >Corola</option>
-        <option value={4} >Aqua</option>
-      </select>
 
 
-      <select name="version"
-        className="form-select"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'version', value: parseInt(e.target.value) || '' }));
-          dispatch(searchCar());
-        }}
-
-        value={data.filters.version}
-        style={selectStyle}>
-        <option value="">Select Version</option>
-        <option value={1}>Grandi</option>
-        <option value={2} >Altis</option>
-
-      </select>
 
 
 
       <select name="category"
         onChange={(e) => {
-          dispatch(setFilter({ filter: 'model', value: e.target.value || '' }));
+          dispatch(setFilter({ filter: 'category', value: e.target.value || '' }));
           dispatch(searchCar());
         }}
 
@@ -127,6 +85,49 @@ export default function CarFilters() {
         <option value={4}>Hybrid</option>
       </select>
 
+      <select name="transmission"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'transmission', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.transmission}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Transmission</option>
+        <option value={"Automatic"}>Automatic</option>
+        <option value={"Manual"}>Manual</option>
+
+      </select>
+
+      <select name="door"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'door', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.door}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Door</option>
+        <option value={2} >2</option>
+        <option value={4} >4</option>
+      </select>
+      <select name="color"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'color', value: e.target.value }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.color}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Select Color</option>
+        {colors.map((color) => (
+          <option key={color.id} value={color.id}>
+            {color.name}
+          </option>
+        ))}
+      </select>
 
 
       <label style={labelStyle}>Price:</label>
@@ -165,22 +166,9 @@ export default function CarFilters() {
 
 
 
-      <select name="transmission"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'transmission', value: e.target.value || '' }));
-          dispatch(searchCar());
-        }}
 
-        value={data.filters.transmission}
-        className="form-select"
-        style={selectStyle}>
-        <option value="">Transmission</option>
-        <option value={"Automatic"}>Automatic</option>
-        <option value={"Manual"}>Manual</option>
 
-      </select>
-
-      <select name="driver_type"
+      {/* <select name="driver_type"
         onChange={(e) => {
           dispatch(setFilter({ filter: 'driver_type', value: e.target.value || '' }));
           dispatch(searchCar());
@@ -193,24 +181,12 @@ export default function CarFilters() {
         <option value={1}>FWD</option>
         <option value={2}>RWD</option>
         <option value={3}>AWD</option>
-      </select>
-
-      <select name="door"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'door', value: e.target.value || '' }));
-          dispatch(searchCar());
-        }}
-
-        value={data.filters.door}
-        className="form-select"
-        style={selectStyle}>
-        <option value="">Door</option>
-        <option value={2} >2</option>
-        <option value={4} >4</option>
-      </select>
+      </select> */}
 
 
-      <select name="cylinder"
+
+
+      {/* <select name="cylinder"
         onChange={(e) => {
           dispatch(setFilter({ filter: 'cylinder', value: e.target.value || '' }));
           dispatch(searchCar());
@@ -224,23 +200,62 @@ export default function CarFilters() {
         <option value={4}>4</option>
         <option value={6}>6</option>
         <option value={8}>8</option>
-      </select>
+      </select> */}
 
-      <select name="color"
+
+      {/* Country */}
+      <select
+        name="country"
         onChange={(e) => {
-          dispatch(setFilter({ filter: 'color', value: e.target.value }));
+          dispatch(setFilter({ filter: 'country', value: e.target.value }));
           dispatch(searchCar());
         }}
-        value={data.filters.color}
+        value={data.filters.country}
         className="form-select"
-        style={selectStyle}>
-        <option value="">Select Color</option>
-        {colors.map((color) => (
-          <option key={color.id} value={color.id}>
-            {color.name}
-          </option>
-        ))}
+        style={selectStyle}
+      >
+        <option value="">Select Country</option>
+        <option value="pakistan">Pakistan</option>
+        <option value="india">India</option>
+        <option value="uae">UAE</option>
       </select>
+
+      {/* City */}
+      <select
+        name="city"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'city', value: e.target.value }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.city}
+        className="form-select mt-3"
+        style={selectStyle}
+      >
+        <option value="">Select City</option>
+        <option value="lahore">Lahore</option>
+        <option value="karachi">Karachi</option>
+        <option value="islamabad">Islamabad</option>
+      </select>
+
+      {/* Area */}
+      <select
+        name="area"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'area', value: e.target.value }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.area}
+        className="form-select mt-3"
+        style={selectStyle}
+      >
+        <option value="">Select Area</option>
+        <option value="dha">DHA</option>
+        <option value="gulberg">Gulberg</option>
+        <option value="bahria">Bahria Town</option>
+      </select>
+
+
+
 
       <label style={labelStyle}>Featured</label>
       <div className="form-check text-white">
@@ -259,23 +274,7 @@ export default function CarFilters() {
         <input className="form-check-input" type="checkbox" id="nav" />
         <label className="form-check-label" htmlFor="nav">Navigation</label>
       </div>
-      <label style={labelStyle}>Single Select</label>
-      <div className="form-check text-white">
-        <input className="form-check-input" type="checkbox" id="ac" />
-        <label className="form-check-label" htmlFor="ac">A/C: Front</label>
-      </div>
-      <div className="form-check text-white">
-        <input className="form-check-input" type="checkbox" id="camera" />
-        <label className="form-check-label" htmlFor="camera">Backup Camera</label>
-      </div>
-      <div className="form-check text-white">
-        <input className="form-check-input" type="checkbox" id="cruise" />
-        <label className="form-check-label" htmlFor="cruise">Cruise Control</label>
-      </div>
-      <div className="form-check text-white">
-        <input className="form-check-input" type="checkbox" id="nav" />
-        <label className="form-check-label" htmlFor="nav">Navigation</label>
-      </div>
+
     </div>
   );
 }

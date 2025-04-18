@@ -39,87 +39,130 @@ export default function TopFilter() {
         category: 'Sedan',
     });
 
+
+
     const colors = useSelector((state) => state.color.data);
     const data = useSelector((state) => state.product);
 
     return (
         <>
 
-            <div className="row g-3 mb-5 ">
+            <div className="row g-3 mb-5">
+                {/* Category */}
                 <div className="col-md-3 col-6">
+                    <label className="text-white">Category</label>
                     <select
-                        onChange={(e) => dispatch(setFilter({ 'filter': 'brand', 'value': e.target.value }))} name="brand"
+                        name="category"
+                        value={data.filters.category}
+                        onChange={(e) => dispatch(setFilter({ filter: 'category', value: e.target.value }))}
+                        style={selectStyle}
+                        className="form-select"
+                    >
+                        <option value="">Select Category</option>
+                        <option value={1}>Bike</option>
+                        <option value={2}>Car</option>
+                        <option value={3}>Plane</option>
+                        <option value={4}>Truck</option>
+                    </select>
+                </div>
+
+                {/* Make */}
+                <div className="col-md-3 col-6">
+                    <label className="text-white">Make</label>
+                    <select
+                        name="brand"
                         value={data.filters.brand}
-                        style={selectStyle}>
-                        <option value="">Select Brand</option>
-                        <option value={'infinity'} >Infinity</option>
-                        <option value={'audi'} >Audi</option>
-                        <option value={'bmw'}>BMW</option>
+                        onChange={(e) => dispatch(setFilter({ filter: 'brand', value: e.target.value }))}
+                        style={selectStyle}
+                        className="form-select"
+                    >
+                        <option value="">Select Make</option>
+                        <option value="honda">Honda</option>
+                        <option value="suzuki">Suzuki</option>
+                        <option value="toyota">Toyota</option>
                     </select>
                 </div>
 
+                {/* Year */}
                 <div className="col-md-3 col-6">
+                    <label className="text-white">Year</label>
                     <select
-                        name="model"
-                        onChange={(e) => dispatch(setFilter({ 'filter': 'model', 'value': e.target.value }))}
-                        value={data.filters.model}
-                        style={selectStyle}>
-                        <option value="">Select Model</option>
-                        <option value={1}>Sedanx50</option>
-                        <option value={2} >Q7</option>
-                        <option value={3} >i8</option>
+                        name="year"
+                        value={data.filters.year}
+                        onChange={(e) => dispatch(setFilter({ filter: 'year', value: e.target.value }))}
+                        style={selectStyle}
+                        className="form-select"
+                    >
+                        <option value="">Select Year</option>
+                        <option value="1990">1990</option>
+                        <option value="2000">2000</option>
+                        <option value="2025">2025</option>
                     </select>
                 </div>
-
-                <div className="col-md-3 col-6">
-                    <select
-                        name="door"
-                        onChange={(e) => dispatch(setFilter({ 'filter': 'door', 'value': e.target.value }))}
-                        value={data.filters.door}
-                        style={selectStyle}>
-                        <option value="">Select Door</option>
-                        <option value={2} >2</option>
-                        <option value={4} >4</option>
-                    </select>
-                </div>
-
-
-
-                <div className="col-md-3 col-6 d-flex align-items-center justify-content-end">
+                <div className="col-md-3 col-6 d-flex align-items-end justify-content-end">
                     <button onClick={() => dispatch(searchCar())} style={iconBtnStyle}>
                         <i className="fas fa-sync-alt"></i>
                     </button>
                 </div>
 
+                {/* Model */}
                 <div className="col-md-3 col-6">
+                    <label className="text-white">Model</label>
                     <select
-                        name="color"
-                        onChange={(e) => dispatch(setFilter({ 'filter': 'color', 'value': e.target.value }))}
-                        value={data.filters.color}
+                        name="model"
+                        value={data.filters.model}
+                        onChange={(e) => dispatch(setFilter({ filter: 'model', value: e.target.value }))}
                         style={selectStyle}
+                        className="form-select"
                     >
-                        <option value="">Select Color</option>
-                        {colors.map((color) => (
-                            <option key={color.id} value={color.id}>
-                                {color.name}
-                            </option>
-                        ))}
+                        <option value="">Select Model</option>
+                        <option value={1}>Furtunar </option>
+                        <option value={2} >Yaris</option>
+                        <option value={3} >Corola</option>
+                        <option value={4} >Aqua</option>
                     </select>
                 </div>
 
+                {/* Version */}
                 <div className="col-md-3 col-6">
-                    <select name="category" value={data.filters.category}
-                        onChange={(e) => dispatch(setFilter({ 'filter': 'category', 'value': e.target.value }))}
-
-                        style={selectStyle}>
-                        <option value="">Select Category</option>
-                        <option value={1}>Sedan</option>
-                        <option value={2}>SUV</option>
-                        <option value={3}>Truck</option>
+                    <label className="text-white">Version</label>
+                    <select
+                        name="version"
+                        value={data.filters.version}
+                        onChange={(e) => dispatch(setFilter({ filter: 'version', value: e.target.value }))}
+                        style={selectStyle}
+                        className="form-select"
+                    >
+                        <option value="">Select Version</option>
+                        <option value={1}>Grandi</option>
+                        <option value={2} >Altis</option>
                     </select>
                 </div>
+
+                <div className="col-md-3 col-6 mt-5">
+
+                    <button
+                        onClick={() =>
+                            setFilters({
+                                category: '',
+                                brand: '',
+                                year: '',
+                                model: '',
+                                version: ''
+                            })
+                        }
+                        className="btn btn-outline-light"
+                        style={{ height: '38px', padding: '0 16px' }}
+                    >
+                        Reset
+                    </button>
+                </div>
+
+
+
 
             </div>
+
         </>
     );
 }
