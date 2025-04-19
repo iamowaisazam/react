@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { FaEnvelope, FaKey, FaTimes } from "react-icons/fa";
-import { openResModal, openForgotModal, closeLoginModal } from '../../../../store/slices/globalSlice';
-import { useDispatch, useSelector } from 'react-redux';
-export default function LoginModal({ onClose }) {
+import { FaEnvelope, FaTimes } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
+import { openLoginModal, closeForgotModal } from '../../../../store/slices/globalSlice';
+
+export default function ForgotPasswordModal({ onClose }) {
     const [slideIn, setSlideIn] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setTimeout(() => setSlideIn(true), 10);
@@ -11,10 +13,8 @@ export default function LoginModal({ onClose }) {
 
     const handleClose = () => {
         setSlideIn(false);
-        setTimeout(() => onClose(), 300);
+        setTimeout(() => dispatch(closeForgotModal()), 300);
     };
-    const dispatch = useDispatch();
-
     return (
         <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75" style={{ zIndex: 1050 }}>
             <div
@@ -26,6 +26,7 @@ export default function LoginModal({ onClose }) {
                     transition: 'right 0.3s ease-in-out',
                 }}
             >
+                {/* Close Button */}
                 <button
                     className="btn btn-link text-white position-absolute end-0 top-0 mt-2 me-2"
                     onClick={handleClose}
@@ -34,10 +35,12 @@ export default function LoginModal({ onClose }) {
                     <FaTimes />
                 </button>
 
-                <h2 className="text-center mb-4 mt-5">Login</h2>
+                {/* Title */}
+                <h2 className="text-center mb-4 mt-5">Forgot Password</h2>
 
+                {/* Form */}
                 <form>
-                    <div className="mb-3">
+                    <div className="mb-4">
                         <div className="input-group">
                             <span className="input-group-text" style={{ background: "#2d3748", border: "none" }}>
                                 <FaEnvelope className="text-secondary" />
@@ -45,27 +48,7 @@ export default function LoginModal({ onClose }) {
                             <input
                                 type="email"
                                 className="form-control"
-                                placeholder="Email"
-                                style={{
-                                    background: "#2d3748",
-                                    border: "none",
-                                    color: "#fffff",
-                                    boxShadow: "none",
-                                }}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="mb-4">
-                        <div className="input-group">
-                            <span className="input-group-text" style={{ background: "#2d3748", border: "none" }}>
-                                <FaKey className="text-secondary" />
-                            </span>
-                            <input
-                                type="password"
-                                className="form-control"
-                                placeholder="Password"
+                                placeholder="Enter your email"
                                 style={{
                                     background: "#2d3748",
                                     border: "none",
@@ -86,33 +69,22 @@ export default function LoginModal({ onClose }) {
                             border: "none",
                         }}
                     >
-                        Login
+                        Send Reset Link
                     </button>
                 </form>
 
+                {/* Go back to login */}
                 <div className="text-center">
-                    <button type='button'
+                    <a
+                        href="#"
                         onClick={() => {
-
-                            dispatch(openForgotModal());
-
+                            dispatch(openLoginModal());
+                            dispatch(closeForgotModal());
                         }}
                         className="text-white text-decoration-none d-block mb-2"
                     >
-                        Forgot Password?
-                    </button>
-
-                    <button
-                        className="text-white mb-0"
-                        role="button"
-                        onClick={() => {
-                            dispatch(openResModal());
-                            dispatch(closeLoginModal());
-                        }}
-                    >
-                        Don't have an account?
-                    </button>
-
+                        Back to Login
+                    </a>
                 </div>
             </div>
         </div>

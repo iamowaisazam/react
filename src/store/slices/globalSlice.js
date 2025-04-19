@@ -4,6 +4,7 @@ const initialState = {
     isMenuOpen: false,
     showLoginModal: false,
     showResModal: false,
+    showForgetModal: false,
 };
 
 const uiSlice = createSlice({
@@ -26,8 +27,9 @@ const uiSlice = createSlice({
             state.showResModal = false;
         },
         openForgotModal: (state) => {
+
             state.showForgotModal = true;
-            state.showLoginModal = false;
+            // state.showLoginModal = false;
         },
         closeForgotModal: (state) => {
             state.showForgotModal = false;

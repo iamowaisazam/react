@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import LoginModal from '../login/index';
 import RegisterModal from '../register/index';
+import ForgotPasswordModal from '../forgot/index';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   toggleMenu,
   openLoginModal,
   closeLoginModal,
   openResModal,
-  closeResModal
+  closeResModal,
+  openForgotModal,
+  closeForgotModal
 } from '../../../../store/slices/globalSlice';
 
 export default function Header() {
@@ -18,7 +21,7 @@ export default function Header() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const height100 = { height: '50px' };
   const dispatch = useDispatch();
-  const { isMenuOpen, showLoginModal, showResModal } = useSelector(state => state.ui);
+  const { isMenuOpen, showLoginModal, showResModal, showForgetModal } = useSelector(state => state.ui);
 
   return (
 
@@ -73,7 +76,7 @@ export default function Header() {
             <div className="d-none d-md-flex">
               <button onClick={() => dispatch(openLoginModal())} className="btn btn-outline-warning btn-sm me-2">Login</button>
               <button onClick={() => dispatch(openResModal())} className="btn btn-outline-warning btn-sm me-2">Register</button>
-              <Link to="/add-listing" className="btn btn-warning btn-sm">Add Listing</Link>
+              <Link className="btn btn-warning btn-sm">Add Listing</Link>
             </div>
           </div>
 
@@ -102,6 +105,7 @@ export default function Header() {
 
       {showLoginModal && <LoginModal onClose={() => dispatch(closeLoginModal())} />}
       {showResModal && <RegisterModal onClose={() => dispatch(closeResModal())} />}
+      {showForgetModal && <ForgotPasswordModal onClose={() => dispatch(closeForgotModal())} />}
     </>
   );
 }
