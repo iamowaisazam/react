@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { FaEnvelope, FaTimes } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
-import { openLoginModal, closeForgotModal } from '../../../../store/slices/globalSlice';
+import { setModalState } from '../../../../store/slices/globalSlice';
 
-export default function ForgotPasswordModal({ onClose }) {
+export default function ForgotPasswordModal() {
     const [slideIn, setSlideIn] = useState(false);
     const dispatch = useDispatch();
 
@@ -13,8 +13,11 @@ export default function ForgotPasswordModal({ onClose }) {
 
     const handleClose = () => {
         setSlideIn(false);
-        setTimeout(() => dispatch(closeForgotModal()), 300);
+        setTimeout(() => {
+            dispatch(setModalState({ modal: '', value: false }));
+        }, 300);
     };
+
     return (
         <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75" style={{ zIndex: 1050 }}>
             <div
@@ -75,16 +78,15 @@ export default function ForgotPasswordModal({ onClose }) {
 
                 {/* Go back to login */}
                 <div className="text-center">
-                    <a
-                        href="#"
+                    <p
                         onClick={() => {
-                            dispatch(openLoginModal());
-                            dispatch(closeForgotModal());
+                            dispatch(setModalState({ modal: 'showLoginModal', value: true }));
                         }}
                         className="text-white text-decoration-none d-block mb-2"
+                        style={{ cursor: 'pointer' }}
                     >
                         Back to Login
-                    </a>
+                    </p>
                 </div>
             </div>
         </div>

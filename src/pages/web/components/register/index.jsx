@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { FaEnvelope, FaKey, FaTimes } from "react-icons/fa";
-import { openLoginModal, closeResModal } from '../../../../store/slices/globalSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setModalState } from '../../../../store/slices/globalSlice';
 
-export default function RegisterModal({ onClose }) {
+export default function RegisterModal() {
     const [slideIn, setSlideIn] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setTimeout(() => setSlideIn(true), 10);
@@ -12,9 +13,11 @@ export default function RegisterModal({ onClose }) {
 
     const handleClose = () => {
         setSlideIn(false);
-        setTimeout(() => onClose(), 300);
+        setTimeout(() => {
+            dispatch(setModalState({ modal: '', value: false }));
+        }, 300);
     };
-    const dispatch = useDispatch();
+
     return (
         <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75" style={{ zIndex: 1050 }}>
             <div
@@ -35,6 +38,7 @@ export default function RegisterModal({ onClose }) {
                 </button>
 
                 <h2 className="text-center mb-4 mt-5">Sign Up</h2>
+
                 <form>
                     {/* Username */}
                     <div className="mb-3">
@@ -133,20 +137,16 @@ export default function RegisterModal({ onClose }) {
                     </button>
                 </form>
 
-
                 <div className="text-center">
-
-                    <a
-                        href="#"
+                    <p
                         onClick={() => {
-                            dispatch(openLoginModal());
-                            dispatch(closeResModal());
+                            dispatch(setModalState({ modal: 'showLoginModal', value: true }));
                         }}
                         className="text-white text-decoration-none d-block mb-2"
+                        style={{ cursor: 'pointer' }}
                     >
-
                         Already have an account?
-                    </a>
+                    </p>
                 </div>
             </div>
         </div>

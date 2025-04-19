@@ -1,35 +1,22 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import LoginModal from '../login/index';
 import RegisterModal from '../register/index';
 import ForgotPasswordModal from '../forgot/index';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  toggleMenu,
-  openLoginModal,
-  closeLoginModal,
-  openResModal,
-  closeResModal,
-  openForgotModal,
-  closeForgotModal
-} from '../../../../store/slices/globalSlice';
+import { toggleMenu, setModalState } from '../../../../store/slices/globalSlice';
 
 export default function Header() {
-
-
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const height100 = { height: '50px' };
   const dispatch = useDispatch();
   const { isMenuOpen, showLoginModal, showResModal, showForgetModal } = useSelector(state => state.ui);
+  const height100 = { height: '50px' };
 
   return (
-
     <>
       <header className="bg-black text-white py-3 h-75 border-danger border-bottom border-3">
         <div className="container" style={height100}>
           <div className="d-flex justify-content-between align-items-center">
 
+            {/* Logo */}
             <div className="d-flex align-items-center">
               <Link to="/" className="text-decoration-none">
                 <div className="d-flex align-items-center">
@@ -51,7 +38,7 @@ export default function Header() {
             <button
               className="navbar-toggler d-md-none"
               type="button"
-              onClick={toggleMenu}
+              onClick={() => dispatch(toggleMenu())}
               aria-controls="navbarNav"
               aria-expanded={isMenuOpen ? 'true' : 'false'}
               aria-label="Toggle navigation"
@@ -59,7 +46,7 @@ export default function Header() {
               <i className="fas fa-bars text-white"></i>
             </button>
 
-            {/* Desktop Nav */}
+            {/* Desktop Navigation */}
             <div className="d-none d-md-flex align-items-center">
               <nav>
                 <ul className="list-unstyled d-flex mb-0">
@@ -74,8 +61,14 @@ export default function Header() {
 
             {/* Desktop CTA */}
             <div className="d-none d-md-flex">
-              <button onClick={() => dispatch(openLoginModal())} className="btn btn-outline-warning btn-sm me-2">Login</button>
-              <button onClick={() => dispatch(openResModal())} className="btn btn-outline-warning btn-sm me-2">Register</button>
+              <button
+                onClick={() => dispatch(setModalState({ modal: 'showLoginModal', value: true }))}
+                className="btn btn-outline-warning btn-sm me-2"
+              >Login</button>
+              <button
+                onClick={() => dispatch(setModalState({ modal: 'showResModal', value: true }))}
+                className="btn btn-outline-warning btn-sm me-2"
+              >Register</button>
               <Link className="btn btn-warning btn-sm">Add Listing</Link>
             </div>
           </div>
@@ -84,28 +77,31 @@ export default function Header() {
           <div className={`d-md-none ${isMenuOpen ? 'd-block' : 'd-none'} mt-3`}>
             <nav>
               <ul className="list-unstyled">
-                <li className="mb-2"><Link to="/" className="text-white" onClick={toggleMenu}>Home</Link></li>
-                <li className="mb-2"><Link to="/about" className="text-white" onClick={toggleMenu}>About</Link></li>
-                <li className="mb-2"><Link to="/services" className="text-white" onClick={toggleMenu}>Services</Link></li>
-                <li className="mb-2"><Link to="/faq" className="text-white" onClick={toggleMenu}>Faq</Link></li>
-                <li className="mb-2"><Link to="/contact" className="text-white" onClick={toggleMenu}>Contact</Link></li>
+                <li className="mb-2"><Link to="/" className="text-white" onClick={() => dispatch(toggleMenu())}>Home</Link></li>
+                <li className="mb-2"><Link to="/about" className="text-white" onClick={() => dispatch(toggleMenu())}>About</Link></li>
+                <li className="mb-2"><Link to="/services" className="text-white" onClick={() => dispatch(toggleMenu())}>Services</Link></li>
+                <li className="mb-2"><Link to="/faq" className="text-white" onClick={() => dispatch(toggleMenu())}>Faq</Link></li>
+                <li className="mb-2"><Link to="/contact" className="text-white" onClick={() => dispatch(toggleMenu())}>Contact</Link></li>
               </ul>
             </nav>
             <div className="mt-3">
-              <button onClick={() => dispatch(openLoginModal())} className="btn btn-outline-warning btn-sm me-2">Login</button>
-              <button onClick={() => dispatch(openResModal())} className="btn btn-outline-warning btn-sm me-2">Register</button>
-
-
+              <button
+                onClick={() => dispatch(setModalState({ modal: 'showLoginModal', value: true }))}
+                className="btn btn-outline-warning btn-sm me-2"
+              >Login</button>
+              <button
+                onClick={() => dispatch(setModalState({ modal: 'showResModal', value: true }))}
+                className="btn btn-outline-warning btn-sm me-2"
+              >Register</button>
               <Link className="btn btn-warning btn-sm">Add Listing</Link>
             </div>
           </div>
         </div>
       </header>
 
-
-      {showLoginModal && <LoginModal onClose={() => dispatch(closeLoginModal())} />}
-      {showResModal && <RegisterModal onClose={() => dispatch(closeResModal())} />}
-      {showForgetModal && <ForgotPasswordModal onClose={() => dispatch(closeForgotModal())} />}
+      {showLoginModal && <LoginModal />}
+      {showResModal && <RegisterModal />}
+      {showForgetModal && <ForgotPasswordModal />}
     </>
   );
 }

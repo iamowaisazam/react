@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ()=> {
+export default () => {
   return (
     <footer className="bg-black text-white pt-4">
       <hr style={{ borderColor: '#fff', opacity: 0.2 }} />
@@ -9,8 +9,7 @@ export default ()=> {
           <div className="text-center text-md-start mb-3 mb-md-0">
             <span className="text-white">Copyright </span>
             <span className="fw-bold text-warning">2023 DRIVCO</span>
-            <span className="text-white"> | Design By </span>
-            <span className="fw-bold text-warning">Azam Solution</span>
+
           </div>
           <div className="d-flex align-items-center justify-content-center">
             <span className="me-3 fw-semibold text-white">Follow Us On :</span>

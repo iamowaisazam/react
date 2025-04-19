@@ -14,37 +14,22 @@ const uiSlice = createSlice({
         toggleMenu: (state) => {
             state.isMenuOpen = !state.isMenuOpen;
         },
-        openLoginModal: (state) => {
-            state.showLoginModal = true;
-        },
-        closeLoginModal: (state) => {
-            state.showLoginModal = false;
-        },
-        openResModal: (state) => {
-            state.showResModal = true;
-        },
-        closeResModal: (state) => {
-            state.showResModal = false;
-        },
-        openForgotModal: (state) => {
+        setModalState: (state, action) => {
+            const { modal, value } = action.payload;
 
-            state.showForgotModal = true;
-            // state.showLoginModal = false;
-        },
-        closeForgotModal: (state) => {
-            state.showForgotModal = false;
-        },
+
+            state.showLoginModal = false;
+            state.showResModal = false;
+            state.showForgetModal = false;
+
+
+            if (value === true && modal in state) {
+                state[modal] = true;
+            }
+        }
     },
 });
 
-export const {
-    toggleMenu,
-    openLoginModal,
-    closeLoginModal,
-    openResModal,
-    closeResModal,
-    openForgotModal,
-    closeForgotModal
-} = uiSlice.actions;
+export const { toggleMenu, setModalState } = uiSlice.actions;
 
 export default uiSlice.reducer;
