@@ -12,6 +12,21 @@ import Detail from './pages/web/pages/detail';
 
 const homepage = import.meta.env.VITE_HOME_PAGE || "/default";
 
+// Admin
+import AdminLayout from './pages/admin/components/Layout';
+import Login from './pages/admin/components/login';
+
+
+// Dashboard
+import Dashboard from './pages/admin/pages/dashboard';
+
+// Users
+import Userindex from './pages/admin/pages/user';
+import Adduser from './pages/admin/pages/user/add.jsx';
+
+// Menu
+import Menuindex from './pages/admin/pages/menu';
+import Addmenu from './pages/admin/pages/menu/add.jsx';
 
 const appRouter = createBrowserRouter([
   {
@@ -20,34 +35,53 @@ const appRouter = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: (<Home/>),
+        element: (<Home />),
       },
       {
         path: "/about",
-        element: (<About/>),
+        element: (<About />),
       },
       {
         path: "/services",
-        element: (<Vault/>),
+        element: (<Vault />),
       },
       {
         path: "/faq",
-        element: (<Faq/>),
+        element: (<Faq />),
       },
       {
-        path:"/contact",
-        element: (<Contact/>)
+        path: "/contact",
+        element: (<Contact />)
       },
       {
         path: "/detail/:id",
-        element: (<Detail/>)
+        element: (<Detail />)
       }
     ]
+
+
   },
+  {
+    path: "/admin/login",
+    element: <Login />
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "users", element: <Userindex /> },
+      { path: "add-user", element: <Adduser /> },
+      { path: "view-menus", element: <Menuindex /> },
+      { path: "add-menu", element: <Addmenu /> },
+    ]
+  }
 ],
 {
-     basename:homepage, 
+    basename:homepage, 
 }
+
+
 );
 
 
