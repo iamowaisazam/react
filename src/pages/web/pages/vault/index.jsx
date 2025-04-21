@@ -26,7 +26,7 @@ export default () => {
 
       <div className="container-fluid bg-black text-white py-4">
 
-        <Search showTop={false} />
+        <Search showTop={true} />
       </div>
 
     </div>

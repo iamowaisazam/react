@@ -30,5 +30,17 @@ header {
   background-color: #ffc107;
   color: #000;
 }
+.action-btn {
+  transition: all 0.3s ease-in-out;
+  transform: scale(1);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
 
+.action-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
