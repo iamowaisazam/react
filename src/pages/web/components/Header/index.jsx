@@ -4,6 +4,7 @@ import LoginModal from '../login/index';
 import RegisterModal from '../register/index';
 import ForgotPasswordModal from '../forgot/index';
 import { toggleMenu, setModalState } from '../../../../store/slices/globalSlice';
+const path = import.meta.env.VITE_PATH || "";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ export default function Header() {
                 <div className="d-flex align-items-center">
                   <div className="me-2" style={height100}>
                     <img
-                      src="/src/assets/Logo.jpg"
+                      src={path+'/images/Logo.jpg'}
                       alt="ACSA Logo"
                       width={60}
                       height={40}

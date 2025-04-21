@@ -10,7 +10,7 @@ import Faq from './pages/web/pages/faq';
 import Contact from './pages/web/pages/contact';
 import Detail from './pages/web/pages/detail';
 
-const homepage = import.meta.env.VITE_HOME_PAGE || "/default";
+const path = import.meta.env.VITE_PATH || "";
 
 // Admin
 import AdminLayout from './pages/admin/components/Layout';
@@ -78,7 +78,7 @@ const appRouter = createBrowserRouter([
   }
 ],
 {
-    basename:homepage, 
+    basename:path, 
 }
 
 
