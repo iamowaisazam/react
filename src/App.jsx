@@ -10,6 +10,7 @@ import Faq from './pages/web/pages/faq';
 import Contact from './pages/web/pages/contact';
 import Detail from './pages/web/pages/detail';
 
+const homepage = import.meta.env.VITE_HOME_PAGE || "/default";
 
 
 const appRouter = createBrowserRouter([
@@ -43,12 +44,16 @@ const appRouter = createBrowserRouter([
       }
     ]
   },
-]);
+],
+{
+     basename:homepage, 
+}
+);
 
 
 
 function App() {
-  
+
   return (
     <main>
       <RouterProvider router={appRouter} />
