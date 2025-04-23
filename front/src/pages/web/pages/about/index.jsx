@@ -1,14 +1,15 @@
 import { useState } from 'react'
-
- export default () => {
-
+const path = import.meta.env.VITE_PATH || "";
+export default () => {
+  const bgImage = path + '/src/assets/banner.jpg';
   return (
     <div className="bg-black text-white">
-      {/* Hero Section */}
+
       <div
         className="text-center text-white py-5"
         style={{
-          backgroundImage: `url('/src/assets/banner.jpg')`, // 🔁 Replace with your actual bg
+
+          backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

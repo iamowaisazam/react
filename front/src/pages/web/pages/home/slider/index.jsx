@@ -1,12 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { nextSlide, prevSlide, goToSlide } from '../../../../../store/slices/sliderSlice';
-import bgImage from '/src/assets/background.avif'
-
+const path = import.meta.env.VITE_PATH || "";
 export default function Slider() {
 
   const slider = useSelector((state) => state.slider);
   const dispatch = useDispatch();
-
+  const bgImage = path + '/src/assets/background.avif';
   return (
 
     <div

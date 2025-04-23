@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useParams ,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
-
+const path = import.meta.env.VITE_PATH || "";
 const specs = [
   { label: 'Make', value: 'Lamborghini' },
   { label: 'Repair', value: 'No' },
@@ -15,15 +15,15 @@ const specs = [
 ];
 
 
-export default function Detail  () {
+export default function Detail() {
   const navigate = useNavigate();
-  
-  
+
+
   const { id } = useParams();
   const cars = useSelector((state) => state.product.data);
   const car = cars.find((c) => String(c.id) === String(id));
   const suggestedCars = cars.filter((c) => c.type === car.type && c.id !== car.id);
-
+  const bgImage = path + '/src/assets/banner.jpg';
   return (
 
 
@@ -32,7 +32,7 @@ export default function Detail  () {
       <div
         className="text-center py-5"
         style={{
-          backgroundImage: "url('/src/assets/banner.jpg')",
+          backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -49,7 +49,7 @@ export default function Detail  () {
 
             <div className="col-md-8">
               <img
-      src={`/images/${car.image.replace('./images/', '')}`}
+                src={`/images/${car.image.replace('./images/', '')}`}
                 alt={car.name}
                 className="img-fluid rounded"
               />
@@ -210,25 +210,25 @@ export default function Detail  () {
               </div>
 
               <div className="col-md-6 mx-auto mb-4 w-100">
-                    <div
-                      className="ratio ratio-16x9 mt-5"
-                      style={{
-                        overflow: 'hidden',
-                        boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)',
-                      }}
-                    >
-                      <iframe
-                        title="map"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0197068308716!2d-122.4324!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808f7e2b3d3b9a71%3A0x82b1d4f5b7b49b33!2sChurch%20Of%208%20Wheels%20Roller%20Disco!5e0!3m2!1sen!2sus!4v1712870440000!5m2!1sen!2sus"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen=""
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                      ></iframe>
-                    </div>
-                  </div>
+                <div
+                  className="ratio ratio-16x9 mt-5"
+                  style={{
+                    overflow: 'hidden',
+                    boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)',
+                  }}
+                >
+                  <iframe
+                    title="map"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0197068308716!2d-122.4324!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808f7e2b3d3b9a71%3A0x82b1d4f5b7b49b33!2sChurch%20Of%208%20Wheels%20Roller%20Disco!5e0!3m2!1sen!2sus!4v1712870440000!5m2!1sen!2sus"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+              </div>
 
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function Detail  () {
               <div className="col-md-3" key={index}>
                 <div className="card h-100 shadow-sm rounded-4">
                   <div className="position-relative">
-                    <img src={`/images/${car.image.replace('./images/', '')}`}alt={car.name} className="card-img-top rounded-top-4" />
+                    <img src={`/images/${car.image.replace('./images/', '')}`} alt={car.name} className="card-img-top rounded-top-4" />
                     <span className="badge bg-warning text-dark position-absolute top-0 start-0 m-2">
                       Featured
                     </span>
@@ -274,7 +274,7 @@ export default function Detail  () {
 
                     <div className="d-flex justify-content-between align-items-center mt-3">
                       <span className="text-muted" style={{ fontSize: '0.9rem' }}>👤 {car.owner}</span>
-                      <button onClick={() => navigate(`/detail/${car.id}`)}   className="btn btn-outline-warning btn-sm rounded-pill px-3">
+                      <button onClick={() => navigate(`/detail/${car.id}`)} className="btn btn-outline-warning btn-sm rounded-pill px-3">
                         View More
                       </button>
                     </div>

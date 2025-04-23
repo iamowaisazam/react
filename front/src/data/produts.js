@@ -1,8 +1,10 @@
+const path = import.meta.env.VITE_PATH || "";
+
 export default [
     {
         id: 1,
         color_id: 1,
-        image: './images/porsche.jpg',
+        image: path + './images/porsche.jpg',
         name: '2019 Toyota Camry Hybrid',
         is_featured: 1,
         type: 'Sedan',
@@ -28,7 +30,7 @@ export default [
     {
         id: 2,
         color_id: 2,
-        image: './images/bmw.jpg',
+        image: path + './images/bmw.jpg',
         name: '2021 Ford Mustang GT',
         is_featured: 1,
         type: 'Sedan',
@@ -54,7 +56,7 @@ export default [
     {
         id: 3,
         color_id: 3,
-        image: './images/yAudi.jpeg',
+        image: path + './images/yAudi.jpeg',
         name: '2021 Ford Mustang GT',
         is_featured: 0,
         type: 'Coupe',
@@ -80,7 +82,7 @@ export default [
     {
         id: 4,
         color_id: 2,
-        image: './images/audi.jpg',
+        image: path + './images/audi.jpg',
         name: '2021 Ford Mustang GT',
         is_featured: 0,
         type: 'Coupe',
@@ -106,7 +108,7 @@ export default [
     {
         id: 5,
         color_id: 2,
-        image: './images/car-five.jpg',
+        image: path + './images/car-five.jpg',
         name: '2021 Ford Mustang GT',
         is_featured: 0,
         type: 'Coupe',
@@ -132,7 +134,7 @@ export default [
     {
         id: 6,
         color_id: 2,
-        image: './images/car-four.jpg',
+        image: path + './images/car-four.jpg',
         name: '2021 Ford Mustang GT',
         is_featured: 0,
         type: 'Coupe',
