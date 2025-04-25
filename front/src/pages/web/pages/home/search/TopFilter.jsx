@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter, searchCar } from '../../../../../store/slices/productSlice';
-
+import { FaSearch } from 'react-icons/fa';
 
 
 export default function TopFilter() {
@@ -21,6 +21,7 @@ export default function TopFilter() {
         width: '100%',
     };
 
+
     const iconBtnStyle = {
         backgroundColor: '#1f2937',
         border: '1px solid #374151',
@@ -29,6 +30,7 @@ export default function TopFilter() {
         borderRadius: '5px',
         cursor: 'pointer',
     };
+
 
 
     const [filters, setFilters] = useState({
@@ -47,16 +49,19 @@ export default function TopFilter() {
     return (
         <>
 
-            <div className="row g-3 mb-5">
-                {/* Category */}
-                <div className="col-md-3 col-6">
-                    <label className="text-white">Category</label>
+            <div className="row g-3 mb-4">
+
+                <div className="col-md-4">
+                    <label className="text-white mb-1">Category</label>
                     <select
                         name="category"
                         value={data.filters.category}
-                        onChange={(e) => dispatch(setFilter({ filter: 'category', value: e.target.value }))}
-                        style={selectStyle}
+                        onChange={(e) => {
+                            dispatch(setFilter({ filter: 'category', value: e.target.value || '' }));
+                            dispatch(searchCar());
+                        }}
                         className="form-select"
+                        style={selectStyle}
                     >
                         <option value="">Select Category</option>
                         <option value={1}>Bike</option>
@@ -64,34 +69,41 @@ export default function TopFilter() {
                         <option value={3}>Plane</option>
                         <option value={4}>Truck</option>
                     </select>
+
                 </div>
 
-                {/* Make */}
-                <div className="col-md-3 col-6">
-                    <label className="text-white">Make</label>
+
+                <div className="col-md-4">
+                    <label className="text-white mb-1">Make</label>
                     <select
                         name="brand"
                         value={data.filters.brand}
-                        onChange={(e) => dispatch(setFilter({ filter: 'brand', value: e.target.value }))}
-                        style={selectStyle}
+                        onChange={(e) => {
+                            dispatch(setFilter({ filter: 'brand', value: e.target.value || '' }));
+                            dispatch(searchCar());
+                        }}
                         className="form-select"
+                        style={selectStyle}
                     >
                         <option value="">Select Make</option>
                         <option value="honda">Honda</option>
                         <option value="suzuki">Suzuki</option>
                         <option value="toyota">Toyota</option>
                     </select>
+
                 </div>
 
-                {/* Year */}
-                <div className="col-md-3 col-6">
-                    <label className="text-white">Year</label>
+                <div className="col-md-4">
+                    <label className="text-white mb-1">Year</label>
                     <select
                         name="year"
                         value={data.filters.year}
-                        onChange={(e) => dispatch(setFilter({ filter: 'year', value: e.target.value }))}
-                        style={selectStyle}
+                        onChange={(e) => {
+                            dispatch(setFilter({ filter: 'year', value: e.target.value || '' }));
+                            dispatch(searchCar());
+                        }}
                         className="form-select"
+                        style={selectStyle}
                     >
                         <option value="">Select Year</option>
                         <option value="1990">1990</option>
@@ -99,48 +111,51 @@ export default function TopFilter() {
                         <option value="2025">2025</option>
                     </select>
                 </div>
-                <div className="col-md-3 col-6 d-flex align-items-end justify-content-end">
-                    <button onClick={() => dispatch(searchCar())} style={iconBtnStyle}>
-                        <i className="fas fa-sync-alt"></i>
-                    </button>
-                </div>
 
-                {/* Model */}
-                <div className="col-md-3 col-6">
-                    <label className="text-white">Model</label>
+
+
+                <div className="col-md-4">
+                    <label className="text-white mb-1">Model</label>
                     <select
                         name="model"
                         value={data.filters.model}
-                        onChange={(e) => dispatch(setFilter({ filter: 'model', value: e.target.value }))}
-                        style={selectStyle}
+                        onChange={(e) => {
+                            dispatch(setFilter({ filter: 'model', value: e.target.value || '' }));
+                            dispatch(searchCar());
+                        }}
                         className="form-select"
+                        style={selectStyle}
                     >
                         <option value="">Select Model</option>
-                        <option value={1}>Furtunar </option>
-                        <option value={2} >Yaris</option>
-                        <option value={3} >Corola</option>
-                        <option value={4} >Aqua</option>
+                        <option value={1}>Furtunar</option>
+                        <option value={2}>Yaris</option>
+                        <option value={3}>Corolla</option>
+                        <option value={4}>Aqua</option>
                     </select>
                 </div>
 
-                {/* Version */}
-                <div className="col-md-3 col-6">
-                    <label className="text-white">Version</label>
+
+
+                <div className="col-md-4">
+                    <label className="text-white mb-1">Version</label>
                     <select
                         name="version"
                         value={data.filters.version}
-                        onChange={(e) => dispatch(setFilter({ filter: 'version', value: e.target.value }))}
-                        style={selectStyle}
+                        onChange={(e) => {
+                            dispatch(setFilter({ filter: 'version', value: e.target.value || '' }));
+                            dispatch(searchCar());
+                        }}
                         className="form-select"
+                        style={selectStyle}
                     >
                         <option value="">Select Version</option>
                         <option value={1}>Grandi</option>
-                        <option value={2} >Altis</option>
+                        <option value={2}>Altis</option>
                     </select>
                 </div>
 
-                <div className="col-md-3 col-6 mt-5">
 
+                <div className="col-md-4 d-flex gap-2 align-items-end">
                     <button
                         onClick={() =>
                             setFilters({
@@ -151,17 +166,20 @@ export default function TopFilter() {
                                 version: ''
                             })
                         }
-                        className="btn btn-outline-light"
-                        style={{ height: '38px', padding: '0 16px' }}
+                        className="btn btn-outline-light w-50"
                     >
                         Reset
                     </button>
+                    {/* <button
+                        onClick={() => dispatch(searchCar())}
+                        className="btn btn-danger w-100"
+                    >
+                        <FaSearch className="me-2" />
+                        Search
+                    </button> */}
                 </div>
-
-
-
-
             </div>
+
 
         </>
     );
