@@ -23,7 +23,7 @@ export const register = async (req, res) => {
         if (!username || !email || !password || !confirmPassword) {
             return res.status(400).json({
                 success: false,
-                message: "Username, email, password and confirm password are required."
+                message: "Username, email, password, and confirm password are required."
             });
         }
 
@@ -35,10 +35,7 @@ export const register = async (req, res) => {
         }
 
 
-        const db = await DB();
-        const usersCollection = db.collection('users');
-
-        const existingUser = await usersCollection.findOne({ email });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
                 success: false,
@@ -49,17 +46,18 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = {
+
+        const newUser = new User({
             username,
             email,
             password: hashedPassword,
-            role: role || 'user',
+            role: role || 'student',
             permission: permission || ["read", "edit", "update", "delete"],
             date: date || new Date()
-        };
+        });
 
 
-        await usersCollection.insertOne(newUser);
+        await newUser.save();
 
         return res.status(201).json({
             success: true,
@@ -70,7 +68,7 @@ export const register = async (req, res) => {
         console.error(error);
         return res.status(500).json({
             success: false,
-            message: "Failed to register. Please try again later.",
+            message: "Failed to register. Please try again later."
         });
     }
 };
@@ -78,7 +76,6 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-
         const { email, password } = req.body;
         console.log("📥 Request body:", req.body);
 
@@ -90,14 +87,10 @@ export const login = async (req, res) => {
             });
         }
 
-        const db = await DB();
-        console.log("✅ Connected to DB");
 
-        const usersCollection = db.collection('users');
-        const user = await usersCollection.findOne({ email });
+        const user = await User.findOne({ email }).select('+password');
 
         console.log("🔍 Fetched user:", user);
-
 
         if (!user) {
             return res.status(400).json({
@@ -105,6 +98,7 @@ export const login = async (req, res) => {
                 message: "Incorrect email or password"
             });
         }
+
 
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         console.log("🔐 Password match:", isPasswordMatch);
@@ -115,6 +109,7 @@ export const login = async (req, res) => {
                 message: "Incorrect email or password"
             });
         }
+
 
         generateToken(res, user, `Welcome back ${user.username}`);
 
@@ -146,7 +141,7 @@ export const logout = async (_, res) => {
 export const getUserProfile = async (req, res) => {
     try {
         const userId = req.id;
-        const user = await User.findById(userId).select("-password").populate("enrolledCourses");
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({
                 message: "Profile not found",
