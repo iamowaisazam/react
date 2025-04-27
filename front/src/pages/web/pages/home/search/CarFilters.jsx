@@ -48,8 +48,131 @@ export default function CarFilters() {
 
 
 
+      <select
+        name="country"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'country', value: e.target.value }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.country}
+        className="form-select"
+        style={selectStyle}
+      >
+        <option value="">Select Country</option>
+        <option value="pakistan">Pakistan</option>
+        <option value="india">India</option>
+        <option value="uae">UAE</option>
+      </select>
+
+      {/* City */}
+      <select
+        name="city"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'city', value: e.target.value }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.city}
+        className="form-select mt-3"
+        style={selectStyle}
+      >
+        <option value="">Select City</option>
+        <option value="lahore">Lahore</option>
+        <option value="karachi">Karachi</option>
+        <option value="islamabad">Islamabad</option>
+      </select>
+
+      {/* Area */}
+      <select
+        name="area"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'area', value: e.target.value }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.area}
+        className="form-select mt-3"
+        style={selectStyle}
+      >
+        <option value="">Select Area</option>
+        <option value="dha">DHA</option>
+        <option value="gulberg">Gulberg</option>
+        <option value="bahria">Bahria Town</option>
+      </select>
 
 
+
+
+
+      <label style={labelStyle}>Price:</label>
+      <p className="text-white">
+        ${minPrice.toLocaleString()} — ${maxPrice.toLocaleString()}
+      </p>
+      <label className="text-white">Min Price: ${data.filters.minrange}</label>
+      <input
+        type="range"
+        className="form-range text-warning"
+        min={minPrice}
+        max={maxPrice}
+        step="100"
+        value={data.filters.minrange}
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'minrange', value: parseInt(e.target.value) }));
+          dispatch(searchCar());
+        }}
+      />
+
+      <label className="text-white mt-2">Max Price: ${data.filters.maxrange}</label>
+      <input
+        type="range"
+        className="form-range text-warning"
+        min={minPrice}
+        max={maxPrice}
+        step="100"
+        value={data.filters.maxrange}
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'maxrange', value: parseInt(e.target.value) }));
+          dispatch(searchCar());
+        }}
+      />
+
+
+
+
+
+
+
+      {/* <select name="driver_type"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'driver_type', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.driver_type}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Driver Type</option>
+        <option value={1}>FWD</option>
+        <option value={2}>RWD</option>
+        <option value={3}>AWD</option>
+      </select> */}
+
+
+
+
+      {/* <select name="cylinder"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'cylinder', value: e.target.value || '' }));
+          dispatch(searchCar());
+        }}
+
+        value={data.filters.cylinder}
+        className="form-select"
+        style={selectStyle}>
+        <option value="">Cylinder</option>
+        <option value={3}>3</option>
+        <option value={4}>4</option>
+        <option value={6}>6</option>
+        <option value={8}>8</option>
+      </select> */}
 
 
 
@@ -130,129 +253,6 @@ export default function CarFilters() {
       </select>
 
 
-      <label style={labelStyle}>Price:</label>
-      <p className="text-white">
-        ${minPrice.toLocaleString()} — ${maxPrice.toLocaleString()}
-      </p>
-      <label className="text-white">Min Price: ${data.filters.minrange}</label>
-      <input
-        type="range"
-        className="form-range text-warning"
-        min={minPrice}
-        max={maxPrice}
-        step="100"
-        value={data.filters.minrange}
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'minrange', value: parseInt(e.target.value) }));
-          dispatch(searchCar());
-        }}
-      />
-
-      <label className="text-white mt-2">Max Price: ${data.filters.maxrange}</label>
-      <input
-        type="range"
-        className="form-range text-warning"
-        min={minPrice}
-        max={maxPrice}
-        step="100"
-        value={data.filters.maxrange}
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'maxrange', value: parseInt(e.target.value) }));
-          dispatch(searchCar());
-        }}
-      />
-
-
-
-
-
-
-
-      {/* <select name="driver_type"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'driver_type', value: e.target.value || '' }));
-          dispatch(searchCar());
-        }}
-
-        value={data.filters.driver_type}
-        className="form-select"
-        style={selectStyle}>
-        <option value="">Driver Type</option>
-        <option value={1}>FWD</option>
-        <option value={2}>RWD</option>
-        <option value={3}>AWD</option>
-      </select> */}
-
-
-
-
-      {/* <select name="cylinder"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'cylinder', value: e.target.value || '' }));
-          dispatch(searchCar());
-        }}
-
-        value={data.filters.cylinder}
-        className="form-select"
-        style={selectStyle}>
-        <option value="">Cylinder</option>
-        <option value={3}>3</option>
-        <option value={4}>4</option>
-        <option value={6}>6</option>
-        <option value={8}>8</option>
-      </select> */}
-
-
-      {/* Country */}
-      <select
-        name="country"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'country', value: e.target.value }));
-          dispatch(searchCar());
-        }}
-        value={data.filters.country}
-        className="form-select"
-        style={selectStyle}
-      >
-        <option value="">Select Country</option>
-        <option value="pakistan">Pakistan</option>
-        <option value="india">India</option>
-        <option value="uae">UAE</option>
-      </select>
-
-      {/* City */}
-      <select
-        name="city"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'city', value: e.target.value }));
-          dispatch(searchCar());
-        }}
-        value={data.filters.city}
-        className="form-select mt-3"
-        style={selectStyle}
-      >
-        <option value="">Select City</option>
-        <option value="lahore">Lahore</option>
-        <option value="karachi">Karachi</option>
-        <option value="islamabad">Islamabad</option>
-      </select>
-
-      {/* Area */}
-      <select
-        name="area"
-        onChange={(e) => {
-          dispatch(setFilter({ filter: 'area', value: e.target.value }));
-          dispatch(searchCar());
-        }}
-        value={data.filters.area}
-        className="form-select mt-3"
-        style={selectStyle}
-      >
-        <option value="">Select Area</option>
-        <option value="dha">DHA</option>
-        <option value="gulberg">Gulberg</option>
-        <option value="bahria">Bahria Town</option>
-      </select>
 
 
 

@@ -18,6 +18,13 @@ const specs = [
 export default function Detail() {
   const navigate = useNavigate();
 
+  const [showPhone, setShowPhone] = useState(false);
+  const [showEmail, setShowEmail] = useState(false);
+
+
+  const phoneNumber = "(123) 123-1234";
+  const email = "test@test.com";
+
 
   const { id } = useParams();
   const cars = useSelector((state) => state.product.data);
@@ -48,11 +55,28 @@ export default function Detail() {
           <div className="row g-4">
 
             <div className="col-md-8">
-              <img
-                src={`/images/${car.image.replace('./images/', '')}`}
-                alt={car.name}
-                className="img-fluid rounded"
-              />
+              <div id="carImagesCarousel" className="carousel slide" data-bs-ride="carousel">
+                <div className="carousel-inner">
+                  {[car.image, ...(car.gallery || [])].map((img, index) => (
+                    <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                      <img
+                        src={img.replace('./images/', '/images/')}
+                        className="d-block w-100 rounded"
+                        alt={`Car ${index + 1}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <button className="carousel-control-prev" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="prev">
+                  <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span className="visually-hidden">Previous</span>
+                </button>
+                <button className="carousel-control-next" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="next">
+                  <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span className="visually-hidden">Next</span>
+                </button>
+              </div>
+
 
               {/* Car Info */}
               <div className="border-top border-white mt-4 pt-3">
@@ -157,17 +181,30 @@ export default function Detail() {
                 className="p-3 rounded"
                 style={{ border: '1px solid white', backgroundColor: '#0f0f0f' }}
               >
-                <button className="btn btn-warning w-100 mb-2">
-                  <i className="fas fa-phone me-2"></i> Show Number
+
+
+                <button
+                  className="btn btn-warning w-100 mb-2"
+                  onClick={() => setShowPhone(!showPhone)}
+                >
+                  <i className="fas fa-phone me-2"></i>
+                  {showPhone ? phoneNumber : "Show Number"}
                 </button>
-                <button className="btn btn-outline-light w-100 mb-2">
-                  <i className="fas fa-envelope me-2"></i> Email Now
+
+
+                <button
+                  className="btn btn-outline-light w-100 mb-2"
+                  onClick={() => setShowEmail(!showEmail)}
+                >
+                  <i className="fas fa-envelope me-2"></i>
+                  {showEmail ? email : "Email Now"}
                 </button>
+
                 <button className="btn btn-danger w-100 mb-3">
                   <i className="fas fa-flag me-2"></i> Report Now
                 </button>
 
-                {/* Form */}
+
                 <div className="mt-4">
                   <h6 className="fw-bold text-warning">To More inquiry</h6>
                   <p className="text-white-50">If choose this car to contact easily with us.</p>

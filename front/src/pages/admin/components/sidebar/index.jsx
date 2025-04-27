@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
     FaChevronRight, FaChevronDown,
-    FaUserPlus, FaUsers,
+    FaUserPlus, FaUsers, FaTools, FaClone, FaBolt,
     FaList, FaCar, FaCog, FaFolderPlus, FaTachometerAlt
 } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 const styles = {
     sidebar: (collapsed) => ({
         width: collapsed ? "70px" : "250px",
-        height: "100vh",
+        height: "100%",
         backgroundColor: "#1f2d3d",
         color: "#ecf0f1",
         padding: "20px 0",
@@ -148,6 +148,34 @@ export default function Sidebar({ collapsed }) {
                 ]}
                 collapsed={collapsed}
             />
+            <SidebarSection
+                title="Make"
+                icon={FaTools}
+                links={[
+                    { label: "Add Make", icon: FaUserPlus, to: "/admin/add-make" },
+                    { label: "View Make", icon: FaFolderPlus, to: "/admin/view-make" }
+                ]}
+                collapsed={collapsed}
+            />
+            <SidebarSection
+                title="Model"
+                icon={FaClone}
+                links={[
+                    { label: "Add Model", icon: FaUserPlus, to: "/admin/add-model" },
+                    { label: "View Model", icon: FaFolderPlus, to: "/admin/view-model" }
+                ]}
+                collapsed={collapsed}
+            />
+            <SidebarSection
+                title="Version"
+                icon={FaBolt}
+                links={[
+                    { label: "Add Version", icon: FaUserPlus, to: "/admin/add-version" },
+                    { label: "View Version", icon: FaFolderPlus, to: "/admin/view-version" }
+                ]}
+                collapsed={collapsed}
+            />
+
 
             <SidebarSection
                 title="Cars"
@@ -164,7 +192,6 @@ export default function Sidebar({ collapsed }) {
                 icon={FaCog}
                 links={[
                     { label: "General Settings", icon: FaCog, to: "/admin/settings/general" },
-                    { label: "Account Settings", icon: FaCog, to: "/admin/settings/account" }
                 ]}
                 collapsed={collapsed}
             />

@@ -25,7 +25,12 @@ export default [
         make: "honda",
         country: "pakistan",
         city: "lahore",
-        area: "dha"
+        area: "dha",
+        gallery: [
+            path + './images/audi.jpg',
+            path + './images/audi.jpg',
+            path + './images/audi.jpg'
+        ],
     },
     {
         id: 2,
@@ -51,7 +56,12 @@ export default [
         make: "honda",
         country: "pakistan",
         city: "karachi",
-        area: "gulshan"
+        area: "gulshan",
+        gallery: [
+            path + './images/audi.jpg',
+            path + './images/audi.jpg',
+            path + './images/audi.jpg'
+        ],
     },
     {
         id: 3,
@@ -77,7 +87,12 @@ export default [
         make: "honda",
         country: "pakistan",
         city: "islamabad",
-        area: "g13"
+        area: "g13",
+        gallery: [
+            path + './images/audi.jpg',
+            path + './images/audi.jpg',
+            path + './images/audi.jpg'
+        ],
     },
     {
         id: 4,
@@ -103,7 +118,12 @@ export default [
         make: "honda",
         country: "uae",
         city: "dubai",
-        area: "marina"
+        area: "marina",
+        gallery: [
+            path + './images/audi.jpg',
+            path + './images/audi.jpg',
+            path + './images/audi.jpg'
+        ],
     },
     {
         id: 5,
@@ -129,7 +149,12 @@ export default [
         make: "suzuki",
         country: "pakistan",
         city: "lahore",
-        area: "gulberg"
+        area: "gulberg",
+        gallery: [
+            path + './images/audi.jpg',
+            path + './images/audi.jpg',
+            path + './images/audi.jpg'
+        ],
     },
     {
         id: 6,
@@ -155,6 +180,11 @@ export default [
         make: "suzuki",
         country: "uae",
         city: "abu dhabi",
-        area: "corniche"
+        area: "corniche",
+        gallery: [
+            path + './images/audi.jpg',
+            path + './images/audi.jpg',
+            path + './images/audi.jpg'
+        ],
     }
 ];
