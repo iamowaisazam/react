@@ -32,7 +32,7 @@ export default () => {
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-  const bgImage = path + '/src/assets/banner.jpg';
+  const bgImage = path + '/images/banner.jpg';
   return (
     <div className="bg-black text-white">
 
@@ -60,7 +60,7 @@ export default () => {
           {/* Left Image */}
           <div className="col-md-5 mb-4 mb-md-0">
             <img
-              src={path + '/src/assets/faq-img.png'}
+              src={path + '/images/faq-img.png'}
               alt="FAQs"
               className="img-fluid rounded"
             />

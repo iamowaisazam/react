@@ -1,7 +1,7 @@
 import { useState } from "react";
 const path = import.meta.env.VITE_PATH || "";
 export default () => {
-  const bgImage = path + '/src/assets/banner.jpg';
+  const bgImage = path + '/images/banner.jpg';
   return (
     <div className="bg-black text-white pt-5 pb-4 px-3">
 
