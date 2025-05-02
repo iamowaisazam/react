@@ -10,7 +10,7 @@ export default () => {
       <div
         className="text-center text-white py-5"
         style={{
-          backgroundImage: `url('/src/assets/banner.jpg')`,
+          backgroundImage: `url('/images/banner.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

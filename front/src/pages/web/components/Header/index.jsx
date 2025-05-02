@@ -23,7 +23,7 @@ export default function Header() {
                 <div className="d-flex align-items-center">
                   <div className="me-2" style={height100}>
                     <img
-                      src={path+'/images/Logo.jpg'}
+                      src={path + '/images/Logo.jpg'}
                       alt="ACSA Logo"
                       width={60}
                       height={40}
@@ -70,7 +70,10 @@ export default function Header() {
                 onClick={() => dispatch(setModalState({ modal: 'showResModal', value: true }))}
                 className="btn btn-outline-warning btn-sm me-2"
               >Register</button>
-              <Link className="btn btn-warning btn-sm">Add Listing</Link>
+              {/* <Link className="btn btn-warning btn-sm">Add Listing</Link> */}
+              <Link to="/admin/dashboard" className="btn btn-warning btn-sm">
+                Add Listing
+              </Link>
             </div>
           </div>
 
