@@ -1,14 +1,17 @@
-import { User } from "../models/user.model.js";
+import { User } from "../models/user.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
+import { query, validationResult } from "express-validator";
 
 
-import DB from '../database/mongodb.js';
 
 
+// **
+// Register
+// **
 export const register = async (req, res) => {
-    try {
+
         const {
             username,
             email,
@@ -34,7 +37,7 @@ export const register = async (req, res) => {
             });
         }
 
-
+        // Validation...
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
@@ -44,9 +47,9 @@ export const register = async (req, res) => {
         }
 
 
+
+        //Entry
         const hashedPassword = await bcrypt.hash(password, 10);
-
-
         const newUser = new User({
             username,
             email,
@@ -56,41 +59,47 @@ export const register = async (req, res) => {
             date: date || new Date()
         });
 
-
         await newUser.save();
-
         return res.status(201).json({
             success: true,
-            message: "Account created successfully."
+            message: "Account created successfully.",
+            data:{
+
+            }
         });
 
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            success: false,
-            message: "Failed to register. Please try again later."
-        });
-    }
+        
+    // } catch (error) {
+    //     console.error(error);
+    //     return res.status(500).json({
+    //         success: false,
+    //         message: "Failed to register. Please try again later."
+    //     });
+    // }
 };
 
 
-export const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        console.log("📥 Request body:", req.body);
 
+
+
+// **
+// Login
+// **
+export const login = async (req, res) => {
+    
+    // try {
+
+        const { email, password } = req.body;
+        
         if (!email || !password) {
-            console.log("❌ Missing email or password");
+            console.log("Missing email or password");
             return res.status(400).json({
                 success: false,
                 message: "All fields are required."
             });
         }
 
-
         const user = await User.findOne({ email }).select('+password');
-
-        console.log("🔍 Fetched user:", user);
 
         if (!user) {
             return res.status(400).json({
@@ -99,10 +108,7 @@ export const login = async (req, res) => {
             });
         }
 
-
         const isPasswordMatch = await bcrypt.compare(password, user.password);
-        console.log("🔐 Password match:", isPasswordMatch);
-
         if (!isPasswordMatch) {
             return res.status(400).json({
                 success: false,
@@ -111,19 +117,25 @@ export const login = async (req, res) => {
         }
 
 
-        generateToken(res, user, `Welcome back ${user.username}`);
+        let token = "asdasd";
+        const updatedUser = await User.findByIdAndUpdate(userId,{token:token}, { new: true })
 
-    } catch (error) {
-        console.error("🔥 Error during login:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Failed to login"
-        });
-    }
+        // generateToken(res, user, `Welcome back ${user.username}`);
+
+    // } catch (error) {
+    //     console.error("🔥 Error during login:", error);
+    //     return res.status(500).json({
+    //         success: false,
+    //         message: "Failed to login"
+    //     });
+    // }
 };
 
 
 
+// **
+// Logout
+// **
 export const logout = async (_, res) => {
     try {
         return res.status(200).cookie("token", "", { maxAge: 0 }).json({
@@ -138,28 +150,61 @@ export const logout = async (_, res) => {
         })
     }
 }
+
+
+// **
+// getUserProfile
+// **
 export const getUserProfile = async (req, res) => {
-    try {
-        const userId = req.id;
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({
-                message: "Profile not found",
-                success: false
-            })
-        }
+
+
+      await Promise.all([
+        query('full_name').isString().withMessage('Full name must be a string').isLength({ min: 5 }).withMessage('Full name too short'),
+        query('username').isString().withMessage('Username must be a string').isLength({ min: 5 }).withMessage('Username too short'),
+        query('email').isEmail().withMessage('Invalid email address'),
+        query('password').isLength({ min: 6, max: 30 }).withMessage('Password length must be between 6 and 30 characters')
+      ].map(validation => validation.run(req)));
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          message: 'Validation failed',
+          errors: errors.array().map(err => ({
+            [err.path]: err.msg
+          }))
+        });
+      }
+   
+   
+    // try {
+        // const userId = req.id;
+        // const user = await User.findById(userId);
+        // if (!user) {
+        //     return res.status(404).json({
+        //         message: "Profile not found",
+        //         success: false
+        //     })
+        // }
         return res.status(200).json({
             success: true,
-            user
+        
         })
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: "Failed to load user"
-        })
-    }
+
+    // } catch (error) {
+    //     console.log(error);
+    //     return res.status(500).json({
+    //         success: false,
+    //         message: "Failed to load user"
+    //     })
+    // }
+
+
 }
+
+
+// **
+// updateProfile
+// **
 export const updateProfile = async (req, res) => {
     try {
         const userId = req.id;
@@ -199,4 +244,15 @@ export const updateProfile = async (req, res) => {
             message: "Failed to update profile"
         })
     }
+}
+
+
+
+
+export default {
+    getUserProfile,
+    register,
+    updateProfile,
+    logout,
+    login
 }

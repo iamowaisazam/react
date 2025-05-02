@@ -1,5 +1,5 @@
 import { body, validationResult } from 'express-validator';
-import Version from '../../models/version.model.js';
+import Version from '../../models/version.js';
 
 export const createVersion = [
     // Validation rules

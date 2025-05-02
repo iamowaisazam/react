@@ -1,10 +1,7 @@
-import { User } from "../../models/user.model.js";
+import { User } from "../../models/user.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../../utils/generateToken.js";
 import { body, validationResult } from 'express-validator';
-
-
-
 
 
 export const adminlogin = [
@@ -69,8 +66,6 @@ export const adminlogin = [
     }
 ];
 
-
-
 export const getAllUsers = async (req, res) => {
 
     try {
@@ -96,6 +91,7 @@ export const getAllUsers = async (req, res) => {
         });
     }
 };
+
 export const createUser = [
 
     body('username').notEmpty().withMessage('Username is required'),
@@ -186,7 +182,6 @@ export const getSingleUser = async (req, res) => {
     }
 };
 
-
 export const updateUser = [
 
     body('username').optional().notEmpty().withMessage('Username is required'),
@@ -247,7 +242,6 @@ export const updateUser = [
     }
 ];
 
-
 export const deleteUser = async (req, res) => {
     const { userId } = req.params;
 
@@ -281,3 +275,14 @@ export const deleteUser = async (req, res) => {
         });
     }
 };
+
+
+
+export default {
+    deleteUser,
+    updateUser,
+    adminlogin,
+    getSingleUser,
+    createUser,
+    getAllUsers
+}
