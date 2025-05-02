@@ -1,5 +1,12 @@
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJLucHtAOvWDSHFF.woff2') format('woff2');
+}
+
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins';
 }
 
 header {

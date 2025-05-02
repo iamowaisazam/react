@@ -10,7 +10,7 @@ import { query, validationResult } from "express-validator";
 // **
 // Register
 // **
-export const register = async (req, res) => {
+const register = async (req, res) => {
 
         const {
             username,
@@ -85,7 +85,7 @@ export const register = async (req, res) => {
 // **
 // Login
 // **
-export const login = async (req, res) => {
+const login = async (req, res) => {
     
     // try {
 
@@ -136,7 +136,7 @@ export const login = async (req, res) => {
 // **
 // Logout
 // **
-export const logout = async (_, res) => {
+ const logout = async (_, res) => {
     try {
         return res.status(200).cookie("token", "", { maxAge: 0 }).json({
             message: "Logged out successfully.",
@@ -152,11 +152,13 @@ export const logout = async (_, res) => {
 }
 
 
+
 // **
 // getUserProfile
 // **
-export const getUserProfile = async (req, res) => {
+ const getUserProfile = async (req, res) => {
 
+      
 
       await Promise.all([
         query('full_name').isString().withMessage('Full name must be a string').isLength({ min: 5 }).withMessage('Full name too short'),
@@ -168,6 +170,7 @@ export const getUserProfile = async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({
+          success: false,
           message: 'Validation failed',
           errors: errors.array().map(err => ({
             [err.path]: err.msg
@@ -177,18 +180,24 @@ export const getUserProfile = async (req, res) => {
    
    
     // try {
-        // const userId = req.id;
-        // const user = await User.findById(userId);
-        // if (!user) {
-        //     return res.status(404).json({
-        //         message: "Profile not found",
-        //         success: false
-        //     })
-        // }
+
+        const userId = req.id;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: "Profile not found",
+                success: false
+            })
+        }
+
         return res.status(200).json({
             success: true,
-        
+            message: "Success",
+            data:{
+
+            }
         })
+        
 
     // } catch (error) {
     //     console.log(error);
@@ -205,7 +214,7 @@ export const getUserProfile = async (req, res) => {
 // **
 // updateProfile
 // **
-export const updateProfile = async (req, res) => {
+ const updateProfile = async (req, res) => {
     try {
         const userId = req.id;
         const { name } = req.body;
