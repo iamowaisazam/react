@@ -4,7 +4,7 @@ export default [
     {
         id: 1,
         color_id: 1,
-        image: path + './images/porsche.jpg',
+        image: path + '/images/porsche.jpg',
         name: '2019 Toyota Camry Hybrid',
         is_featured: 1,
         type: 'Sedan',
@@ -27,15 +27,15 @@ export default [
         city: "lahore",
         area: "dha",
         gallery: [
-            path + './images/audi.jpg',
-            path + './images/audi.jpg',
-            path + './images/audi.jpg'
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg'
         ],
     },
     {
         id: 2,
         color_id: 2,
-        image: path + './images/bmw.jpg',
+        image: path + '/images/bmw.jpg',
         name: '2021 Ford Mustang GT',
         is_featured: 1,
         type: 'Sedan',
@@ -58,15 +58,15 @@ export default [
         city: "karachi",
         area: "gulshan",
         gallery: [
-            path + './images/audi.jpg',
-            path + './images/audi.jpg',
-            path + './images/audi.jpg'
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg'
         ],
     },
     {
         id: 3,
         color_id: 3,
-        image: path + './images/yAudi.jpeg',
+        image: path + '/images/yAudi.jpeg',
         name: '2021 Ford Mustang GT',
         is_featured: 0,
         type: 'Coupe',
@@ -89,15 +89,15 @@ export default [
         city: "islamabad",
         area: "g13",
         gallery: [
-            path + './images/audi.jpg',
-            path + './images/audi.jpg',
-            path + './images/audi.jpg'
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg'
         ],
     },
     {
         id: 4,
         color_id: 2,
-        image: path + './images/audi.jpg',
+        image: path + '/images/audi.jpg',
         name: '2021 Ford Mustang GT',
         is_featured: 0,
         type: 'Coupe',
@@ -120,15 +120,15 @@ export default [
         city: "dubai",
         area: "marina",
         gallery: [
-            path + './images/audi.jpg',
-            path + './images/audi.jpg',
-            path + './images/audi.jpg'
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg'
         ],
     },
     {
         id: 5,
         color_id: 2,
-        image: path + './images/car-five.jpg',
+        image: path + '/images/car-five.jpg',
         name: '2021 Ford Mustang GT',
         is_featured: 0,
         type: 'Coupe',
@@ -151,15 +151,15 @@ export default [
         city: "lahore",
         area: "gulberg",
         gallery: [
-            path + './images/audi.jpg',
-            path + './images/audi.jpg',
-            path + './images/audi.jpg'
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg'
         ],
     },
     {
         id: 6,
         color_id: 2,
-        image: path + './images/car-four.jpg',
+        image: path + '/images/car-four.jpg',
         name: '2021 Ford Mustang GT',
         is_featured: 0,
         type: 'Coupe',
@@ -182,9 +182,9 @@ export default [
         city: "abu dhabi",
         area: "corniche",
         gallery: [
-            path + './images/audi.jpg',
-            path + './images/audi.jpg',
-            path + './images/audi.jpg'
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg',
+            path + '/images/audi.jpg'
         ],
     }
 ];

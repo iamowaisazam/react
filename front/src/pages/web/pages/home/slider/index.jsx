@@ -5,7 +5,7 @@ export default function Slider() {
 
   const slider = useSelector((state) => state.slider);
   const dispatch = useDispatch();
-  const bgImage = path + '/src/assets/background.avif';
+  const bgImage = path + '/images/background.avif';
   return (
 
     <div

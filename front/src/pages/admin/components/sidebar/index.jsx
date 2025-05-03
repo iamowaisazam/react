@@ -128,7 +128,7 @@ export default function Sidebar({ collapsed }) {
                 ]}
                 collapsed={collapsed}
             />
-
+            {/* 
             <SidebarSection
                 title="Menus"
                 icon={FaList}
@@ -137,7 +137,7 @@ export default function Sidebar({ collapsed }) {
                     { label: "View Menus", icon: FaList, to: "/admin/view-menus" }
                 ]}
                 collapsed={collapsed}
-            />
+            /> */}
 
             <SidebarSection
                 title="Categories"

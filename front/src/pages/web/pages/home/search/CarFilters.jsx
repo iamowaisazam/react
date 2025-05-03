@@ -63,6 +63,23 @@ export default function CarFilters() {
         <option value="india">India</option>
         <option value="uae">UAE</option>
       </select>
+      {/* State */}
+      <select
+        name="state"
+        onChange={(e) => {
+          dispatch(setFilter({ filter: 'state', value: e.target.value }));
+          dispatch(searchCar());
+        }}
+        value={data.filters.state}
+        className="form-select mt-3"
+        style={selectStyle}
+      >
+        <option value="">Select State</option>
+        <option value="punjab">Punjab</option>
+        <option value="sindh">Sindh</option>
+        <option value="kpk">KPK</option>
+        <option value="balochistan">Balochistan</option>
+      </select>
 
       {/* City */}
       <select
@@ -82,7 +99,7 @@ export default function CarFilters() {
       </select>
 
       {/* Area */}
-      <select
+      {/* <select
         name="area"
         onChange={(e) => {
           dispatch(setFilter({ filter: 'area', value: e.target.value }));
@@ -96,7 +113,7 @@ export default function CarFilters() {
         <option value="dha">DHA</option>
         <option value="gulberg">Gulberg</option>
         <option value="bahria">Bahria Town</option>
-      </select>
+      </select> */}
 
 
 
@@ -185,7 +202,7 @@ export default function CarFilters() {
         value={data.filters.category}
         className="form-select"
         style={selectStyle}>
-        <option value="">Body</option>
+        <option value="">Select body</option>
         <option value={1}>Sedan</option>
         <option value={2}>SUV</option>
         <option value={3}>Truck</option>
@@ -201,7 +218,7 @@ export default function CarFilters() {
         value={data.filters.fuel}
         className="form-select"
         style={selectStyle}>
-        <option value="">Fuel Type</option>
+        <option value="">Select Fuel Type</option>
         <option value={1}>Petrol</option>
         <option value={2}>Diesel</option>
         <option value={3}>Electric</option>
@@ -217,7 +234,7 @@ export default function CarFilters() {
         value={data.filters.transmission}
         className="form-select"
         style={selectStyle}>
-        <option value="">Transmission</option>
+        <option value="">Select Transmission</option>
         <option value={"Automatic"}>Automatic</option>
         <option value={"Manual"}>Manual</option>
 
@@ -232,7 +249,7 @@ export default function CarFilters() {
         value={data.filters.door}
         className="form-select"
         style={selectStyle}>
-        <option value="">Door</option>
+        <option value="">Select Door</option>
         <option value={2} >2</option>
         <option value={4} >4</option>
       </select>

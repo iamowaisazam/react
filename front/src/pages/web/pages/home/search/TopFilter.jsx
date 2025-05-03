@@ -157,15 +157,14 @@ export default function TopFilter() {
 
                 <div className="col-md-4 d-flex gap-2 align-items-end">
                     <button
-                        onClick={() =>
-                            setFilters({
-                                category: '',
-                                brand: '',
-                                year: '',
-                                model: '',
-                                version: ''
-                            })
-                        }
+                        onClick={() => {
+                            dispatch(setFilter({ filter: 'category', value: '' }));
+                            dispatch(setFilter({ filter: 'brand', value: '' }));
+                            dispatch(setFilter({ filter: 'year', value: '' }));
+                            dispatch(setFilter({ filter: 'model', value: '' }));
+                            dispatch(setFilter({ filter: 'version', value: '' }));
+                            dispatch(searchCar()); // Refresh the results after reset
+                        }}
                         className="btn btn-outline-light w-50"
                     >
                         Reset

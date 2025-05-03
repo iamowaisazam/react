@@ -14,7 +14,7 @@ export default function Header({ toggleSidebar }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  const path = import.meta.env.VITE_PATH || "";
   const menuItemStyle = {
     padding: "12px 18px",
     fontSize: "14px",
@@ -41,7 +41,7 @@ export default function Header({ toggleSidebar }) {
 
       <div style={{ display: "flex", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", marginRight: "24px" }}>
-          <img src="/src/assets/logo.png" alt="Logo"
+          <img src={`${path}/images/logo.png`} alt="Logo"
             style={{
               borderRadius: "50%",
               width: "40px",
@@ -52,7 +52,7 @@ export default function Header({ toggleSidebar }) {
             }}
           />
           <span style={{ fontWeight: 600, fontSize: "20px", letterSpacing: "0.5px" }}>
-            elite<span style={{ fontWeight: "normal", color: "#bbb" }}>admin</span>
+            Auto<span style={{ fontWeight: "normal", color: "#bbb" }}>Style</span>
           </span>
         </div>
 
@@ -70,7 +70,7 @@ export default function Header({ toggleSidebar }) {
           style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
           onClick={() => setOpen(!open)}
         >
-          <img src="/src/assets/profile.jpg" alt="Profile"
+          <img src={`${path}/images/profile.jpg`} alt="Profile"
             style={{
               borderRadius: "50%",
               width: "38px",
@@ -80,7 +80,7 @@ export default function Header({ toggleSidebar }) {
               border: "2px solid #fff"
             }}
           />
-          <span style={{ marginRight: "6px", fontWeight: 500 }}>Muhammad Shakeeb Raza</span>
+          <span style={{ marginRight: "6px", fontWeight: 500 }}>Admin</span>
           <FaChevronDown style={{ fontSize: "12px" }} />
         </div>
 
