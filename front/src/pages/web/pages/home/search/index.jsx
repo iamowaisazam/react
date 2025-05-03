@@ -1,15 +1,18 @@
-import { useState } from 'react'
+import { useEffect } from 'react';
 
 import './style.css';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import CarFilters from './CarFilters';
 import CarCard from './CarCard';
 import TopFilter from './TopFilter';
 
+import { searchCar } from '../../../../../store/slices/productSlice';
 export default function Search({ showTop = false }) {
-
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(searchCar());
+  }, [dispatch]);
   const containerStyle = {
 
     padding: '20px',

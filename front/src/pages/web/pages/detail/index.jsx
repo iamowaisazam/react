@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { openReportPopup } from '../../../../store/slices/reportpopupslice'
+import ReportPopup from './popup';
+import { FaTachometerAlt, FaCogs, FaGasPump, FaCarSide, FaCheckCircle, FaPhone, FaEnvelope, FaFlag, FaCar, FaClock } from 'react-icons/fa';
 const path = import.meta.env.VITE_PATH || "";
 const specs = [
   { label: 'Make', value: 'Lamborghini' },
@@ -24,13 +27,16 @@ export default function Detail() {
 
   const phoneNumber = "(123) 123-1234";
   const email = "test@test.com";
-
+  const dispatch = useDispatch();
+  const handleClick = () => {
+    dispatch(openReportPopup());
+  };
 
   const { id } = useParams();
   const cars = useSelector((state) => state.product.data);
   const car = cars.find((c) => String(c.id) === String(id));
   const suggestedCars = cars.filter((c) => c.type === car.type && c.id !== car.id);
-  const bgImage = path + '/src/assets/banner.jpg';
+  const bgImage = path + '/images/banner.jpg';
   return (
 
 
@@ -83,25 +89,26 @@ export default function Detail() {
                 <h5 className="text-warning mb-3">{car.name}</h5>
                 <div className="row text-center text-white">
                   <div className="col-3">
-                    <i className="fas fa-tachometer-alt"></i>
+                    <FaTachometerAlt size={24} />
                     <p className="fw-bold mb-0">25,100 miles</p>
                     <small>Mileage</small>
                   </div>
                   <div className="col-3">
-                    <i className="fas fa-cogs"></i>
+                    <FaCogs size={24} />
                     <p className="fw-bold mb-0">22,231 cc</p>
                     <small>Engine</small>
                   </div>
                   <div className="col-3">
-                    <i className="fas fa-gas-pump"></i>
+                    <FaGasPump size={24} />
                     <p className="fw-bold mb-0">Petrol + Gas</p>
                     <small>Fuel Type</small>
                   </div>
                   <div className="col-3">
-                    <i className="fas fa-car-side"></i>
+                    <FaCarSide size={24} />
                     <p className="fw-bold mb-0">Used Car</p>
                     <small>Condition</small>
                   </div>
+
                 </div>
               </div>
 
@@ -119,50 +126,36 @@ export default function Detail() {
                     'Blind Spot System',
                   ].map((feature, i) => (
                     <div className="col-md-6 mb-2" key={i}>
-                      <i className="fas fa-check-circle text-warning me-2"></i>
+                      <FaCheckCircle className="text-warning me-2" />
                       {feature}
                     </div>
                   ))}
                 </div>
               </div>
 
-
               <div className="border-top border-white mt-4 pt-3">
                 <h5 className="text-warning mb-3">Overview</h5>
 
-                <div className="bg-black text-white px-3 py-5">
+                <div className="bg-black text-white">
                   <div className="container">
-                    <div className="row">
-
-                      <div className="col-md-8 w-100">
+                    <div className="row justify-content-center">
+                      <div className="col-12">
                         <div className="row g-3">
                           {specs.map((item, index) => (
-                            <div className="col-md-4" key={index}>
-                              <div
-                                style={{
-                                  border: '1px solid white',
-                                  padding: '10px 15px',
-                                  borderRadius: '4px',
-                                  display: 'flex',
-                                  justifyContent: 'space-between',
-                                }}
-                              >
+                            <div className="col-12 col-sm-6 col-md-4" key={index}>
+                              <div className="border border-light rounded p-3 d-flex justify-content-between h-100">
                                 <span className="fw-bold">{item.label}:</span>
                                 <span>{item.value}</span>
                               </div>
                             </div>
                           ))}
                         </div>
-
-
-
                       </div>
-
-
                     </div>
                   </div>
                 </div>
               </div>
+
               <div className="border-top border-white mt-4 pt-3">
                 <div className="mt-5">
                   <h5 className="text-warning fw-bold border-bottom pb-2 mb-3">Contact Us</h5>
@@ -187,7 +180,7 @@ export default function Detail() {
                   className="btn btn-warning w-100 mb-2"
                   onClick={() => setShowPhone(!showPhone)}
                 >
-                  <i className="fas fa-phone me-2"></i>
+                  <FaPhone className="me-2" />
                   {showPhone ? phoneNumber : "Show Number"}
                 </button>
 
@@ -196,15 +189,15 @@ export default function Detail() {
                   className="btn btn-outline-light w-100 mb-2"
                   onClick={() => setShowEmail(!showEmail)}
                 >
-                  <i className="fas fa-envelope me-2"></i>
+                  <FaEnvelope className="me-2" />
                   {showEmail ? email : "Email Now"}
                 </button>
 
-                <button className="btn btn-danger w-100 mb-3">
-                  <i className="fas fa-flag me-2"></i> Report Now
+                <button className="btn btn-danger w-100 mb-3" onClick={handleClick}>
+                  <FaFlag className="me-2" /> Report Now
                 </button>
 
-
+                <ReportPopup />
                 <div className="mt-4">
                   <h6 className="fw-bold text-warning">To More inquiry</h6>
                   <p className="text-white-50">If choose this car to contact easily with us.</p>
@@ -285,7 +278,12 @@ export default function Detail() {
               <div className="col-md-3" key={index}>
                 <div className="card h-100 shadow-sm rounded-4">
                   <div className="position-relative">
-                    <img src={`/images/${car.image.replace('./images/', '')}`} alt={car.name} className="card-img-top rounded-top-4" />
+                    <img
+                      src={car.image}
+                      alt={car.name}
+                      className="card-img-top rounded-top-4"
+                    />
+
                     <span className="badge bg-warning text-dark position-absolute top-0 start-0 m-2">
                       Featured
                     </span>
@@ -297,23 +295,31 @@ export default function Detail() {
                     </span>
                   </div>
 
-                  <div className="card-body px-3 py-3">
-                    <small className="text-warning fw-bold">{car.type}</small>
-                    <h6 className="fw-bold mt-1 mb-2 text-dark">{car.name}</h6>
+                  <div className="card-body">
+                    <h6 className="text-muted text-truncate" style={{ maxWidth: '100%' }}>{car.type}</h6>
+                    <h5 className="text-truncate" style={{ maxWidth: '100%' }}>{car.name}</h5>
 
-                    <div className="d-flex align-items-center flex-wrap mb-2 text-muted" style={{ fontSize: '0.85rem' }}>
-                      <span className="me-3">🚗 {car.kms} kms</span>
-                      <span className="me-3">⛽ {car.fuel}</span>
-                      <span>⚙️ {car.transmission}</span>
+
+                    <div className="d-flex flex-wrap justify-content-between text-muted" style={{ fontSize: '14px', marginBottom: '10px', gap: '8px' }}>
+                      <span className="d-flex align-items-center" style={{ minWidth: '45%', maxWidth: '45%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <FaCar size={16} style={{ marginRight: '5px' }} /> {car.kms} kms
+                      </span>
+                      <span className="d-flex align-items-center" style={{ minWidth: '45%', maxWidth: '45%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <FaGasPump size={16} style={{ marginRight: '5px' }} /> {car.fuel}
+                      </span>
+                      <span className="d-flex align-items-center" style={{ minWidth: '45%', maxWidth: '45%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <FaClock size={16} style={{ marginRight: '5px' }} /> Used Car
+                      </span>
+                      <span className="d-flex align-items-center" style={{ minWidth: '45%', maxWidth: '45%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <FaCogs size={16} style={{ marginRight: '5px' }} /> {car.transmission}
+                      </span>
                     </div>
 
-                    <h6 className="fw-bold text-dark">{car.price}</h6>
+                    <h5 className="text-dark fw-bold">${car.price}</h5>
 
-                    <div className="d-flex justify-content-between align-items-center mt-3">
-                      <span className="text-muted" style={{ fontSize: '0.9rem' }}>👤 {car.owner}</span>
-                      <button onClick={() => navigate(`/detail/${car.id}`)} className="btn btn-outline-warning btn-sm rounded-pill px-3">
-                        View More
-                      </button>
+                    <div className="d-flex align-items-center justify-content-between mt-3">
+                      <small className="text-muted text-truncate" style={{ maxWidth: '70%' }}>👤 {car.owner}</small>
+                      <button onClick={() => navigate(`/detail/${car.id}`)} className="btn btn-outline-warning btn-sm">View More</button>
                     </div>
                   </div>
                 </div>
@@ -322,6 +328,7 @@ export default function Detail() {
           </div>
         </div>
       </div>
+
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+const path = import.meta.env.VITE_PATH || "";
 
 import Search from '../home/search';
 export default () => {
@@ -10,7 +10,7 @@ export default () => {
       <div
         className="text-center text-white py-5"
         style={{
-          backgroundImage: `url('/images/banner.jpg')`,
+          backgroundImage: `url(${path}'/images/banner.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
