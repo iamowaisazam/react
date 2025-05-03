@@ -2,7 +2,7 @@ import { User } from "../models/user.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
-import { query, validationResult } from "express-validator";
+import { body, query, validationResult } from "express-validator";
 
 
 
@@ -12,33 +12,32 @@ import { query, validationResult } from "express-validator";
 // **
 const register = async (req, res) => {
 
-        const {
-            username,
-            email,
-            password,
-            confirmPassword,
-            role,
-            permission,
-            date
-        } = req.body;
-
-
-        if (!username || !email || !password || !confirmPassword) {
+        await Promise.all([
+            body('name')
+             .isString().withMessage('Username must be a string')
+             .isLength({ min: 4 }).withMessage('name too short')
+             .run(req),
+            body('email')
+             .isEmail().withMessage('Invalid email address')
+             .run(req),
+            body('password')
+             .isLength({ min: 6, max: 30 }).withMessage('Password length must be between 6 and 30 characters')
+             .run(req),
+          ]);
+    
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
             return res.status(400).json({
-                success: false,
-                message: "Username, email, password, and confirm password are required."
+              success: false,
+              message: 'Validation failed',
+              errors: errors.array().map(err => ({
+                [err.path]: err.msg
+              }))
             });
-        }
-
-        if (password !== confirmPassword) {
-            return res.status(400).json({
-                success: false,
-                message: "Passwords do not match."
-            });
-        }
+          }
 
         // Validation...
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email:req.body.email });
         if (existingUser) {
             return res.status(400).json({
                 success: false,
@@ -46,17 +45,17 @@ const register = async (req, res) => {
             });
         }
 
-
-
         //Entry
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+     
         const newUser = new User({
-            username,
-            email,
+            name:req.body.name,
+            email:req.body.email,
             password: hashedPassword,
-            role: role || 'student',
-            permission: permission || ["read", "edit", "update", "delete"],
-            date: date || new Date()
+            token:null,
+            role: 'student',
+            permission: "",
+            date: new Date()
         });
 
         await newUser.save();
@@ -64,18 +63,11 @@ const register = async (req, res) => {
             success: true,
             message: "Account created successfully.",
             data:{
-
+                "_id": newUser._id,
+                "name": newUser.name,
+                "email": newUser.email,    
             }
         });
-
-        
-    // } catch (error) {
-    //     console.error(error);
-    //     return res.status(500).json({
-    //         success: false,
-    //         message: "Failed to register. Please try again later."
-    //     });
-    // }
 };
 
 
@@ -87,20 +79,27 @@ const register = async (req, res) => {
 // **
 const login = async (req, res) => {
     
-    // try {
+        await Promise.all([
+            body('email')
+            .isEmail().withMessage('Invalid email address')
+            .run(req),
+            body('password')
+            .isLength({ min: 6, max: 30 }).withMessage('Password length must be between 6 and 30 characters')
+            .run(req),
+        ]);
 
-        const { email, password } = req.body;
-        
-        if (!email || !password) {
-            console.log("Missing email or password");
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
             return res.status(400).json({
-                success: false,
-                message: "All fields are required."
+            success: false,
+            message: 'Validation failed',
+            errors: errors.array().map(err => ({
+                [err.path]: err.msg
+            }))
             });
         }
 
-        const user = await User.findOne({ email }).select('+password');
-
+        const user = await User.findOne({ email:req.body.email}).select('+password');
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -108,7 +107,7 @@ const login = async (req, res) => {
             });
         }
 
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        const isPasswordMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isPasswordMatch) {
             return res.status(400).json({
                 success: false,
@@ -116,19 +115,19 @@ const login = async (req, res) => {
             });
         }
 
+        let token = Math.random().toString(36).slice(2);
+        const updatedUser = await User.findByIdAndUpdate(user._id,{token:token},{ new: true })
 
-        let token = "asdasd";
-        const updatedUser = await User.findByIdAndUpdate(userId,{token:token}, { new: true })
+        return res.status(200).json({
+            success: true,
+            message: "Logged In",
+            data:{
+                name:updatedUser.name,
+                email:updatedUser.email,
+                token:updatedUser.token,
+            }
+        });
 
-        // generateToken(res, user, `Welcome back ${user.username}`);
-
-    // } catch (error) {
-    //     console.error("🔥 Error during login:", error);
-    //     return res.status(500).json({
-    //         success: false,
-    //         message: "Failed to login"
-    //     });
-    // }
 };
 
 
@@ -136,19 +135,29 @@ const login = async (req, res) => {
 // **
 // Logout
 // **
- const logout = async (_, res) => {
-    try {
-        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
-            message: "Logged out successfully.",
-            success: true
-        })
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: "Failed to logout"
-        })
-    }
+ const logout = async (req, res) => {
+
+            const user = await User.findOne({ token: req.params.token });
+            if(!user){
+                return res.status(500).json({
+                    success: false,
+                    message: "Failed to logout"
+                })
+            }
+
+            const updatedUser = await User.findByIdAndUpdate(
+                user._id,
+                { token:null },
+                { new: true }
+              );
+
+        
+            return res.status(200).json({
+                message: "Logged out successfully.",
+                success: true
+            });
+
+
 }
 
 
@@ -157,32 +166,9 @@ const login = async (req, res) => {
 // getUserProfile
 // **
  const getUserProfile = async (req, res) => {
-
-      
-
-      await Promise.all([
-        query('full_name').isString().withMessage('Full name must be a string').isLength({ min: 5 }).withMessage('Full name too short'),
-        query('username').isString().withMessage('Username must be a string').isLength({ min: 5 }).withMessage('Username too short'),
-        query('email').isEmail().withMessage('Invalid email address'),
-        query('password').isLength({ min: 6, max: 30 }).withMessage('Password length must be between 6 and 30 characters')
-      ].map(validation => validation.run(req)));
-
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          message: 'Validation failed',
-          errors: errors.array().map(err => ({
-            [err.path]: err.msg
-          }))
-        });
-      }
-   
-   
-    // try {
-
-        const userId = req.id;
-        const user = await User.findById(userId);
+        
+    
+        const user = await User.findOne({ token:req.params.token});
         if (!user) {
             return res.status(404).json({
                 message: "Profile not found",
@@ -194,19 +180,9 @@ const login = async (req, res) => {
             success: true,
             message: "Success",
             data:{
-
+                user
             }
-        })
-        
-
-    // } catch (error) {
-    //     console.log(error);
-    //     return res.status(500).json({
-    //         success: false,
-    //         message: "Failed to load user"
-    //     })
-    // }
-
+        });
 
 }
 
@@ -215,6 +191,16 @@ const login = async (req, res) => {
 // updateProfile
 // **
  const updateProfile = async (req, res) => {
+
+
+    const user = await User.findOne({ token:req.token});
+    if (!user) {
+        return res.status(404).json({
+            message: "Profile not found",
+            success: false
+        })
+    }
+
     try {
         const userId = req.id;
         const { name } = req.body;

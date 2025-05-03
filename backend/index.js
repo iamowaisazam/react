@@ -2,44 +2,50 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import DB from './database/mongodb.js';
-import isAuthenticated from './middlewares/isAuthenticated.js'
-import authMiddleware from './middlewares/authMiddleware.js'
 
 
+// Controllers
 import userController from './controllers/userController.js';
 import loginController from './controllers/admin/loginController.js';
 
-
-
-
 dotenv.config({});
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
 DB();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
 
 
+// Routes ______________________________________________________________________________
+
+const router = express.Router();
+const BASE_PATH = process.env.BASE_PATH || '/nodejs';
+
+router.get('/', (req, res) => {
+  res.send('Home Page');
+});
+
+
 // User Routes
-app.post('/register', userController.register);
-app.post('/login', userController.login);
-app.post('/logout', userController.logout);
-app.get('/profile', userController.getUserProfile);
+router.post('/register', userController.register);
+router.post('/login', userController.login);
+router.get('/logout/:token', userController.logout);
+router.get('/profile/:token', userController.getUserProfile);
 
 
 
 // Login Routes
-app.post('/adminlogin', loginController.adminlogin);
-app.get('/admin/users', authMiddleware,loginController.getAllUsers);
-app.post('/admin/users/create', authMiddleware,loginController.createUser);
-app.get('/admin/user/:userId', authMiddleware,loginController.getSingleUser);
-app.put('/admin/user/:userId', authMiddleware,loginController.updateUser);
-app.delete('/admin/user/:userId', authMiddleware,loginController.deleteUser);
+// router.post('/adminlogin', loginController.adminlogin);
+// router.get('/admin/users', loginController.getAllUsers);
+// router.post('/admin/users/create',loginController.createUser);
+// router.get('/admin/user/:userId',loginController.getSingleUser);
+// router.put('/admin/user/:userId',loginController.updateUser);
+// router.delete('/admin/user/:userId',loginController.deleteUser);
 
 
 
@@ -67,9 +73,13 @@ app.delete('/admin/user/:userId', authMiddleware,loginController.deleteUser);
 // app.delete('/admin/version/:versionId', authMiddleware, deleteVersion);
 
 
+router.get('*', (req, res) => {
+  res.status(404).send('404 Not Found');
+});
+
+app.use(BASE_PATH, router);
+
 
 app.listen(PORT, () => {
   console.log(`Server listen at port ${PORT}`);
 })
-
-
