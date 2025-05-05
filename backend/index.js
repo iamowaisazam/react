@@ -2,11 +2,14 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import DB from './database/mongodb.js';
-
+import authMiddleware from './middlewares/authMiddleware.js'
 
 // Controllers
 import userController from './controllers/userController.js';
 import loginController from './controllers/admin/loginController.js';
+import Categories from './controllers/admin/categoryController.js';
+import Model from './controllers/admin/modelController.js';
+import Version from './controllers/admin/versionController.js';
 
 dotenv.config({});
 const app = express();
@@ -40,37 +43,37 @@ router.get('/profile/:token', userController.getUserProfile);
 
 
 // Login Routes
-// router.post('/adminlogin', loginController.adminlogin);
-// router.get('/admin/users', loginController.getAllUsers);
-// router.post('/admin/users/create',loginController.createUser);
-// router.get('/admin/user/:userId',loginController.getSingleUser);
-// router.put('/admin/user/:userId',loginController.updateUser);
-// router.delete('/admin/user/:userId',loginController.deleteUser);
+router.post('/adminlogin', loginController.adminlogin);
+router.get('/admin/users', loginController.getAllUsers);
+router.post('/admin/users/create', loginController.createUser);
+router.get('/admin/user/:userId', loginController.getSingleUser);
+router.put('/admin/user/:userId', loginController.updateUser);
+router.delete('/admin/user/:userId', loginController.deleteUser);
 
 
 
 // Categories
-// app.get('/admin/categories', authMiddleware, getAllCategories);
-// app.post('/admin/categories/create', authMiddleware, createCategory);
-// app.get('/admin/category/:categoryId', authMiddleware, getSingleCategory);
-// app.put('/admin/category/:categoryId', authMiddleware, updateCategory);
-// app.delete('/admin/category/:categoryId', authMiddleware, deleteCategory);
+app.get('/admin/categories', authMiddleware, Categories.getAllCategories);
+app.post('/admin/categories/create', authMiddleware, Categories.createCategory);
+app.get('/admin/category/:categoryId', authMiddleware, Categories.getSingleCategory);
+app.put('/admin/category/:categoryId', authMiddleware, Categories.updateCategory);
+app.delete('/admin/category/:categoryId', authMiddleware, Categories.deleteCategory);
 
 
 // Car Model
-// app.post('/admin/model/create', authMiddleware, createCar);
-// app.get('/admin/model', authMiddleware, getAllCars);
-// app.get('/admin/model/:carId', authMiddleware, getCarById);
-// app.put('/admin/model/:carId', authMiddleware, updateCar);
-// app.delete('/admin/model/:carId', authMiddleware, deleteCar);
+app.post('/admin/model/create', authMiddleware, Model.createCar);
+app.get('/admin/model', authMiddleware, Model.getAllCars);
+app.get('/admin/model/:carId', authMiddleware, Model.getCarById);
+app.put('/admin/model/:carId', authMiddleware, Model.updateCar);
+app.delete('/admin/model/:carId', authMiddleware, Model.deleteCar);
 
 
 // version
-// app.post('/admin/versions/create', authMiddleware, createVersion);
-// app.get('/admin/versions', authMiddleware, getAllVersions);
-// app.get('/admin/version/:versionId', authMiddleware, getVersionById);
-// app.put('/admin/version/:versionId', authMiddleware, updateVersion);
-// app.delete('/admin/version/:versionId', authMiddleware, deleteVersion);
+app.post('/admin/versions/create', authMiddleware, Version.createVersion);
+app.get('/admin/versions', authMiddleware, Version.getAllVersions);
+app.get('/admin/version/:versionId', authMiddleware, Version.getVersionById);
+app.put('/admin/version/:versionId', authMiddleware, Version.updateVersion);
+app.delete('/admin/version/:versionId', authMiddleware, Version.deleteVersion);
 
 
 router.get('*', (req, res) => {

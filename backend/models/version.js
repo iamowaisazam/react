@@ -14,7 +14,7 @@ const versionSchema = new mongoose.Schema(
         },
         modelId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Model',
+            ref: 'model',
             required: true,
         },
         status: {
