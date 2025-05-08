@@ -1,66 +1,12 @@
 import { useState } from 'react';
 import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import { toast } from 'react-toastify';
+import { useGetUsersQuery } from '../../../../features/usersApi.js';
 
 export default function Users() {
 
-    const [entriesPerPage, setEntriesPerPage] = useState(10);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-
-    const employees = [
-        { id: 1, name: "John Doe", email: "john@example.com", role: "Admin" },
-        { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Editor" },
-    ];
-
-    const handleDelete = (id) => {
-
-
-        toast.info("User deleted successfully!", {
-            icon: "🗑️",
-            style: {
-                background: "#00c4cc",
-                color: "white",
-                fontWeight: "500",
-            }
-        });
-    };
-
-    const filteredEmployees = employees.filter(emp => emp.name.toLowerCase().includes(searchTerm.toLowerCase()));
-
-    const sortedEmployees = [...filteredEmployees].sort((a, b) => {
-        if (!sortConfig.key) return 0;
-        const aValue = a[sortConfig.key];
-        const bValue = b[sortConfig.key];
-        if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
-        if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
-        return 0;
-    });
-
-    const totalPages = Math.ceil(sortedEmployees.length / entriesPerPage);
-    const displayedEmployees = sortedEmployees.slice((currentPage - 1) * entriesPerPage, currentPage * entriesPerPage);
-
-    const requestSort = (key) => {
-        let direction = "asc";
-        if (sortConfig.key === key && sortConfig.direction === "asc") direction = "desc";
-        setSortConfig({ key, direction });
-    };
-
-    const getSortIcon = (key) => {
-        if (sortConfig.key !== key) return <FaSort />;
-        return sortConfig.direction === "asc" ? <FaSortUp /> : <FaSortDown />;
-    };
-
-    const handleEntriesPerPageChange = (e) => {
-        setEntriesPerPage(parseInt(e.target.value));
-        setCurrentPage(1);
-    };
-
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
-        setCurrentPage(1);
-    };
+    const { data, error, isLoading } = useGetUsersQuery();
+    const users = data?.data || [];
 
     return (
 
@@ -98,8 +44,8 @@ export default function Users() {
                                 <select
                                     className="form-select form-select-sm"
                                     style={{ width: "80px" }}
-                                    value={entriesPerPage}
-                                    onChange={handleEntriesPerPageChange}
+
+
                                 >
                                     {[10, 25, 50, 100].map(size => (
                                         <option key={size} value={size}>{size}</option>
@@ -114,8 +60,8 @@ export default function Users() {
                                     type="text"
                                     className="form-control form-control-sm"
                                     style={{ width: "200px" }}
-                                    value={searchTerm}
-                                    onChange={handleSearch}
+
+
                                 />
                             </div>
                         </div>
@@ -134,7 +80,7 @@ export default function Users() {
                                             >
                                                 <div className="d-flex justify-content-between align-items-center">
                                                     {col}
-                                                    <span className="ms-1">{getSortIcon(col.toLowerCase().replace(" ", ""))}</span>
+                                                    <span className="ms-1"></span>
                                                 </div>
                                             </th>
                                         ))}
@@ -142,9 +88,9 @@ export default function Users() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {displayedEmployees.map((user) => (
-                                        <tr key={user.id} className="table-row-custom">
-                                            <td>{user.id}</td>
+                                    {users.map((user) => (
+                                        <tr key={user._id} className="table-row-custom">
+                                            <td>{user._id}</td>
                                             <td>{user.name}</td>
                                             <td>{user.email}</td>
                                             <td>{user.role}</td>
@@ -152,13 +98,13 @@ export default function Users() {
                                                 <div className="d-flex gap-2">
                                                     <button
                                                         className="btn btn-sm btn-outline-primary animated-btn"
-                                                        onClick={() => handleEdit(user.id)}
+                                                        onClick={() => handleEdit(user._id)}
                                                     >
                                                         ✎ Edit
                                                     </button>
                                                     <button
                                                         className="btn btn-sm btn-outline-danger animated-btn"
-                                                        onClick={() => handleDelete(user.id)}
+                                                        onClick={() => handleDelete(user._id)}
                                                     >
                                                         🗑 Delete
                                                     </button>
@@ -175,21 +121,17 @@ export default function Users() {
 
                         <div className="row align-items-center mt-3">
                             <div className="col-md-6 small text-muted">
-                                Showing {(currentPage - 1) * entriesPerPage + 1} to {Math.min(currentPage * entriesPerPage, sortedEmployees.length)} of {sortedEmployees.length} entries
+
                             </div>
                             <div className="col-md-6">
                                 <nav className="float-md-end">
                                     <ul className="pagination pagination-sm mb-0">
-                                        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                                            <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>Previous</button>
+                                        <li >
+                                            <button className="page-link" >Previous</button>
                                         </li>
-                                        {Array.from({ length: totalPages }, (_, i) => (
-                                            <li key={i} className={`page-item ${currentPage === i + 1 ? "active" : ""}`}>
-                                                <button className="page-link" onClick={() => setCurrentPage(i + 1)}>{i + 1}</button>
-                                            </li>
-                                        ))}
-                                        <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-                                            <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
+
+                                        <li >
+                                            <button className="page-link">Next</button>
                                         </li>
                                     </ul>
                                 </nav>

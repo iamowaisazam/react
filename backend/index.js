@@ -10,9 +10,13 @@ import loginController from './controllers/admin/loginController.js';
 import Categories from './controllers/admin/categoryController.js';
 import Model from './controllers/admin/modelController.js';
 import Version from './controllers/admin/versionController.js';
+import Make from './controllers/admin/makeContoller.js';
+import cors from 'cors';
 
 dotenv.config({});
 const app = express();
+
+app.use(cors());
 const PORT = process.env.PORT || 3000;
 
 DB();
@@ -60,12 +64,21 @@ app.put('/admin/category/:categoryId', authMiddleware, Categories.updateCategory
 app.delete('/admin/category/:categoryId', authMiddleware, Categories.deleteCategory);
 
 
+//Make
+app.post('/admin/make/create', Make.create);
+app.get('/admin/make', Make.getmake);
+app.get('/admin/make/:makeId', Make.getmakeId);
+app.put('/admin/make/:makeId', Make.Update);
+app.delete('/admin/make/:makeId', Make.deleteMake);
+
+
+
 // Car Model
-app.post('/admin/model/create', authMiddleware, Model.createCar);
-app.get('/admin/model', authMiddleware, Model.getAllCars);
-app.get('/admin/model/:carId', authMiddleware, Model.getCarById);
-app.put('/admin/model/:carId', authMiddleware, Model.updateCar);
-app.delete('/admin/model/:carId', authMiddleware, Model.deleteCar);
+app.post('/admin/model/create', Model.createCar);
+app.get('/admin/model', Model.getAllCars);
+app.get('/admin/model/:carId', Model.getCarById);
+app.put('/admin/model/:carId', Model.updateCar);
+app.delete('/admin/model/:carId', Model.deleteCar);
 
 
 // version
