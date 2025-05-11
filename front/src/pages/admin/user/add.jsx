@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { useCreateUserMutation } from '../../../../features/usersApi.js';
+import { useCreateUserMutation } from '../../../features/usersApi.js';
 
 
 export default function adduser() {

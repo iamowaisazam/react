@@ -6,6 +6,7 @@ import colorReducer from './slices/colorSlice';
 import uiReducer from './slices/globalSlice';
 import popupReducer from './slices/reportpopupslice';
 import { userApi } from '../features/usersApi';
+import { categoryApi } from '../features/categoryApi';
 
 export const store = configureStore({
   reducer: {
@@ -16,7 +17,10 @@ export const store = configureStore({
     ui: uiReducer,
     popup: popupReducer,
     [userApi.reducerPath]: userApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(userApi.middleware),
+    getDefaultMiddleware()
+      .concat(userApi.middleware)
+      .concat(categoryApi.middleware),
 });

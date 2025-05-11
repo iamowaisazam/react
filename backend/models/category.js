@@ -1,30 +1,29 @@
 import mongoose from 'mongoose';
 
-
 const categorySchema = new mongoose.Schema(
     {
         name: {
             type: String,
             required: true
         },
+        slug: {
+            type: String,
+            required: true,
+            unique: true
+        },
         status: {
             type: String,
-            enum: ['active', 'inactive'],  // The allowed values
+            enum: ['active', 'inactive'],
             required: true
         },
-        description: {
-            type: String
+        image: {
+            type: String,
         },
-        createdAt: {
-            type: Date,
-            default: Date.now
-        }
     },
     {
         timestamps: true,
     }
 );
-
 
 const Category = mongoose.model('Category', categorySchema);
 

@@ -21,11 +21,13 @@ const getAllCategories = async (req, res) => {
 
 // Create category
 export const createCategory = async (req, res) => {
+
     await Promise.all([
         body('name').notEmpty().withMessage('Category name is required').run(req),
+        body('slug').notEmpty().withMessage('Category slug is required').run(req),
         body('status').isIn(['active', 'inactive']).withMessage('Status must be either active or inactive').run(req),
-        body('description').optional().isString().withMessage('Description must be a string').run(req)
     ]);
+
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -38,10 +40,10 @@ export const createCategory = async (req, res) => {
         });
     }
 
-    const { name, status, description } = req.body;
+    const { name, status, slug } = req.body;
 
     try {
-        const newCategory = new Category({ name, status, description });
+        const newCategory = new Category({ name, status, slug });
         await newCategory.save();
 
         return res.status(201).json({

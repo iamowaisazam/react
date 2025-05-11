@@ -57,11 +57,11 @@ router.delete('/admin/user/:userId', loginController.deleteUser);
 
 
 // Categories
-app.get('/admin/categories', authMiddleware, Categories.getAllCategories);
-app.post('/admin/categories/create', authMiddleware, Categories.createCategory);
-app.get('/admin/category/:categoryId', authMiddleware, Categories.getSingleCategory);
-app.put('/admin/category/:categoryId', authMiddleware, Categories.updateCategory);
-app.delete('/admin/category/:categoryId', authMiddleware, Categories.deleteCategory);
+app.get('/admin/categories', Categories.getAllCategories);
+app.post('/admin/categories/create', Categories.createCategory);
+app.get('/admin/category/:categoryId', Categories.getSingleCategory);
+app.put('/admin/category/:categoryId', Categories.updateCategory);
+app.delete('/admin/category/:categoryId', Categories.deleteCategory);
 
 
 //Make

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useCreateCategoryMutation } from '../../../features/categoryApi';
 
 export default function Addmenu() {
     const [name, setName] = useState('');
@@ -8,27 +9,35 @@ export default function Addmenu() {
     const [image, setImage] = useState(null);
     const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const [createCategory, { isLoading }] = useCreateCategoryMutation();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!name.trim() || !slug.trim() || !image) {
+        if (!name.trim() || !slug.trim()) {
             setError('All fields are required');
-            toast.error("Please fill all fields and upload an image");
+            toast.error("Please fill all fields");
             return;
         }
 
         setError('');
-        toast.success("Menu created!");
-        console.log({ name, slug, status, image });
-        setName('');
-        setSlug('');
-        setStatus('active');
-        setImage(null);
+
+        const payload = { name, slug, status };
+
+        try {
+            await createCategory(payload).unwrap();
+            toast.success("Category created successfully!");
+            setName('');
+            setSlug('');
+            setStatus('active');
+        } catch (err) {
+            toast.error(err?.data?.message || "Failed to create category");
+        }
     };
+
 
     return (
         <main>
-
             <div className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom" style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}>
                 <h5 className="fw-semibold mb-0" style={{ color: "#2c3e50" }}>Category</h5>
                 <nav aria-label="breadcrumb">
@@ -45,9 +54,7 @@ export default function Addmenu() {
                         <h4 className="fw-bold mb-4">Create New Category</h4>
 
                         <form onSubmit={handleSubmit}>
-
                             <div className="row">
-
                                 <div className="col-md-6 mb-4">
                                     <label className="form-label fw-semibold">Category Name</label>
                                     <input
@@ -87,9 +94,7 @@ export default function Addmenu() {
                                     <div className="form-text text-muted">Choose menu visibility</div>
                                 </div>
 
-
-
-                                <div className="col-md-6 mb-4">
+                                {/* <div className="col-md-6 mb-4">
                                     <label className="form-label fw-semibold">Category Image</label>
                                     <input
                                         type="file"
@@ -99,12 +104,13 @@ export default function Addmenu() {
                                     />
                                     <div className="form-text text-muted">Upload a category image</div>
                                     {error && !image && <div className="invalid-feedback">Image is required</div>}
-                                </div>
-
+                                </div> */}
                             </div>
 
                             <div className="d-flex justify-content-between pt-3 border-top mt-3">
-                                <button type="submit" className="btn btn-dark px-4">Add Category</button>
+                                <button type="submit" className="btn btn-dark px-4" disabled={isLoading}>
+                                    {isLoading ? 'Adding...' : 'Add Category'}
+                                </button>
                             </div>
                         </form>
                     </div>

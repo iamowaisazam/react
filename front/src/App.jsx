@@ -18,39 +18,40 @@ import Login from './pages/admin/components/login';
 
 
 // Dashboard
-import Dashboard from './pages/admin/pages/dashboard';
+import Dashboard from './pages/admin/dashboard';
 
 // Users
-import Userindex from './pages/admin/pages/user';
-import Adduser from './pages/admin/pages/user/add.jsx';
+import Userindex from './pages/admin/user';
+import Adduser from './pages/admin/user/add.jsx';
+import EditUser from './pages/admin/user/edit.jsx';
 
 // Menu
-import Menuindex from './pages/admin/pages/menu';
-import Addmenu from './pages/admin/pages/menu/add.jsx';
+import Menuindex from './pages/admin/menu';
+import Addmenu from './pages/admin/menu/add.jsx';
 
 // category
-import Addcategory from './pages/admin/pages/category/addcategory.jsx';
-import Category from './pages/admin/pages/category/index.jsx';
+import Addcategory from './pages/admin/category/addcategory.jsx';
+import Category from './pages/admin/category/index.jsx';
 
 
 // Make
-import Addmake from './pages/admin/pages/make/add.jsx';
-import Make from './pages/admin/pages/make/index.jsx';
+import Addmake from './pages/admin/make/add.jsx';
+import Make from './pages/admin/make/index.jsx';
 
 // Model
-import Addmodel from './pages/admin/pages/model/add.jsx';
-import Model from './pages/admin/pages/model/index.jsx';
+import Addmodel from './pages/admin/model/add.jsx';
+import Model from './pages/admin/model/index.jsx';
 
 // Version
-import Addversion from './pages/admin/pages/version/add.jsx';
-import Version from './pages/admin/pages/version/index.jsx';
+import Addversion from './pages/admin/version/add.jsx';
+import Version from './pages/admin/version/index.jsx';
 
 // car
-import Addcar from './pages/admin/pages/car/add.jsx';
-import Car from './pages/admin/pages/car/index.jsx';
+import Addcar from './pages/admin/car/add.jsx';
+import Car from './pages/admin/car/index.jsx';
 
 // Setting
-import General from './pages/admin/pages/setting/index.jsx';
+import General from './pages/admin/setting/index.jsx';
 
 
 const appRouter = createBrowserRouter([
@@ -97,6 +98,7 @@ const appRouter = createBrowserRouter([
       { path: "dashboard", element: <Dashboard /> },
       { path: "users", element: <Userindex /> },
       { path: "add-user", element: <Adduser /> },
+      { path: "edit-user/:id", element: <EditUser /> },
       { path: "view-menus", element: <Menuindex /> },
       { path: "add-menu", element: <Addmenu /> },
       { path: "add-category", element: <Addcategory /> },
