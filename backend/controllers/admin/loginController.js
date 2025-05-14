@@ -112,7 +112,6 @@ const createUser = async (req, res) => {
         body('password')
             .notEmpty().withMessage('Password is required')
             .run(req),
-
     ]);
 
     const errors = validationResult(req);
@@ -120,10 +119,10 @@ const createUser = async (req, res) => {
         return res.status(400).json({
             success: false,
             message: 'Validation errors',
-            errors: errors.array().map(err => ({
-                field: err.path,
-                message: err.msg
-            }))
+            errors: errors.array().reduce((acc, err) => {
+                acc[err.path] = err.msg;
+                return acc;
+            }, {})
         });
     }
 
