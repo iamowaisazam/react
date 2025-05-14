@@ -63,49 +63,37 @@ const adminlogin = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
 
-
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-    const search = req.query.search || '';
-    const query = search
-        ? {
-            $or: [
-                { name: { $regex: search, $options: 'i' } },
-                { email: { $regex: search, $options: 'i' } }
-            ]
-        }
-        : {};
+ 
+    let query = {};
 
+    //Search
+    if(req.query.search){
+        query.name = { $regex: (req.query.search),  $options: "i"}, 
+        query.email = { $regex: (req.query.search), $options: "i"}
+    }
 
-    const [users, total] = await Promise.all([
-        User.find(query)
-            .select('-password')
-            .skip(skip)
-            .limit(limit),
-        User.countDocuments(query)
-    ]);
+    // Total Count
+    const total = await User.countDocuments(query);
+    
+    //Records
+    let data = await User.find(query)
+        .select('-password')
+        .skip(skip)
+        .limit(limit);
 
-
-    // console.log(req.user)
-    // if (!req.user || req.user.role !== 'admin') {
-    //     return res.status(403).json({
-    //         success: false,
-    //         message: "Access denied. Admins only."
-    //     });
-    // }
-
-    // const users = await User.find().select('-password');
-
-
+    //Pages
+    const pages = Math.ceil(total / limit);
 
     return res.status(200).json({
         success: true,
         data: {
-            data: users,
-            total: total,
+            data: data,
+            total:total,
             page: page,
-            skip: skip,
+            pages:pages,
             limit: limit,
         }
     });
