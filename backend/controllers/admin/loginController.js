@@ -63,6 +63,30 @@ const adminlogin = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
 
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const search = req.query.search || '';
+    const query = search
+        ? {
+            $or: [
+                { name: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } }
+            ]
+        }
+        : {};
+
+
+    const [users, total] = await Promise.all([
+        User.find(query)
+            .select('-password')
+            .skip(skip)
+            .limit(limit),
+        User.countDocuments(query)
+    ]);
+
+
     // console.log(req.user)
     // if (!req.user || req.user.role !== 'admin') {
     //     return res.status(403).json({
@@ -71,11 +95,19 @@ const getAllUsers = async (req, res) => {
     //     });
     // }
 
-    const users = await User.find().select('-password');
+    // const users = await User.find().select('-password');
+
+
 
     return res.status(200).json({
         success: true,
-        data: users
+        data: {
+            data: users,
+            total: total,
+            page: page,
+            skip: skip,
+            limit: limit,
+        }
     });
 
 };
@@ -92,9 +124,7 @@ const createUser = async (req, res) => {
         body('password')
             .notEmpty().withMessage('Password is required')
             .run(req),
-        body('confirmPassword')
-            .notEmpty().withMessage('Confirm Password is required')
-            .run(req),
+
     ]);
 
     const errors = validationResult(req);
@@ -109,14 +139,9 @@ const createUser = async (req, res) => {
         });
     }
 
-    const { username, email, password, confirmPassword, role, permission, date } = req.body;
+    const { username, email, password, role, permission, date } = req.body;
 
-    if (password !== confirmPassword) {
-        return res.status(400).json({
-            success: false,
-            message: "Passwords do not match."
-        });
-    }
+
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {

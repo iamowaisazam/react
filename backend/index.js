@@ -16,7 +16,11 @@ import cors from 'cors';
 dotenv.config({});
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 const PORT = process.env.PORT || 3000;
 
 DB();
