@@ -116,25 +116,11 @@ export default function Users() {
                                         state.loading ? (
                                             <tr>
                                                 <td colSpan={5} className="text-center py-4">
-                                                    <div style={{
-                                                        width: "40px",
-                                                        height: "40px",
-                                                        border: "4px solid #e0e0e0",
-                                                        borderTop: "4px solid #3498db",
-                                                        borderRadius: "50%",
-                                                        animation: "spin 1s linear infinite",
-                                                        margin: "0 auto"
-                                                    }} />
-                                                    <style>
-                                                        {`
-                                                    @keyframes spin {
-                                                        to { transform: rotate(360deg); }
-                                                    }
-                                                    `}
-                                                    </style>
-                                                    <div style={{ marginTop: '10px', fontWeight: 'bold', color: '#3498db' }}>Loading, please wait...</div>
+                                                    <div className="loading-spinner"></div>
+                                                    <div className="loading-text">Please wait...</div>
                                                 </td>
                                             </tr>
+
                                         ) :
 
 
