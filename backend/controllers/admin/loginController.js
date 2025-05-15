@@ -66,18 +66,22 @@ const getAllUsers = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
- 
+
     let query = {};
 
     //Search
-    if(req.query.search){
-        query.name = { $regex: (req.query.search),  $options: "i"}, 
-        query.email = { $regex: (req.query.search), $options: "i"}
+
+
+    if (req.query.search) {
+        query.$or = [
+            { name: { $regex: req.query.search, $options: "i" } },
+            { email: { $regex: req.query.search, $options: "i" } }
+        ];
     }
 
     // Total Count
     const total = await User.countDocuments(query);
-    
+
     //Records
     let data = await User.find(query)
         .select('-password')
@@ -91,12 +95,12 @@ const getAllUsers = async (req, res) => {
         success: true,
         data: {
             data: data,
-            total:total,
+            total: total,
             page: page,
-            pages:pages,
+            pages: pages,
             limit: limit,
-            skip:skip,
-            
+            skip: skip,
+
         }
     });
 
@@ -105,7 +109,7 @@ const getAllUsers = async (req, res) => {
 const createUser = async (req, res) => {
     await Promise.all([
         body('name')
-            .isString().withMessage('Username must be a string')
+            .isString().withMessage('name must be a string')
             .isLength({ min: 4 }).withMessage('name too short')
             .run(req),
         body('email')
@@ -128,7 +132,7 @@ const createUser = async (req, res) => {
         });
     }
 
-    const { username, email, password, role, permission, date } = req.body;
+    const { name, email, password, role, permission, date } = req.body;
 
 
 
@@ -143,10 +147,10 @@ const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-        username,
+        name,
         email,
         password: hashedPassword,
-        role: role || 'student',
+        role: role || 'user',
         permission: permission || ["read", "edit", "update", "delete"],
         date: date || new Date()
     });
@@ -187,13 +191,12 @@ const getSingleUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     await Promise.all([
-        body('name').optional().notEmpty().withMessage('name is required').run(req),
+        body('name').optional().notEmpty().withMessage('Name is required').run(req),
         body('email').optional().isEmail().withMessage('Invalid email address').run(req),
-        body('role').optional().isIn(['admin', 'student']).withMessage('Invalid role').run(req)
     ]);
 
     const { userId } = req.params;
-    const { name, email, role } = req.body;
+    const { name, email, password } = req.body;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -207,14 +210,6 @@ const updateUser = async (req, res) => {
         });
     }
 
-
-    // if (!req.user || req.user.role !== 'admin') {
-    //     return res.status(403).json({
-    //         success: false,
-    //         message: "Access denied. Admins only."
-    //     });
-    // }
-
     const user = await User.findById(userId);
 
     if (!user) {
@@ -226,17 +221,23 @@ const updateUser = async (req, res) => {
 
     user.name = name || user.name;
     user.email = email || user.email;
-    user.role = role || user.role;
+
+    if (password) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
+    }
 
     await user.save();
 
     return res.status(200).json({
         success: true,
         message: "User updated successfully.",
-        data: user
+        data: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+        }
     });
-
-
 };
 
 const deleteUser = async (req, res) => {

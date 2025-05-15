@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-
+import { Link } from "react-router-dom";
 import { createUser } from './userFeature.js';
 
 
@@ -30,14 +30,14 @@ export default function adduser() {
                 toast.success("User created successfully!");
                 setFormData({ name: '', email: '', password: '' });
                 setState({ ...state, loading: false });
-            } else {    
-                setState({ ...state, errors:{}, loading: false });
+            } else {
+                setState({ ...state, errors: {}, loading: false });
                 toast.error("Failed to create user!");
             }
 
         } catch (error) {
-                        
-            setState({ ...state, errors: error.response.data.errors??{}, loading: false });
+
+            setState({ ...state, errors: error.response.data.errors ?? {}, loading: false });
             toast.error("Validation failed. Please check the fields.");
             console.error("API Error:", error.response?.data);
         }
@@ -114,16 +114,10 @@ export default function adduser() {
                             >
                                 {state.loading ? 'Submitting...' : 'Submit'}
                             </button>
-                            <button
-                                type="reset"
-                                className="btn btn-secondary w-10"
-                                onClick={() => {
-                                    setFormData({ name: '', email: '', password: '' });
-                                    setState(prev => ({ ...prev, errors: {} }));
-                                }}
-                            >
+                            <Link to="/admin/users" className="btn btn-secondary w-10">
+
                                 Cancel
-                            </button>
+                            </Link>
                         </div>
                     </form>
 

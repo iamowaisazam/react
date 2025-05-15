@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { getSingleUser, editUser } from './userFeature';
@@ -123,16 +123,10 @@ export default function EditUser() {
                         >
                             {state.loading ? 'Submitting...' : 'Submit'}
                         </button>
-                        <button
-                            type="reset"
-                            className="btn btn-secondary w-10"
-                            onClick={() => {
-                                setFormData({ name: '', email: '', password: '' });
-                                setState(prev => ({ ...prev, errors: {} }));
-                            }}
-                        >
+                        <Link to="/admin/users" className="btn btn-secondary w-10">
+
                             Cancel
-                        </button>
+                        </Link>
                     </div>
                 </form>
             </div>

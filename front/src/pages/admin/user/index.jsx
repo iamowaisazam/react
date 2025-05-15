@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { getUsers, deleteUser, getSingleUser } from './userFeature';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { FaUserPlus } from "react-icons/fa";
+
 export default function Users() {
 
     const navigate = useNavigate();
@@ -11,11 +13,11 @@ export default function Users() {
     const [state, setState] = useState({
         search: '',
         page: 1,
-        pages:0,
+        pages: 0,
         loading: true,
         total: 0,
-        skip:0,
-        limit: 3,
+        skip: 0,
+        limit: 10,
     });
 
 
@@ -40,12 +42,15 @@ export default function Users() {
             .then((res) => {
 
                 res = res.data.data;
+
                 setData(res.data);
-                setState({ ...state, 
+                setState({
+                    ...state,
                     loading: false,
-                    page:res.page,
-                    total:res.total,
-                    skip:res.skip
+                    page: res.page,
+                    pages: res.pages,
+                    total: res.total,
+                    skip: res.skip
                 });
             })
             .catch((error) => {
@@ -54,7 +59,6 @@ export default function Users() {
                 setState({ ...state, loading: false });
             });
     };
-
 
 
 
@@ -75,9 +79,20 @@ export default function Users() {
     return (
         <main>
 
-            <div className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom" style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}>
-                <h5 className="fw-semibold mb-0" style={{ color: "#2c3e50" }}>User Management</h5>
+            <div
+                className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom"
+                style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}
+            >
+                <h5 className="fw-semibold mb-0" style={{ color: "#2c3e50" }}>
+                    User Management
+                </h5>
+
+                <Link to="/admin/add-user" className="admin_add_btn">
+                    <FaUserPlus style={{ marginRight: "8px" }} />
+                    Add User
+                </Link>
             </div>
+
             <main className="flex-grow-1 p-4" style={{ background: "#f3f7fa", minHeight: "100vh" }}>
                 <div className="card border-0 shadow-sm rounded-3">
                     <div className="card-body">
@@ -87,7 +102,7 @@ export default function Users() {
                                 <select onChange={(e) => { handleOption('limit', e.target.value) }}
                                     className="form-select form-select-sm"
                                     style={{ width: "80px" }}>
-                                    <option>3</option>
+                                    <option>10</option>
                                     <option>50</option>
                                     <option>100</option>
                                     <option>500</option>
@@ -111,7 +126,7 @@ export default function Users() {
                             <table className="table table-hover align-middle mb-0 custom-table">
                                 <thead className="table-light text-uppercase text-secondary small">
                                     <tr>
-                                        <th style={{ cursor: "pointer" }}>User ID</th>
+                                        <th style={{ cursor: "pointer" }}>#</th>
                                         <th style={{ cursor: "pointer" }}>Name</th>
                                         <th style={{ cursor: "pointer" }}>Email</th>
                                         <th style={{ cursor: "pointer" }}>Role</th>
@@ -133,9 +148,9 @@ export default function Users() {
 
 
 
-                                            data.map((user) => (
+                                            data.map((user, index) => (
                                                 <tr key={user._id}>
-                                                    <td>{user._id}</td>
+                                                    <td>{index + 1}</td>
                                                     <td>{user.name}</td>
                                                     <td>{user.email}</td>
                                                     <td>{user.role}</td>
@@ -158,23 +173,30 @@ export default function Users() {
                                                 </tr>
                                             ))
 
+
                                     }
                                 </tbody>
                             </table>
                         </div>
                         <div className="d-flex justify-content-between mt-3">
-                            <span className="small text-muted">Showing {state.skip+1} to {Math.min(state.skip + data.length, state.total)} of {state.total} entries</span>
+                            <span className="small text-muted">Showing {state.skip + 1} to {Math.min(state.skip + data.length, state.total)} of {state.total} entries</span>
                             <nav>
                                 <ul className="pagination pagination-sm mb-0">
-                                    {Array.from({ length: 4 }, (_, index) => {
-                                        return (<li key={index} className={`page-item ${state.page == (index+1) ? 'active' : ''}`}>
-                                            <button  className="page-link" 
-                                            onClick={() => handleOption('page',index+1)}>
-                                                {index+1}
+                                    {Array.from({ length: state.pages }, (_, index) => (
+                                        <li
+                                            key={index}
+                                            className={`page-item ${state.page === index + 1 ? 'active' : ''}`}
+                                        >
+                                            <button
+                                                className="page-link"
+                                                onClick={() => handleOption('page', index + 1)}
+                                            >
+                                                {index + 1}
                                             </button>
-                                        </li>);
-                                    })}
+                                        </li>
+                                    ))}
                                 </ul>
+
                             </nav>
                         </div>
                     </div>
