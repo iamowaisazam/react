@@ -95,6 +95,8 @@ const getAllUsers = async (req, res) => {
             page: page,
             pages:pages,
             limit: limit,
+            skip:skip,
+            
         }
     });
 

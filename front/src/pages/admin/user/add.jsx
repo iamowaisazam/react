@@ -30,36 +30,18 @@ export default function adduser() {
                 toast.success("User created successfully!");
                 setFormData({ name: '', email: '', password: '' });
                 setState({ ...state, loading: false });
-            } else {
-
-                const formattedErrors = {};
-                if (Array.isArray(res.data.errors)) {
-                    res.data.errors.forEach(err => {
-                        formattedErrors[err.field] = err.message;
-                    });
-                }
-                setState({ ...state, errors: formattedErrors, loading: false });
+            } else {    
+                setState({ ...state, errors:{}, loading: false });
                 toast.error("Failed to create user!");
             }
 
         } catch (error) {
-
-            const formattedErrors = {};
-            const resErrors = error.response?.data?.errors;
-
-            if (Array.isArray(resErrors)) {
-                resErrors.forEach(err => {
-                    formattedErrors[err.field] = err.message;
-                });
-            }
-
-            setState({ ...state, errors: formattedErrors, loading: false });
+                        
+            setState({ ...state, errors: error.response.data.errors??{}, loading: false });
             toast.error("Validation failed. Please check the fields.");
             console.error("API Error:", error.response?.data);
         }
     };
-
-
 
     return (
         <main>
@@ -74,8 +56,6 @@ export default function adduser() {
                     </nav>
                 </div>
             </div>
-
-
             <div className="container mt-5">
                 <div className="card shadow-sm p-4">
                     <h4 className="fw-bold">Create User</h4>

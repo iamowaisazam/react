@@ -11,9 +11,11 @@ export default function Users() {
     const [state, setState] = useState({
         search: '',
         page: 1,
+        pages:0,
         loading: true,
-        total: 100,
-        limit: 10,
+        total: 0,
+        skip:0,
+        limit: 3,
     });
 
 
@@ -37,8 +39,14 @@ export default function Users() {
         getUsers(options)
             .then((res) => {
 
-                setData(res.data.data.data);
-                setState({ ...state, loading: false });
+                res = res.data.data;
+                setData(res.data);
+                setState({ ...state, 
+                    loading: false,
+                    page:res.page,
+                    total:res.total,
+                    skip:res.skip
+                });
             })
             .catch((error) => {
                 console.error(error);
@@ -79,7 +87,7 @@ export default function Users() {
                                 <select onChange={(e) => { handleOption('limit', e.target.value) }}
                                     className="form-select form-select-sm"
                                     style={{ width: "80px" }}>
-                                    <option>10</option>
+                                    <option>3</option>
                                     <option>50</option>
                                     <option>100</option>
                                     <option>500</option>
@@ -154,30 +162,18 @@ export default function Users() {
                                 </tbody>
                             </table>
                         </div>
-
                         <div className="d-flex justify-content-between mt-3">
-                            <span className="small text-muted">Showing 1 to 2 of {state.total} entries</span>
+                            <span className="small text-muted">Showing {state.skip+1} to {Math.min(state.skip + data.length, state.total)} of {state.total} entries</span>
                             <nav>
                                 <ul className="pagination pagination-sm mb-0">
-                                    <li className={`page-item `}>
-                                        <button className="page-link" onClick={() => null}>
-                                            Previous
-                                        </button>
-                                    </li>
-                                    <li className={`page-item ${state.page == 1 ? 'active' : ''}`}>
-                                        <button className="page-link" onClick={() => setState({ ...state, page: 1 })}>
-                                            1
-                                        </button>
-                                    </li>
-                                    <li className={`page-item ${state.page == 2 ? 'active' : ''}`}>
-                                        <button className="page-link" onClick={() => setState({ ...state, page: 2 })}>
-                                            2
-                                        </button>
-                                    </li>
-                                    <li className={`page-item`}>
-                                        <button className="page-link" onClick={() => null}>
-                                            Next</button>
-                                    </li>
+                                    {Array.from({ length: 4 }, (_, index) => {
+                                        return (<li key={index} className={`page-item ${state.page == (index+1) ? 'active' : ''}`}>
+                                            <button  className="page-link" 
+                                            onClick={() => handleOption('page',index+1)}>
+                                                {index+1}
+                                            </button>
+                                        </li>);
+                                    })}
                                 </ul>
                             </nav>
                         </div>
