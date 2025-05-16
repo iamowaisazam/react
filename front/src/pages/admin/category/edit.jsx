@@ -1,17 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { createCategories } from './categoyFeature';
+import { getSingleCategory, editCategory } from './categoyFeature';
 
-export default function Addmenu() {
-    const [state, setState] = useState({
-        loading: '',
-        errors: {},
-    });
+export default function EditUser() {
+    const { id } = useParams();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: '',
         slug: '',
     });
+
+    const [state, setState] = useState({
+        loading: false,
+        errors: {},
+    });
+
+
+    useEffect(() => {
+        setState(prev => ({ ...prev, loading: true }));
+        getSingleCategory(id)
+            .then((res) => {
+
+                setFormData({
+                    name: res.data.data.name,
+                    slug: res.data.data.slug,
+                });
+                setState(prev => ({ ...prev, loading: false }));
+            })
+            .catch(() => {
+                toast.error("Failed to fetch Category data.");
+                setState(prev => ({ ...prev, loading: false }));
+            });
+    }, [id]);
 
 
     const handleSubmit = async (e) => {
@@ -19,24 +42,26 @@ export default function Addmenu() {
         setState({ ...state, loading: true, errors: {} });
 
         try {
-            const res = await createCategories(formData);
+            const res = await editCategory(id, formData);
 
-            if (res.data.success) {
-                toast.success("User created successfully!");
-                setFormData({ name: '', slug: '', });
-                setState({ ...state, loading: false });
+            if (res.success) {
+                toast.success("Category updated successfully!");
+                navigate('/admin/view-categories');
             } else {
-                setState({ ...state, errors: {}, loading: false });
-                toast.error("Failed to create user!");
+
+                setState({
+                    ...state,
+                    errors: res.errors || {},
+                    loading: false
+                });
+                toast.error("Failed to update Category!");
             }
-
         } catch (error) {
-
-            setState({ ...state, errors: error.response.data.errors ?? {}, loading: false });
-            toast.error("Validation failed. Please check the fields.");
-            console.error("API Error:", error.response?.data);
+            toast.error("Something went wrong.");
+            setState({ ...state, loading: false });
         }
     };
+
 
     return (
         <main>
@@ -62,7 +87,7 @@ export default function Addmenu() {
                                     <input
                                         type="text"
                                         className={`form-control ${state.errors.name ? 'is-invalid' : ''}`}
-                                        placeholder="Enter menu name"
+                                        placeholder="Enter category name"
                                         value={formData.name}
                                         onChange={(e) => {
                                             const name = e.target.value;
@@ -73,12 +98,10 @@ export default function Addmenu() {
                                                 .replace(/\s+/g, '-')
                                                 .replace(/-+/g, '-');
 
-                                            setFormData({ name, slug });
+                                            setFormData({ ...formData, name, slug });
                                         }}
-
                                     />
                                     {state.errors.name && <div className="invalid-feedback">{state.errors.name}</div>}
-
                                 </div>
 
                                 <div className="col-md-6 mb-4">
@@ -90,12 +113,9 @@ export default function Addmenu() {
                                         value={formData.slug}
                                         readOnly
                                     />
-
-
                                     {state.errors.slug && <div className="invalid-feedback">{state.errors.slug}</div>}
-
-
                                 </div>
+
 
 
 

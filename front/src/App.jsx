@@ -32,11 +32,13 @@ import Addmenu from './pages/admin/menu/add.jsx';
 // category
 import Addcategory from './pages/admin/category/addcategory.jsx';
 import Category from './pages/admin/category/index.jsx';
+import EditCategory from './pages/admin/category/edit.jsx';
 
 
 // Make
-import Addmake from './pages/admin/make/add.jsx';
 import Make from './pages/admin/make/index.jsx';
+import Addmake from './pages/admin/make/add.jsx';
+import EditMake from './pages/admin/make/edit.jsx';
 
 // Model
 import Addmodel from './pages/admin/model/add.jsx';
@@ -101,10 +103,12 @@ const appRouter = createBrowserRouter([
       { path: "edit-user/:id", element: <EditUser /> },
       { path: "view-menus", element: <Menuindex /> },
       { path: "add-menu", element: <Addmenu /> },
-      { path: "add-category", element: <Addcategory /> },
       { path: "view-categories", element: <Category /> },
+      { path: "add-category", element: <Addcategory /> },
+      { path: "edit-category/:id", element: <EditCategory /> },
       { path: "view-make", element: <Make /> },
       { path: "add-make", element: <Addmake /> },
+      { path: "edit-make/:id", element: <EditMake /> },
       { path: "view-model", element: <Model /> },
       { path: "add-model", element: <Addmodel /> },
       { path: "view-version", element: <Version /> },

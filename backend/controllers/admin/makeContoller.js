@@ -21,15 +21,16 @@ const create = async (req, res) => {
     await Promise.all([
         body('name').notEmpty().withMessage('Name is required').run(req),
         body('catId').notEmpty().withMessage('Select a Category').run(req),
-        body('status').isIn(['active', 'inactive']).withMessage('Status must be active or inactive').run(req),
+        body('slug').notEmpty().withMessage('Select a Category').run(req),
+
     ]);
 
     const err = handleValidation(req, res);
     if (err) return;
 
-    const { name, catId, status } = req.body;
+    const { name, catId, slug } = req.body;
 
-    const insertMake = new make({ name, catId, status });
+    const insertMake = new make({ name, catId, slug });
     await insertMake.save();
 
     return res.status(201).json({
@@ -42,11 +43,45 @@ const create = async (req, res) => {
 
 // ************Get all recode*******************
 const getmake = async (req, res) => {
-    const getmake = await make.find();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    let query = {};
+
+    //Search
+    if (req.query.search) {
+        query.$or = [
+            { name: { $regex: req.query.search, $options: "i" } },
+            { slug: { $regex: req.query.search, $options: "i" } }
+        ];
+    }
+
+    // Total Count
+    const total = await make.countDocuments(query);
+
+    //Records
+    let data = await make.find(query)
+        .select('-password')
+        .populate('catId', 'name')
+        .skip(skip)
+        .limit(limit);
+
+    //Pages 
+    const pages = Math.ceil(total / limit);
+
     return res.status(200).json({
         success: true,
-        data: getmake,
-    })
+        data: {
+            data: data,
+            total: total,
+            page: page,
+            pages: pages,
+            limit: limit,
+            skip: skip,
+
+        }
+    });
 }
 
 

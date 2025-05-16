@@ -1,55 +1,79 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { getSingleMake, editMake } from './makeFeature';
 import { getCategories } from '../category/categoyFeature';
-import { createMake } from './makeFeature';
 
-export default function Addmenu() {
+export default function EditMake() {
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        name: '',
+        slug: '',
+        catId: '',
+    });
+
+    const [categories, setCategories] = useState([]);
     const [state, setState] = useState({
         loading: false,
         errors: {},
     });
 
-    const [categories, setCategories] = useState([]);
-    const [formData, setFormData] = useState({
-        category: '',
-        name: '',
-        slug: '',
-        status: 'active',
-    });
 
-    // Fetch categories on mount
+    const generateSlug = (text) => {
+        return text
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-');
+    };
+
     useEffect(() => {
-        async function fetchCategories() {
+        const fetchData = async () => {
+            setState(prev => ({ ...prev, loading: true }));
+
             try {
-                const res = await getCategories();
+                const [makeRes, catRes] = await Promise.all([
+                    getSingleMake(id),
+                    getCategories()
+                ]);
 
-                if (res.data.success) {
-                    setCategories(res.data.data.data);
-                } else {
-                    toast.error("Failed to load categories.");
-                }
+                const makeData = makeRes.data.data;
+
+                setFormData({
+                    name: makeData.name,
+                    slug: makeData.slug,
+                    catId: makeData.catId?._id || makeData.catId,
+                });
+
+                setCategories(catRes.data.data.data);
             } catch (err) {
-                console.error("Failed to fetch categories:", err);
-                toast.error("Error loading categories.");
+                toast.error("Failed to fetch data.");
             }
-        }
 
-        fetchCategories();
-    }, []);
+            setState(prev => ({ ...prev, loading: false }));
+        };
+
+        fetchData();
+    }, [id]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         if (name === 'name') {
-            const generatedSlug = value
-                .toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .trim()
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-');
-            setFormData({ ...formData, name: value, slug: generatedSlug });
+            setFormData(prev => ({
+                ...prev,
+                name: value,
+                slug: generateSlug(value),
+            }));
         } else {
-            setFormData({ ...formData, [name]: value });
+            setFormData(prev => ({
+                ...prev,
+                [name]: value,
+            }));
         }
     };
 
@@ -58,48 +82,41 @@ export default function Addmenu() {
         setState({ ...state, loading: true, errors: {} });
 
         try {
-            const res = await createMake(formData);
+            const res = await editMake(id, formData);
 
-            if (res.data.success) {
-                toast.success("Make created successfully!");
-                setFormData({
-                    category: '',
-                    name: '',
-                    slug: '',
-                    status: 'active',
-                });
+            if (res.success) {
+                toast.success("Make updated successfully!");
+                navigate('/admin/view-categories');
             } else {
-                toast.error("Failed to create make!");
+                setState({
+                    ...state,
+                    errors: res.errors || {},
+                    loading: false
+                });
+                toast.error("Failed to update Make!");
             }
         } catch (error) {
-            setState({
-                ...state,
-                errors: error.response?.data?.errors || {},
-            });
-            toast.error("Validation failed. Please check the fields.");
-        } finally {
-            setState((prev) => ({ ...prev, loading: false }));
+            toast.error("Something went wrong.");
+            setState({ ...state, loading: false });
         }
     };
 
     return (
         <main>
-
-
             <div className="container mt-5">
                 <div className="card shadow-sm border-0">
                     <div className="card-body">
-                        <h4 className="fw-bold mb-4">Create New Make</h4>
+                        <h4 className="fw-bold mb-4">Edit Make</h4>
 
                         <form onSubmit={handleSubmit}>
                             <div className="row">
-
+                                {/* Category */}
                                 <div className="col-md-6 mb-4">
                                     <label className="form-label fw-semibold">Category</label>
                                     <select
                                         name="catId"
-                                        className={`form-select ${state.errors.category ? 'is-invalid' : ''}`}
-                                        value={formData.category}
+                                        className={`form-select ${state.errors.catId ? 'is-invalid' : ''}`}
+                                        value={formData.catId}
                                         onChange={handleChange}
                                     >
                                         <option value="">Select Category</option>
@@ -109,7 +126,9 @@ export default function Addmenu() {
                                             </option>
                                         ))}
                                     </select>
-                                    {state.errors.category && <div className="invalid-feedback">{state.errors.category}</div>}
+                                    {state.errors.catId && (
+                                        <div className="invalid-feedback">{state.errors.catId}</div>
+                                    )}
                                 </div>
 
                                 {/* Title */}
@@ -123,7 +142,9 @@ export default function Addmenu() {
                                         value={formData.name}
                                         onChange={handleChange}
                                     />
-                                    {state.errors.name && <div className="invalid-feedback">{state.errors.name}</div>}
+                                    {state.errors.name && (
+                                        <div className="invalid-feedback">{state.errors.name}</div>
+                                    )}
                                 </div>
 
                                 {/* Slug */}
@@ -137,13 +158,11 @@ export default function Addmenu() {
                                         readOnly
                                     />
                                 </div>
-
-
                             </div>
 
                             <div className="d-flex justify-content-between pt-3 border-top mt-3">
                                 <button type="submit" className="btn btn-dark px-4" disabled={state.loading}>
-                                    {state.loading ? 'Adding...' : 'Add Make'}
+                                    {state.loading ? 'Updating...' : 'Update Make'}
                                 </button>
                             </div>
                         </form>

@@ -8,19 +8,10 @@ const api = axios.create({
   }
 });
 
-const buildQuery = (params) => {
-  const query = new URLSearchParams();
-  for (const key in params) {
-    if (params[key] !== undefined && params[key] !== null) {
-      query.append(key, params[key]);
-    }
-  }
-  return query.toString();
-};
+
 
 export const getUsers = (data) => {
-  const query = buildQuery(data);
-  return axios.get(`${url}admin/users?${query}`);
+  return axios.get(`${url}admin/users`, { params: data });
 };
 
 export const getSingleUser = (id) => {

@@ -88,7 +88,7 @@ const getAllUsers = async (req, res) => {
         .skip(skip)
         .limit(limit);
 
-    //Pages
+    //Pages 
     const pages = Math.ceil(total / limit);
 
     return res.status(200).json({

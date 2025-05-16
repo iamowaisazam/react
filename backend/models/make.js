@@ -8,12 +8,11 @@ const makeSchema = new mongoose.Schema(
         },
         catId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'category',
+            ref: 'Category',
             required: true,
         },
-        status: {
+        slug: {
             type: String,
-            enum: ['active', 'inactive'],
             required: true,
         },
     },
