@@ -49,7 +49,6 @@ router.get('/logout/:token', userController.logout);
 router.get('/profile/:token', userController.getUserProfile);
 
 
-
 // Login Routes
 router.post('/adminlogin', loginController.adminlogin);
 router.get('/admin/users', loginController.getAllUsers);
@@ -57,7 +56,6 @@ router.post('/admin/users/create', loginController.createUser);
 router.get('/admin/user/:userId', loginController.getSingleUser);
 router.put('/admin/user/:userId', loginController.updateUser);
 router.delete('/admin/user/:userId', loginController.deleteUser);
-
 
 
 // Categories
@@ -74,7 +72,6 @@ app.get('/admin/make', Make.getmake);
 app.get('/admin/make/:makeId', Make.getmakeId);
 app.put('/admin/make/:makeId', Make.Update);
 app.delete('/admin/make/:makeId', Make.deleteMake);
-
 
 
 // Car Model

@@ -27,8 +27,6 @@ export default function Home() {
       <Search showTop={true} />
 
 
-
-
     </div>
 
 

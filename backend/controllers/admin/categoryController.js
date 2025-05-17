@@ -1,4 +1,4 @@
-import { body, validationResult } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
 import Category from '../../models/category.js';
 import authMiddleware from '../../middlewares/authMiddleware.js';
 
