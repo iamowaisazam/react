@@ -1,48 +1,13 @@
+import { Model } from 'mongoose';
+import Make from '../../models/make.js';
 import make from '../../models/make.js'
 import { body, param, validationResult } from "express-validator";
 
 
-// Handle a validation 
-const handleValidation = (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            success: false,
-            errors: errors.array(),
-        });
-    }
-};
-
-
-
-// ************create*******************
-
-const create = async (req, res) => {
-    await Promise.all([
-        body('name').notEmpty().withMessage('Name is required').run(req),
-        body('catId').notEmpty().withMessage('Select a Category').run(req),
-        body('slug').notEmpty().withMessage('Select a Category').run(req),
-
-    ]);
-
-    const err = handleValidation(req, res);
-    if (err) return;
-
-    const { name, catId, slug } = req.body;
-
-    const insertMake = new make({ name, catId, slug });
-    await insertMake.save();
-
-    return res.status(201).json({
-        success: true,
-        message: "Model created successfully",
-        data: insertMake,
-    });
-}
-
-
 // ************Get all recode*******************
-const getmake = async (req, res) => {
+const List = async (req, res) => {
+
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
@@ -53,17 +18,15 @@ const getmake = async (req, res) => {
     if (req.query.search) {
         query.$or = [
             { name: { $regex: req.query.search, $options: "i" } },
-            { slug: { $regex: req.query.search, $options: "i" } }
         ];
     }
 
     // Total Count
-    const total = await make.countDocuments(query);
+    const total = await Make.countDocuments(query);
 
     //Records
-    let data = await make.find(query)
-        .select('-password')
-        .populate('catId', 'name')
+    let data = await Make.find(query)
+        .select()
         .skip(skip)
         .limit(limit);
 
@@ -79,19 +42,51 @@ const getmake = async (req, res) => {
             pages: pages,
             limit: limit,
             skip: skip,
-
         }
     });
+
+};
+
+
+
+
+// ************create*******************
+const Create = async (req, res) => {
+
+    await Promise.all([
+        body('name').notEmpty().withMessage('Name is required').run(req),
+        body('catId').notEmpty().withMessage('Select a Category').run(req),
+    ]);
+
+      const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation errors',
+            errors: errors.array().reduce((acc, err) => {
+                acc[err.path] = err.msg;
+                return acc;
+            }, {})
+        });
+    }
+
+    const { name, catId} = req.body;
+    const insertMake = new Make({ name, catId});
+    await insertMake.save();
+
+    return res.status(201).json({
+        success: true,
+        message: "Make created successfully",
+        data: insertMake,
+    });
+
 }
 
 
 // ************Get Data by single*******************
-const getmakeId = async (req, res) => {
-    await param('makeId').isMongoId().withMessage('invalid id to find Make').run(req);
-    const err = handleValidation(req, res);
-    if (err) return;
-    const makeId = req.params.makeId;
-    const getmake = await make.findById(makeId);
+const Find = async (req, res) => {
+
+    const getmake = await make.findById(req.params.id);
     if (!getmake) {
         return res.status(400).json({
             success: false,
@@ -110,22 +105,28 @@ const getmakeId = async (req, res) => {
 
 
 const Update = async (req, res) => {
+   
     await Promise.all([
-        param('makeId').isMongoId().withMessage('Invalid Make ID').run(req),
         body('name').optional().notEmpty().withMessage('Name cannot be empty').run(req),
         body('catId').optional().notEmpty().withMessage('Select a category').run(req),
-        body('status').optional().isIn(['active', 'inactive']).withMessage('Status must be active or inactive').run(req),
     ]);
 
-    const err = handleValidation(req, res);
-    if (err) return;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation errors',
+            errors: errors.array().reduce((acc, err) => {
+                acc[err.path] = err.msg;
+                return acc;
+            }, {})
+        });
+    }
 
-    const { makeId } = req.params;
-    const { name, catId, status } = req.body;
-
-    const getMake = await make.findByIdAndUpdate(
-        makeId,
-        { name, catId, status },
+    const { id } = req.params;
+    const { name, catId} = req.body;
+    const getMake = await make.findByIdAndUpdate(id,
+        { name, catId},
         { new: true }
     );
 
@@ -141,17 +142,25 @@ const Update = async (req, res) => {
         message: "Make updated successfully",
         data: getMake,
     });
+
 };
 
-const deleteMake = async (req, res) => {
-    await param('makeId').isMongoId().withMessage('invalid id to find Make').run(req);
-    const err = handleValidation(req, res);
-    if (err) return;
+
+const Delete = async (req, res) => {
+
+    const { id } = req.params;
 
 
-    const { makeId } = req.params;
-    const getmake = await make.findByIdAndDelete(makeId);
+    const model = await Model.find({makeId:id});
+    if (model) {
+        return res.status(400).json({
+            success: false,
+            message: "Can Not Delete Make It Used In Make",
+        })
+    }
 
+
+    const getmake = await make.findByIdAndDelete(id);
     if (!getmake) {
         return res.status(404).json({
             success: false,
@@ -163,14 +172,15 @@ const deleteMake = async (req, res) => {
         success: true,
         message: "Make deleted successfully",
     });
+    
 }
 
 export default {
-    create,
-    getmake,
-    getmakeId,
+    List,
+    Create,
+    Find,
     Update,
-    deleteMake
+    Delete
 }
 
 

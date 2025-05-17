@@ -4,7 +4,6 @@ const carSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true,
         },
         catId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -26,6 +25,5 @@ const carSchema = new mongoose.Schema(
     }
 );
 
-const Car = mongoose.model('model', carSchema);
 
-export default Car;
+export default mongoose.model('model', carSchema);

@@ -5,8 +5,8 @@ import DB from './database/mongodb.js';
 import authMiddleware from './middlewares/authMiddleware.js'
 
 // Controllers
-import userController from './controllers/userController.js';
-import loginController from './controllers/admin/loginController.js';
+import userController from './controllers/loginController.js';
+import loginController from './controllers/admin/userController.js';
 import Categories from './controllers/admin/categoryController.js';
 import Model from './controllers/admin/modelController.js';
 import Version from './controllers/admin/versionController.js';
@@ -42,44 +42,43 @@ router.get('/', (req, res) => {
 });
 
 
-// User Routes
+// Login Routes
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.get('/logout/:token', userController.logout);
 router.get('/profile/:token', userController.getUserProfile);
 
-
-// Login Routes
-router.post('/adminlogin', loginController.adminlogin);
+// User Routes
 router.get('/admin/users', loginController.getAllUsers);
 router.post('/admin/users/create', loginController.createUser);
-router.get('/admin/user/:userId', loginController.getSingleUser);
-router.put('/admin/user/:userId', loginController.updateUser);
-router.delete('/admin/user/:userId', loginController.deleteUser);
+router.get('/admin/users/:userId', loginController.getSingleUser);
+router.put('/admin/users/:userId', loginController.updateUser);
+router.delete('/admin/users/:userId', loginController.deleteUser);
 
 
 // Categories
 app.get('/admin/categories', Categories.getAllCategories);
 app.post('/admin/categories/create', Categories.createCategory);
-app.get('/admin/category/:categoryId', Categories.getSingleCategory);
-app.put('/admin/category/:categoryId', Categories.updateCategory);
-app.delete('/admin/category/:categoryId', Categories.deleteCategory);
+app.get('/admin/categories/:id', Categories.getSingleCategory);
+app.put('/admin/categories/:id', Categories.updateCategory);
+app.delete('/admin/categories/:id', Categories.deleteCategory);
 
 
 //Make
-app.post('/admin/make/create', Make.create);
-app.get('/admin/make', Make.getmake);
-app.get('/admin/make/:makeId', Make.getmakeId);
-app.put('/admin/make/:makeId', Make.Update);
-app.delete('/admin/make/:makeId', Make.deleteMake);
+app.get('/admin/makes', Make.List);
+app.post('/admin/makes/create', Make.Create);
+app.get('/admin/makes/:id', Make.Find);
+app.put('/admin/makes/:id', Make.Update);
+app.delete('/admin/makes/:id', Make.Delete);
+
 
 
 // Car Model
-app.post('/admin/model/create', Model.createCar);
-app.get('/admin/model', Model.getAllCars);
-app.get('/admin/model/:carId', Model.getCarById);
-app.put('/admin/model/:carId', Model.updateCar);
-app.delete('/admin/model/:carId', Model.deleteCar);
+app.get('/admin/models', Model.List);
+app.post('/admin/models/create', Model.Create);
+app.get('/admin/models/:id', Model.Find);
+app.put('/admin/models/:id', Model.Update);
+app.delete('/admin/models/:id', Model.Delete);
 
 
 // version

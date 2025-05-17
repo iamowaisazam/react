@@ -1,9 +1,13 @@
 import { body, param, validationResult } from 'express-validator';
 import Category from '../../models/category.js';
+import Make from '../../models/make.js';
 import authMiddleware from '../../middlewares/authMiddleware.js';
+
+
 
 // Get all categories
 const getAllCategories = async (req, res) => {
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
@@ -14,7 +18,6 @@ const getAllCategories = async (req, res) => {
     if (req.query.search) {
         query.$or = [
             { name: { $regex: req.query.search, $options: "i" } },
-            { slug: { $regex: req.query.search, $options: "i" } }
         ];
     }
 
@@ -23,7 +26,7 @@ const getAllCategories = async (req, res) => {
 
     //Records
     let data = await Category.find(query)
-        .select('-password')
+        .select()
         .skip(skip)
         .limit(limit);
 
@@ -39,21 +42,19 @@ const getAllCategories = async (req, res) => {
             pages: pages,
             limit: limit,
             skip: skip,
-
         }
     });
 
 };
 
+
 // Create category
 export const createCategory = async (req, res) => {
 
+
     await Promise.all([
         body('name').notEmpty().withMessage('Category name is required').run(req),
-        body('slug').notEmpty().withMessage('Category slug is required').run(req),
-
     ]);
-
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -67,12 +68,11 @@ export const createCategory = async (req, res) => {
         });
     }
 
-
-    const { name, slug } = req.body;
-    const status = "active";
+    const { name} = req.body;
 
     try {
-        const newCategory = new Category({ name, slug, status });
+
+        const newCategory = new Category({ name});
         await newCategory.save();
 
         return res.status(201).json({
@@ -90,11 +90,14 @@ export const createCategory = async (req, res) => {
     }
 };
 
+
+
 // Get single category
 const getSingleCategory = async (req, res) => {
-    const { categoryId } = req.params;
+
+    const { id } = req.params;
     try {
-        const category = await Category.findById(categoryId);
+        const category = await Category.findById(id);
         if (!category) {
             return res.status(404).json({
                 success: false,
@@ -114,27 +117,18 @@ const getSingleCategory = async (req, res) => {
     }
 };
 
+
+
+
 // Update category
 export const updateCategory = async (req, res) => {
+
+
     await Promise.all([
-        // Validate categoryId from the URL params
-        param('categoryId')
-            .custom((value) => mongoose.Types.ObjectId.isValid(value))
-            .withMessage('Invalid category ID')
-            .run(req),
-
-        // Validate body inputs
         body('name')
-            .optional()
-            .notEmpty()
-            .withMessage('Category name cannot be empty')
-            .run(req),
-
-        body('slug')
-            .optional()
-            .isString()
-            .withMessage('Slug must be a string')
-            .run(req),
+         .notEmpty()
+         .withMessage('Category Name Cannot Be Empty')
+         .run(req),
     ]);
 
     const errors = validationResult(req);
@@ -149,13 +143,14 @@ export const updateCategory = async (req, res) => {
         });
     }
 
-    const { categoryId } = req.params;
-    const { name, slug } = req.body;
+    const { id } = req.params;
+    const { name} = req.body;
 
     try {
+
         const updatedCategory = await Category.findByIdAndUpdate(
-            categoryId,
-            { name, slug },
+            id,
+            { name:name},
             { new: true }
         );
 
@@ -179,31 +174,48 @@ export const updateCategory = async (req, res) => {
             message: "Failed to update category. Please try again later."
         });
     }
+
 };
 
 
 // Delete category
 const deleteCategory = async (req, res) => {
-    const { categoryId } = req.params;
+    
+       const { id } = req.params;
+
+       const getmake = await Make.find({catId:id});
+        if (getmake) {
+            return res.status(400).json({
+                success: false,
+                message: "Can Not Delete Category It Used In Make",
+            })
+        }
+
+
     try {
-        const deletedCategory = await Category.findByIdAndDelete(categoryId);
-        if (!deletedCategory) {
+
+        const deletedCategory = await Category.findByIdAndDelete(id);
+        if(!deletedCategory) {
             return res.status(404).json({
                 success: false,
                 message: "Category not found"
             });
         }
+        
         return res.status(200).json({
             success: true,
             message: "Category deleted successfully"
         });
+
     } catch (error) {
-        console.error("🔥 Error deleting category:", error);
+        console.error("Error deleting category:", error);
         return res.status(500).json({
             success: false,
             message: "Failed to delete category. Please try again later."
         });
     }
+    
+    
 };
 
 export default {

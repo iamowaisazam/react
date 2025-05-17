@@ -11,10 +11,6 @@ const makeSchema = new mongoose.Schema(
             ref: 'Category',
             required: true,
         },
-        slug: {
-            type: String,
-            required: true,
-        },
     },
     {
         timestamps: true,

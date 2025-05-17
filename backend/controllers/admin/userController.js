@@ -4,62 +4,6 @@ import { generateToken } from "../../utils/generateToken.js";
 import { body, validationResult } from 'express-validator';
 
 
-const adminlogin = async (req, res) => {
-    await Promise.all([
-        body('email')
-            .isEmail().withMessage('Invalid email address')
-            .run(req),
-        body('password')
-            .isLength({ min: 6, max: 30 }).withMessage('Password length must be between 6 and 30 characters')
-            .run(req),
-    ]);
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            success: false,
-            message: 'Validation failed',
-            errors: errors.array().map(err => ({
-                [err.path]: err.msg
-            }))
-        });
-    }
-
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email }).select('+password +role');
-    if (!user) {
-        return res.status(400).json({
-            success: false,
-            message: "Incorrect email or password"
-        });
-    }
-
-
-    if (user.role !== 'admin') {
-        return res.status(403).json({
-            success: false,
-            message: "Access denied. Admins only."
-        });
-    }
-
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) {
-        return res.status(400).json({
-            success: false,
-            message: "Incorrect email or password"
-        });
-    }
-
-    return generateToken(res, {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-    }, "Logged In");
-};
-
-
 
 const getAllUsers = async (req, res) => {
 
@@ -189,29 +133,34 @@ const getSingleUser = async (req, res) => {
     });
 };
 
+
 const updateUser = async (req, res) => {
+
     await Promise.all([
-        body('name').optional().notEmpty().withMessage('Name is required').run(req),
-        body('email').optional().isEmail().withMessage('Invalid email address').run(req),
+        body('name').notEmpty().withMessage('Name is required').run(req),
+        body('email').isEmail().withMessage('Invalid email address').run(req),
+        body('role').notEmpty().withMessage('Role Is Required').isIn(['admin', 'customer', 'user'])
+        .withMessage('Role must be one of: admin, customer, user').run(req),
+        body('password').optional({ checkFalsy: true }).isLength({ min: 6, max: 20})
+        .withMessage('Password Minimum 6 Character').run(req),
     ]);
-
-    const { userId } = req.params;
-    const { name, email, password } = req.body;
-
+  
+    const { name, email, password,role } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
             success: false,
             message: 'Validation errors',
-            errors: errors.array().map(err => ({
-                field: err.path,
-                message: err.msg
-            }))
+            errors: errors.array().reduce((acc, err) => {
+                acc[err.path] = err.msg;
+                return acc;
+            }, {})
         });
     }
 
-    const user = await User.findById(userId);
 
+    const { userId } = req.params;
+    const user = await User.findById(userId);
     if (!user) {
         return res.status(404).json({
             success: false,
@@ -219,10 +168,21 @@ const updateUser = async (req, res) => {
         });
     }
 
-    user.name = name || user.name;
-    user.email = email || user.email;
+    const existingUser = await User.findOne({ email });
+    if(existingUser) {
+        if(existingUser.id != userId){
+              return res.status(400).json({
+                success: false,
+                message: "User already exists with this email."
+            });
+        }
+    }
 
-    if (password) {
+    user.name = name;
+    user.email = email;
+    user.role = role;
+
+    if(password){
         const hashedPassword = await bcrypt.hash(password, 10);
         user.password = hashedPassword;
     }
@@ -233,14 +193,13 @@ const updateUser = async (req, res) => {
         success: true,
         message: "User updated successfully.",
         data: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
         }
     });
 };
 
+
 const deleteUser = async (req, res) => {
+   
     const { userId } = req.params;
 
     // if (!req.user || req.user.role !== 'admin') {
@@ -263,8 +222,6 @@ const deleteUser = async (req, res) => {
         success: true,
         message: "User deleted successfully."
     });
-
-
 };
 
 
@@ -272,7 +229,6 @@ const deleteUser = async (req, res) => {
 export default {
     deleteUser,
     updateUser,
-    adminlogin,
     getSingleUser,
     createUser,
     getAllUsers
