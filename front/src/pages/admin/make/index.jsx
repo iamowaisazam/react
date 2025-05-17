@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from "react-router-dom";
 import { FaUserPlus } from "react-icons/fa";
 
-export default function Users() {
+export default function Make() {
 
     const navigate = useNavigate();
 

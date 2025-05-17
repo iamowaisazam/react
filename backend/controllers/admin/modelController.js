@@ -14,33 +14,85 @@ const handleValidation = (req, res) => {
 
 // ---------------- Create Car ----------------
 const createCar = async (req, res) => {
+
     await Promise.all([
         body('name').notEmpty().withMessage('Name is required').run(req),
-        body('slug').notEmpty().withMessage('Slug is required').run(req),
-        body('status').isIn(['active', 'inactive']).withMessage('Status must be active or inactive').run(req),
+        body('catId').notEmpty().withMessage('Category ID is required').isMongoId().withMessage('Invalid Category ID').run(req),
+        body('makeId').notEmpty().withMessage('Make ID is required').isMongoId().withMessage('Invalid Make ID').run(req),
     ]);
 
-    const err = handleValidation(req, res);
-    if (err) return;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation errors',
+            errors: errors.array().reduce((acc, err) => {
+                acc[err.path] = err.msg;
+                return acc;
+            }, {})
+        });
+    }
 
-    const { name, slug, status } = req.body;
+    const { name, catId, makeId } = req.body;
 
-    const newCar = new Car({ name, slug, status });
-    await newCar.save();
+    try {
+        const newCar = new Car({ name, catId, makeId });
+        await newCar.save();
 
-    return res.status(201).json({
-        success: true,
-        message: "Model created successfully",
-        data: newCar,
-    });
+        return res.status(201).json({
+            success: true,
+            message: "Model created successfully",
+            data: newCar,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: error.message,
+        });
+    }
 };
 
 // ---------------- Get All Cars ----------------
 const getAllCars = async (req, res) => {
-    const cars = await Car.find();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    let query = {};
+
+    //Search
+    if (req.query.search) {
+        query.$or = [
+            { name: { $regex: req.query.search, $options: "i" } },
+        ];
+    }
+
+    // Total Count
+    const total = await Car.countDocuments(query);
+
+    //Records
+    let data = await Car.find(query)
+        .select('-password')
+        .populate({ path: 'catId', select: 'name' })
+        .populate({ path: 'makeId', select: 'name' })
+        .skip(skip)
+        .limit(limit);
+
+    //Pages 
+    const pages = Math.ceil(total / limit);
+
     return res.status(200).json({
         success: true,
-        data: cars,
+        data: {
+            data: data,
+            total: total,
+            page: page,
+            pages: pages,
+            limit: limit,
+            skip: skip,
+
+        }
     });
 };
 
@@ -72,7 +124,6 @@ const updateCar = async (req, res) => {
     await Promise.all([
         param('carId').isMongoId().withMessage('Invalid car ID').run(req),
         body('name').optional().notEmpty().withMessage('Name cannot be empty').run(req),
-        body('slug').optional().notEmpty().withMessage('Slug cannot be empty').run(req),
         body('status').optional().isIn(['active', 'inactive']).withMessage('Status must be active or inactive').run(req),
     ]);
 
@@ -80,11 +131,11 @@ const updateCar = async (req, res) => {
     if (err) return;
 
     const { carId } = req.params;
-    const { name, slug, status } = req.body;
+    const { name, status } = req.body;
 
     const car = await Car.findByIdAndUpdate(
         carId,
-        { name, slug, status },
+        { name, status },
         { new: true }
     );
 

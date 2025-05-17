@@ -6,14 +6,14 @@ const carSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        slug: {
-            type: String,
+        catId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category',
             required: true,
-            unique: true,
         },
-        status: {
-            type: String,
-            enum: ['active', 'inactive'],
+        makeId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Make',
             required: true,
         },
         date: {
@@ -26,8 +26,6 @@ const carSchema = new mongoose.Schema(
     }
 );
 
-// Rename the model name as requested (using 'model')
 const Car = mongoose.model('model', carSchema);
 
 export default Car;
-

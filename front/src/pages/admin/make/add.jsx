@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { getCategories } from '../category/categoyFeature';
 import { createMake } from './makeFeature';
 
-export default function Addmenu() {
+export default function Addmake() {
     const [state, setState] = useState({
         loading: false,
         errors: {},
@@ -17,7 +17,7 @@ export default function Addmenu() {
         status: 'active',
     });
 
-    // Fetch categories on mount
+
     useEffect(() => {
         async function fetchCategories() {
             try {

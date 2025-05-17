@@ -41,8 +41,9 @@ import Addmake from './pages/admin/make/add.jsx';
 import EditMake from './pages/admin/make/edit.jsx';
 
 // Model
-import Addmodel from './pages/admin/model/add.jsx';
 import Model from './pages/admin/model/index.jsx';
+import Addmodel from './pages/admin/model/add.jsx';
+import EditModel from './pages/admin/model/edit.jsx';
 
 // Version
 import Addversion from './pages/admin/version/add.jsx';
@@ -111,6 +112,7 @@ const appRouter = createBrowserRouter([
       { path: "edit-make/:id", element: <EditMake /> },
       { path: "view-model", element: <Model /> },
       { path: "add-model", element: <Addmodel /> },
+      { path: "edit-model/:id", element: <EditModel /> },
       { path: "view-version", element: <Version /> },
       { path: "add-version", element: <Addversion /> },
       { path: "view-cars", element: <Car /> },
