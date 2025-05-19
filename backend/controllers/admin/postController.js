@@ -20,7 +20,8 @@ const List = async (req, res) => {
     //Search
     if (req.query.search) {
         query.$or = [
-            { name: { $regex: req.query.search, $options: "i" } },
+            { title: { $regex: req.query.search, $options: "i" } },
+            { slug: { $regex: req.query.search, $options: "i" } },
         ];
     }
 
