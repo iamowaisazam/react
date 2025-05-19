@@ -11,24 +11,24 @@ const api = axios.create({
 
 
 export const getMake = (data) => {
-    return axios.get(`${url}admin/make`, { params: data });
+    return axios.get(`${url}admin/makes`, { params: data });
 };
 
 export const getSingleMake = (id) => {
-    return axios.get(`${url}admin/make/${id}`);
+    return axios.get(`${url}admin/makes/${id}`);
 };
 
 export const createMake = (data) => {
-    return api.post("admin/make/create", data);
+    return api.post("admin/makes/create", data);
 };
 
 export const editMake = (id, data) => {
 
-    return api.put(`admin/make/${id}`, data);
+    return api.put(`admin/makes/${id}`, data);
 };
 
 export const deleteMake = (id) => {
-    return api.delete(`admin/make/${id}`);
+    return api.delete(`admin/makes/${id}`);
 };
 
 export default {

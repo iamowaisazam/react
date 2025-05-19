@@ -10,7 +10,7 @@ export default function AdminLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   return (
     <>
-      <div style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", display: "flex", flexDirection: "column", height: "100vh" }}>
+      <div style={{ fontFamily: "'Poppins', sans-serif", display: "flex", flexDirection: "column", height: "100vh" }}>
         <Header toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
         <div style={{ display: "flex", flex: 1, backgroundColor: "#eef5f9" }}>
           <Sidebar collapsed={sidebarCollapsed} />

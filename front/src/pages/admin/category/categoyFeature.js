@@ -15,7 +15,7 @@ export const getCategories = (data) => {
 };
 
 export const getSingleCategory = (id) => {
-    return axios.get(`${url}admin/category/${id}`);
+    return axios.get(`${url}admin/categories/${id}`);
 };
 
 export const createCategories = (data) => {
@@ -24,11 +24,11 @@ export const createCategories = (data) => {
 
 export const editCategory = (id, data) => {
 
-    return api.put(`admin/category/${id}`, data);
+    return api.put(`admin/categories/${id}`, data);
 };
 
 export const deleteCategories = (id) => {
-    return api.delete(`admin/category/${id}`);
+    return api.delete(`admin/categories/${id}`);
 };
 
 export default {
