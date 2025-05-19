@@ -2,6 +2,7 @@ import Category from '../../models/category.js';
 import Make from '../../models/make.js';
 import Model  from '../../models/model.js';
 import Version  from '../../models/version.js';
+import Post  from '../../models/post.js';
 import { body, param, validationResult } from "express-validator";
 
 
@@ -24,10 +25,10 @@ const List = async (req, res) => {
     }
 
     // Total Count
-    const total = await Version.countDocuments(query);
+    const total = await Post.countDocuments(query);
 
     //Records
-    let data = await Version.find(query)
+    let data = await Post.find(query)
         .select()
         .skip(skip)
         .limit(limit);
@@ -56,7 +57,8 @@ const List = async (req, res) => {
 const Create = async (req, res) => {
 
     await Promise.all([
-        body('name').notEmpty().withMessage('Name is required').run(req),
+        body('title').notEmpty().withMessage('Title is required').run(req),
+        body('slug').notEmpty().withMessage('Slug is required').run(req),
         body('catId').notEmpty().withMessage('Select a Category').isMongoId()
         .withMessage('Invalid Category ID').run(req),
         body('makeId').notEmpty().withMessage('Select a Make').isMongoId()
@@ -77,7 +79,7 @@ const Create = async (req, res) => {
         });
     }
 
-    const { name, catId, makeId,modelId} = req.body;
+    const { title, slug, name, catId, makeId, modelId} = req.body;
 
     const category = await Category.find({id:req.body.catId});
     if (!category) {
@@ -112,7 +114,14 @@ const Create = async (req, res) => {
         });
     }
         
-    const insertMake = new Model({ name, catId, makeId,modelId});
+    const insertMake = new Post({
+         title:title,
+         slug:slug, 
+         catId:catId, 
+         makeId:makeId,
+         modelId:modelId,
+    });
+
     await insertMake.save();
 
     return res.status(201).json({
@@ -129,17 +138,17 @@ const Create = async (req, res) => {
 // ************Get Data by single*******************
 const Find = async (req, res) => {
 
-    const data = await Version.findById(req.params.id);
+    const data = await Post.findById(req.params.id);
     if (!data) {
         return res.status(400).json({
             success: false,
-            message: "Version not found",
+            message: "Record not found",
         })
     }
 
     return res.status(200).json({
         success: true,
-        message: "Version Find Successfully",
+        message: "Record Find Successfully",
         data: data,
     })
 
@@ -151,7 +160,8 @@ const Find = async (req, res) => {
 const Update = async (req, res) => {
    
     await Promise.all([
-        body('name').notEmpty().withMessage('Name is required').run(req),
+        body('title').notEmpty().withMessage('Title is required').run(req),
+        body('slug').notEmpty().withMessage('Slug is required').run(req),
         body('catId').notEmpty().withMessage('Select a Category').isMongoId()
         .withMessage('Invalid Category ID').run(req),
         body('makeId').notEmpty().withMessage('Select a Make').isMongoId()
@@ -173,7 +183,6 @@ const Update = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { name, catId,makeId,modelId} = req.body;
 
 
     const category = await Model.find({id:req.body.catId});
@@ -210,23 +219,29 @@ const Update = async (req, res) => {
     }
 
 
-    const version = await Version.findByIdAndUpdate(id,
-        { name, catId,makeId,modelId},
+    const post = await Post.findByIdAndUpdate(id,
+        { 
+         title:req.body.title,
+         slug:req.body.slug, 
+         catId:req.body.catId, 
+         makeId:req.body.makeId,
+         modelId:req.body.modelId,
+        },
         { new: true }
     );
 
-    if (!version) {
+    if (!post) {
         return res.status(404).json({
             success: false,
-            message: "Version not found",
+            message: "Record not found",
         });
     }
 
 
     return res.status(200).json({
         success: true,
-        message: "Version Updated Successfully",
-        data: version,
+        message: "Record Updated Successfully",
+        data: post,
     });
 
 };
@@ -235,17 +250,17 @@ const Update = async (req, res) => {
 const Delete = async (req, res) => {
 
     const { id } = req.params;
-    const version = await Version.findByIdAndDelete(id);
-    if (!version) {
+    const post = await Post.findByIdAndDelete(id);
+    if (!post) {
         return res.status(404).json({
             success: false,
-            message: "Version not found",
+            message: "Record not found",
         });
     }
 
     return res.status(200).json({
         success: true,
-        message: "Version deleted successfully",
+        message: "Record deleted successfully",
     });
     
 }

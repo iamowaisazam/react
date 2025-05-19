@@ -17,6 +17,6 @@ const makeSchema = new mongoose.Schema(
     }
 );
 
-const Make = mongoose.model('Make', makeSchema);
+const Make = mongoose.model('make', makeSchema);
 
 export default Make;

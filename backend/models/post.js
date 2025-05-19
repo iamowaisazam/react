@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
 
 
-const versionSchema = new mongoose.Schema(
+const postSchema = new mongoose.Schema(
     {
-        name: {
+        title: {
+            type: String,
+            required: true,
+        },
+        slug: {
             type: String,
             required: true,
         },
@@ -30,6 +34,6 @@ const versionSchema = new mongoose.Schema(
 );
 
 
-const Version = mongoose.model('version', versionSchema);
+const Post = mongoose.model('post', postSchema);
 
-export default Version;
+export default Post;

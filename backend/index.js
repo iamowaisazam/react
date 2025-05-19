@@ -5,13 +5,14 @@ import DB from './database/mongodb.js';
 import authMiddleware from './middlewares/authMiddleware.js'
 
 // Controllers
-import userController from './controllers/loginController.js';
-import loginController from './controllers/admin/userController.js';
+import loginController from './controllers/loginController.js';
+import userController from './controllers/admin/userController.js';
 import Categories from './controllers/admin/categoryController.js';
 import Model from './controllers/admin/modelController.js';
 import Version from './controllers/admin/versionController.js';
 import Make from './controllers/admin/makeContoller.js';
 import cors from 'cors';
+import Post from "./controllers/admin/postController.js";
 
 dotenv.config({});
 const app = express();
@@ -43,18 +44,17 @@ router.get('/', (req, res) => {
 
 
 // Login Routes
-router.post('/register', userController.register);
-router.post('/login', userController.login);
-router.get('/logout/:token', userController.logout);
-router.get('/profile/:token', userController.getUserProfile);
+router.post('/register', loginController.register);
+router.post('/login', loginController.login);
+router.get('/logout/:token', loginController.logout);
+router.get('/profile/:token', loginController.getUserProfile);
 
 // User Routes
-router.get('/admin/users', loginController.getAllUsers);
-router.post('/admin/users/create', loginController.createUser);
-router.get('/admin/users/:userId', loginController.getSingleUser);
-router.put('/admin/users/:userId', loginController.updateUser);
-router.delete('/admin/users/:userId', loginController.deleteUser);
-
+router.get('/admin/users', userController.getAllUsers);
+router.post('/admin/users/create', userController.createUser);
+router.get('/admin/users/:userId', userController.getSingleUser);
+router.put('/admin/users/:userId', userController.updateUser);
+router.delete('/admin/users/:userId', userController.deleteUser);
 
 // Categories
 app.get('/admin/categories', Categories.getAllCategories);
@@ -71,9 +71,7 @@ app.get('/admin/makes/:id', Make.Find);
 app.put('/admin/makes/:id', Make.Update);
 app.delete('/admin/makes/:id', Make.Delete);
 
-
-
-// Car Model
+// Model
 app.get('/admin/models', Model.List);
 app.post('/admin/models/create', Model.Create);
 app.get('/admin/models/:id', Model.Find);
@@ -81,12 +79,20 @@ app.put('/admin/models/:id', Model.Update);
 app.delete('/admin/models/:id', Model.Delete);
 
 
-// version
-app.post('/admin/versions/create', authMiddleware, Version.createVersion);
-app.get('/admin/versions', authMiddleware, Version.getAllVersions);
-app.get('/admin/version/:versionId', authMiddleware, Version.getVersionById);
-app.put('/admin/version/:versionId', authMiddleware, Version.updateVersion);
-app.delete('/admin/version/:versionId', authMiddleware, Version.deleteVersion);
+// Version
+app.get('/admin/versions',Version.List);
+app.post('/admin/versions/create', Version.Create);
+app.get('/admin/versions/:id', Version.Find);
+app.put('/admin/versions/:id', Version.Update);
+app.delete('/admin/versions/:id', Version.Delete);
+
+
+// Car
+app.get('/admin/posts',Post.List);
+app.post('/admin/posts/create', Post.Create);
+app.get('/admin/posts/:id', Post.Find);
+app.put('/admin/posts/:id', Post.Update);
+app.delete('/admin/posts/:id', Post.Delete);
 
 
 router.get('*', (req, res) => {
