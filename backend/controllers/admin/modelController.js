@@ -2,6 +2,8 @@ import Category from '../../models/category.js';
 import Make from '../../models/make.js';
 import Model  from '../../models/model.js';
 import { body, param, validationResult } from "express-validator";
+import Version from '../../models/version.js';
+import Post from '../../models/post.js';
 
 
 
@@ -209,6 +211,22 @@ const Delete = async (req, res) => {
 
     const { id } = req.params;
    
+
+    const version = await Version.find({modelId:id});
+    if (version) {
+        return res.status(400).json({
+            success: false,
+            message: "Can Not Delete Model It Used In Make",
+        })
+    }
+
+     const checkinProduct = await Post.find({modelId:id});
+    if (checkinProduct) {
+        return res.status(400).json({
+            success: false,
+            message: "Can Not Delete Model It Used In Post",
+        })
+    }
    
     const model = await Model.findByIdAndDelete(id);
     if (!model) {

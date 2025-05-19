@@ -66,6 +66,8 @@ const Create = async (req, res) => {
         .withMessage('Invalid Make ID').run(req),
         body('modelId').notEmpty().withMessage('Select a Model').isMongoId()
         .withMessage('Invalid Model ID').run(req),
+        body('verId').notEmpty().withMessage('Select a Version').isMongoId()
+        .withMessage('Invalid Version ID').run(req),  
     ]);
 
       const errors = validationResult(req);
@@ -80,7 +82,7 @@ const Create = async (req, res) => {
         });
     }
 
-    const { title, slug, name, catId, makeId, modelId} = req.body;
+    const { title, slug, verId, catId, makeId, modelId} = req.body;
 
     const category = await Category.find({id:req.body.catId});
     if (!category) {
@@ -104,11 +106,22 @@ const Create = async (req, res) => {
         });
     }
 
-     const model = await Model.find({id:req.body.modelId});
+    const model = await Model.find({id:req.body.modelId});
     if (!model) {
         return res.status(404).json({
             success: false,
             message: "Model not found",
+            errors: {
+                verId:'Invalid Model Id',
+            }
+        });
+    }
+
+    const version = await Version.find({id:req.body.verId});
+    if (!version) {
+        return res.status(404).json({
+            success: false,
+            message: "Version not found",
             errors: {
                 verId:'Invalid Model Id',
             }
@@ -121,6 +134,7 @@ const Create = async (req, res) => {
          catId:catId, 
          makeId:makeId,
          modelId:modelId,
+         verId:verId
     });
 
     await insertMake.save();
@@ -169,6 +183,8 @@ const Update = async (req, res) => {
         .withMessage('Invalid Make ID').run(req),
         body('modelId').notEmpty().withMessage('Select a Model').isMongoId()
         .withMessage('Invalid Model ID').run(req),
+        body('verId').notEmpty().withMessage('Select a Version').isMongoId()
+        .withMessage('Invalid Version ID').run(req),
     ]);
 
     const errors = validationResult(req);
@@ -219,6 +235,17 @@ const Update = async (req, res) => {
         });
     }
 
+    const version = await Version.find({id:req.body.verId});
+    if (!version) {
+        return res.status(404).json({
+            success: false,
+            message: "Version not found",
+            errors: {
+                verId:'Invalid Model Id',
+            }
+        });
+    }
+
 
     const post = await Post.findByIdAndUpdate(id,
         { 
@@ -227,6 +254,7 @@ const Update = async (req, res) => {
          catId:req.body.catId, 
          makeId:req.body.makeId,
          modelId:req.body.modelId,
+         verId:req.body.verId,
         },
         { new: true }
     );

@@ -2,6 +2,7 @@ import { body, param, validationResult } from 'express-validator';
 import Category from '../../models/category.js';
 import Make from '../../models/make.js';
 import authMiddleware from '../../middlewares/authMiddleware.js';
+import Post from '../../models/post.js';
 
 
 
@@ -188,6 +189,14 @@ const deleteCategory = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Can Not Delete Category It Used In Make",
+            })
+        }
+
+         const checkinProduct = await Post.find({catId:id});
+        if (checkinProduct) {
+            return res.status(400).json({
+                success: false,
+                message: "Can Not Delete Category It Used In Post",
             })
         }
 

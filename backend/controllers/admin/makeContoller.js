@@ -2,6 +2,7 @@ import { Model } from 'mongoose';
 import Make from '../../models/make.js';
 import make from '../../models/make.js'
 import { body, param, validationResult } from "express-validator";
+import Post from '../../models/post.js';
 
 
 // ************Get all recode*******************
@@ -158,6 +159,14 @@ const Delete = async (req, res) => {
             message: "Can Not Delete Make It Used In Make",
         })
     }
+
+      const checkinProduct = await Post.find({makeId:id});
+        if (checkinProduct) {
+            return res.status(400).json({
+                success: false,
+                message: "Can Not Delete Make It Used In Post",
+            })
+        }
 
 
     const getmake = await make.findByIdAndDelete(id);

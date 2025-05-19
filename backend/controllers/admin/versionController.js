@@ -112,7 +112,7 @@ const Create = async (req, res) => {
         });
     }
         
-    const insertMake = new Model({ name, catId, makeId,modelId});
+    const insertMake = new Version({ name, catId, makeId,modelId});
     await insertMake.save();
 
     return res.status(201).json({
@@ -241,6 +241,14 @@ const Delete = async (req, res) => {
             success: false,
             message: "Version not found",
         });
+    }
+
+     const checkinProduct = await Post.find({verId:id});
+    if (checkinProduct) {
+        return res.status(400).json({
+            success: false,
+            message: "Can Not Delete Version It Used In Post",
+        })
     }
 
     return res.status(200).json({

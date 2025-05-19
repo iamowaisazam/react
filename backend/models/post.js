@@ -23,6 +23,10 @@ const postSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'category',
         },
+        verId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'version',
+        },
         date: {
             type: Date,
             default: Date.now,

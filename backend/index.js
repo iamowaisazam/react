@@ -13,6 +13,7 @@ import Version from './controllers/admin/versionController.js';
 import Make from './controllers/admin/makeContoller.js';
 import cors from 'cors';
 import Post from "./controllers/admin/postController.js";
+import Website from './controllers/homeController.js';
 
 dotenv.config({});
 const app = express();
@@ -93,6 +94,15 @@ app.post('/admin/posts/create', Post.Create);
 app.get('/admin/posts/:id', Post.Find);
 app.put('/admin/posts/:id', Post.Update);
 app.delete('/admin/posts/:id', Post.Delete);
+
+
+
+//Website
+app.get('/posts',Website.getProducts);
+app.get('/makes',Website.getMakes);
+app.get('/models',Website.getModels);
+app.get('/versions',Website.getVersions);
+app.get('/categories',Website.getCategories);
 
 
 router.get('*', (req, res) => {
