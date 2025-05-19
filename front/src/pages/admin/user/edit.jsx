@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { getSingleUser, editUser } from './userFeature';
 
@@ -12,6 +11,7 @@ export default function EditUser() {
         name: '',
         email: '',
         password: '',
+        role: '',
     });
 
     const [state, setState] = useState({
@@ -19,16 +19,15 @@ export default function EditUser() {
         errors: {},
     });
 
-
     useEffect(() => {
         setState(prev => ({ ...prev, loading: true }));
         getSingleUser(id)
             .then((res) => {
-
                 setFormData({
                     name: res.data.data.name,
                     email: res.data.data.email,
                     password: '',
+                    role: res.data.data.role || '',
                 });
                 setState(prev => ({ ...prev, loading: false }));
             })
@@ -38,7 +37,6 @@ export default function EditUser() {
             });
     }, [id]);
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setState({ ...state, loading: true, errors: {} });
@@ -47,7 +45,7 @@ export default function EditUser() {
             const res = await editUser(id, formData);
             if (res.success) {
                 toast.success("User updated successfully!");
-                navigate('/admin/users')
+                navigate('/admin/users');
             } else {
                 const formattedErrors = {};
                 if (Array.isArray(res.errors)) {
@@ -72,50 +70,58 @@ export default function EditUser() {
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label className="form-label fw-bold">Name</label>
-                        <div className="input-group">
-                            <span className="input-group-text"><FaUser /></span>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter name"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            />
-                        </div>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter name"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
                         {state.errors?.name && <small className="text-danger">{state.errors.name}</small>}
                     </div>
 
                     <div className="mb-3">
                         <label className="form-label fw-bold">Email</label>
-                        <div className="input-group">
-                            <span className="input-group-text"><FaEnvelope /></span>
-                            <input
-                                type="email"
-                                className="form-control"
-                                placeholder="Enter email"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            />
-                        </div>
+                        <input
+                            type="email"
+                            className="form-control"
+                            placeholder="Enter email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        />
                         {state.errors?.email && <small className="text-danger">{state.errors.email}</small>}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Role</label>
+                        <select
+                            className="form-control"
+                            value={formData.role}
+                            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                        >
+                            <option value="">Select role</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+
+                        </select>
+                        {state.errors?.role && <small className="text-danger">{state.errors.role}</small>}
+                    </div>
+
+
+                    <div className="mb-3">
                         <label className="form-label fw-bold">Password</label>
-                        <div className="input-group">
-                            <span className="input-group-text"><FaLock /></span>
-                            <input
-                                type="password"
-                                className="form-control"
-                                placeholder="Enter password"
-                                value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            />
-                        </div>
+                        <input
+                            type="password"
+                            className="form-control"
+                            placeholder="Enter new password (optional)"
+                            value={formData.password}
+                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        />
                         {state.errors?.password && <small className="text-danger">{state.errors.password}</small>}
                     </div>
 
-                    <div className="d-flex ">
+
+                    <div className="d-flex">
                         <button
                             type="submit"
                             className="btn btn-success w-10 me-2"
@@ -124,7 +130,6 @@ export default function EditUser() {
                             {state.loading ? 'Submitting...' : 'Submit'}
                         </button>
                         <Link to="/admin/users" className="btn btn-secondary w-10">
-
                             Cancel
                         </Link>
                     </div>

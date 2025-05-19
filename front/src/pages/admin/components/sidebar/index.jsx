@@ -78,8 +78,8 @@ const SidebarSection = ({ title, icon: Icon, links, collapsed }) => {
             </div>
 
             {!collapsed && open && (
-                <div>
-                    {links.map(({ label, icon: LinkIcon, to }, idx) => {
+                <div style={{ paddingLeft: "20px" }}>
+                    {links.map(({ label, to }, idx) => {
                         const isActive = location.pathname === to;
                         return (
                             <Link
@@ -95,13 +95,14 @@ const SidebarSection = ({ title, icon: Icon, links, collapsed }) => {
                                     e.currentTarget.style.color = isActive ? '#fff' : '#cfd8dc';
                                 }}
                             >
-                                <LinkIcon style={styles.linkIcon} />
                                 {!collapsed && <span>{label}</span>}
                             </Link>
                         );
                     })}
                 </div>
             )}
+
+
         </div>
     );
 };

@@ -78,7 +78,7 @@ export default function EditUser() {
             <div className="container mt-5">
                 <div className="card shadow-sm border-0">
                     <div className="card-body">
-                        <h4 className="fw-bold mb-4">Create New Category</h4>
+                        <h4 className="fw-bold mb-4">Edit Category</h4>
 
                         <form onSubmit={handleSubmit}>
                             <div className="row">
@@ -134,7 +134,7 @@ export default function EditUser() {
 
                             <div className="d-flex justify-content-between pt-3 border-top mt-3">
                                 <button type="submit" className="btn btn-dark px-4" disabled={state.loading}>
-                                    {state.loading ? 'Adding...' : 'Add Category'}
+                                    {state.loading ? 'Edting...' : 'Edit Category'}
                                 </button>
 
 

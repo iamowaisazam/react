@@ -15,7 +15,7 @@ export const getUsers = (data) => {
 };
 
 export const getSingleUser = (id) => {
-  return axios.get(`${url}admin/user/${id}`);
+  return axios.get(`${url}admin/users/${id}`);
 };
 
 export const createUser = (data) => {
@@ -24,11 +24,11 @@ export const createUser = (data) => {
 
 export const editUser = (id, data) => {
 
-  return api.put(`admin/user/${id}`, data);
+  return api.put(`admin/users/${id}`, data);
 };
 
 export const deleteUser = (id) => {
-  return api.delete(`admin/user/${id}`);
+  return api.delete(`admin/users/${id}`);
 };
 
 export default {
