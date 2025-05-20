@@ -8,7 +8,7 @@ const makeSchema = new mongoose.Schema(
         },
         catId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Category',
+            ref: 'category',
             required: true,
         },
     },

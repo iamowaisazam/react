@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { createVersions } from './versionFeature';
+import { getSingleVersions, editVersions } from './versionFeature';
 import CategoryDropdown from '../components/dropdowns/CategoryDropdown';
 import MakeDropDown from '../components/dropdowns/makeDropdown';
 import ModelDropDown from '../components/dropdowns/modelDropdown';
 
-export default function AddVersion() {
+export default function EditVersion() {
+    const { id } = useParams();
+    const navigate = useNavigate();
+
     const [state, setState] = useState({
         loading: false,
         errors: {},
@@ -17,6 +21,36 @@ export default function AddVersion() {
         modelId: '',
         name: '',
     });
+
+    useEffect(() => {
+        if (id) {
+            fetchVersion();
+        } else {
+            toast.error("Invalid version ID");
+            navigate('/admin/view-version');
+        }
+    }, [id]);
+
+    const fetchVersion = async () => {
+        try {
+            const res = await getSingleVersions(id);
+            if (res.data.success) {
+                const { catId, makeId, modelId, name } = res.data.data;
+                setFormData({
+                    catId: catId?._id || '',
+                    makeId: makeId?._id || '',
+                    modelId: modelId?._id || '',
+                    name,
+                });
+            } else {
+                toast.error("Failed to fetch version details");
+                navigate('/admin/view-version');
+            }
+        } catch (error) {
+            toast.error("Error fetching version data");
+            navigate('/admin/view-version');
+        }
+    };
 
     const handleInputChange = (field, value) => {
         setFormData((prev) => ({
@@ -30,17 +64,12 @@ export default function AddVersion() {
         setState({ loading: true, errors: {} });
 
         try {
-            const res = await createVersions(formData);
+            const res = await editVersions(id, formData);
             if (res.data.success) {
-                toast.success("Make created successfully!");
-                setFormData({
-                    catId: '',
-                    makeId: '',
-                    modelId: '',
-                    name: '',
-                });
+                toast.success("Version updated successfully!");
+                navigate('/admin/view-version');
             } else {
-                toast.error("Failed to create make!");
+                toast.error("Failed to update version!");
             }
         } catch (error) {
             setState({
@@ -55,18 +84,19 @@ export default function AddVersion() {
 
     return (
         <main>
+
             <div
                 className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom"
                 style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}
             >
                 <h5 className="fw-semibold mb-0" style={{ color: "#2c3e50" }}>
-                    Add Versions
+                    Edit Versions
                 </h5>
             </div>
             <div className="container mt-5">
                 <div className="card shadow-sm border-0">
                     <div className="card-body">
-                        <h4 className="fw-bold mb-4">Create New Versions</h4>
+                        <h4 className="fw-bold mb-4">Edit Version</h4>
 
                         <form onSubmit={handleSubmit}>
                             <div className="row">
@@ -115,7 +145,7 @@ export default function AddVersion() {
 
                             <div className="d-flex justify-content-between pt-3 border-top mt-3">
                                 <button type="submit" className="btn btn-dark px-4" disabled={state.loading}>
-                                    {state.loading ? 'Adding...' : 'Add Versions'}
+                                    {state.loading ? 'Updating...' : 'Update Version'}
                                 </button>
                             </div>
                         </form>

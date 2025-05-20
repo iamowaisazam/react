@@ -7,12 +7,12 @@ const carSchema = new mongoose.Schema(
         },
         catId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Category',
+            ref: 'category',
             required: true,
         },
         makeId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Make',
+            ref: 'make',
             required: true,
         },
         date: {

@@ -10,30 +10,30 @@ const api = axios.create({
 
 
 export const getAllMake = (data) => {
-    return axios.get(`${url}admin/make`, { params: data });
+    return axios.get(`${url}admin/makes`, { params: data });
 };
 
 
 export const getModel = (data) => {
-    return axios.get(`${url}admin/model`, { params: data });
+    return axios.get(`${url}admin/models`, { params: data });
 };
 
 
 export const getModelById = (id) => {
-    return axios.get(`${url}admin/model/${id}`);
+    return axios.get(`${url}admin/models/${id}`);
 };
 
 export const createModel = (data) => {
-    return api.post("admin/model/create", data);
+    return api.post("admin/models/create", data);
 };
 
 export const updateModel = (id, data) => {
 
-    return api.put(`admin/model/${id}`, data);
+    return api.put(`admin/models/${id}`, data);
 };
 
 export const deleteModel = (id) => {
-    return api.delete(`admin/model/${id}`);
+    return api.delete(`admin/models/${id}`);
 };
 
 export default {

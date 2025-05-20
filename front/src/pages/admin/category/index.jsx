@@ -128,7 +128,7 @@ export default function Users() {
                                     <tr>
                                         <th style={{ cursor: "pointer" }}>#</th>
                                         <th style={{ cursor: "pointer" }}>Name</th>
-                                        <th style={{ cursor: "pointer" }}>Slug</th>
+
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -151,7 +151,7 @@ export default function Users() {
                                                 <tr key={cat._id}>
                                                     <td>{index + 1}</td>
                                                     <td>{cat.name}</td>
-                                                    <td>{cat.slug}</td>
+
                                                     <td>
                                                         <div className="d-flex gap-2">
                                                             <button

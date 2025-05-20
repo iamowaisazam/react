@@ -1,18 +1,16 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { createCategories } from './categoyFeature';
+import { createCategories } from './categoyFeature'; // Make sure this calls your backend API
 
 export default function Addmenu() {
     const [state, setState] = useState({
-        loading: '',
+        loading: false,
         errors: {},
     });
 
     const [formData, setFormData] = useState({
         name: '',
-        slug: '',
     });
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,17 +20,20 @@ export default function Addmenu() {
             const res = await createCategories(formData);
 
             if (res.data.success) {
-                toast.success("User created successfully!");
-                setFormData({ name: '', slug: '', });
+                toast.success("Category created successfully!");
+                setFormData({ name: '' });
                 setState({ ...state, loading: false });
             } else {
-                setState({ ...state, errors: {}, loading: false });
-                toast.error("Failed to create user!");
+                toast.error("Failed to create category!");
+                setState({ ...state, loading: false });
             }
 
         } catch (error) {
-
-            setState({ ...state, errors: error.response.data.errors ?? {}, loading: false });
+            setState({
+                ...state,
+                errors: error.response?.data?.errors ?? {},
+                loading: false,
+            });
             toast.error("Validation failed. Please check the fields.");
             console.error("API Error:", error.response?.data);
         }
@@ -62,62 +63,18 @@ export default function Addmenu() {
                                     <input
                                         type="text"
                                         className={`form-control ${state.errors.name ? 'is-invalid' : ''}`}
-                                        placeholder="Enter menu name"
+                                        placeholder="Enter category name"
                                         value={formData.name}
-                                        onChange={(e) => {
-                                            const name = e.target.value;
-                                            const slug = name
-                                                .toLowerCase()
-                                                .replace(/[^a-z0-9\s-]/g, '')
-                                                .trim()
-                                                .replace(/\s+/g, '-')
-                                                .replace(/-+/g, '-');
-
-                                            setFormData({ name, slug });
-                                        }}
-
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     />
                                     {state.errors.name && <div className="invalid-feedback">{state.errors.name}</div>}
-
                                 </div>
-
-                                <div className="col-md-6 mb-4">
-                                    <label className="form-label fw-semibold">Slug</label>
-                                    <input
-                                        type="text"
-                                        className={`form-control ${state.errors.slug ? 'is-invalid' : ''}`}
-                                        placeholder="category-slug"
-                                        value={formData.slug}
-                                        readOnly
-                                    />
-
-
-                                    {state.errors.slug && <div className="invalid-feedback">{state.errors.slug}</div>}
-
-
-                                </div>
-
-
-
-                                {/* <div className="col-md-6 mb-4">
-                                    <label className="form-label fw-semibold">Category Image</label>
-                                    <input
-                                        type="file"
-                                        className={`form-control ${error && !image ? 'is-invalid' : ''}`}
-                                        onChange={(e) => setImage(e.target.files[0])}
-                                        accept="image/*"
-                                    />
-                                    <div className="form-text text-muted">Upload a category image</div>
-                                    {error && !image && <div className="invalid-feedback">Image is required</div>}
-                                </div> */}
                             </div>
 
                             <div className="d-flex justify-content-between pt-3 border-top mt-3">
                                 <button type="submit" className="btn btn-dark px-4" disabled={state.loading}>
                                     {state.loading ? 'Adding...' : 'Add Category'}
                                 </button>
-
-
                             </div>
                         </form>
                     </div>
