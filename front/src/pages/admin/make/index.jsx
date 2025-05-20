@@ -128,7 +128,6 @@ export default function Make() {
                                     <tr>
                                         <th style={{ cursor: "pointer" }}>#</th>
                                         <th style={{ cursor: "pointer" }}>Name</th>
-                                        <th style={{ cursor: "pointer" }}>Slug</th>
                                         <th style={{ cursor: "pointer" }}>Category</th>
                                         <th>Actions</th>
                                     </tr>
@@ -152,7 +151,6 @@ export default function Make() {
                                                 <tr key={make._id}>
                                                     <td>{index + 1}</td>
                                                     <td>{make.name}</td>
-                                                    <td>{make.slug}</td>
                                                     <td>{make.catId?.name || 'N/A'}</td>
                                                     <td>
                                                         <div className="d-flex gap-2">

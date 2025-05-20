@@ -46,8 +46,9 @@ import Addmodel from './pages/admin/model/add.jsx';
 import EditModel from './pages/admin/model/edit.jsx';
 
 // Version
-import Addversion from './pages/admin/version/add.jsx';
 import Version from './pages/admin/version/index.jsx';
+import Addversion from './pages/admin/version/add.jsx';
+import EditVersion from './pages/admin/version/edit.jsx';
 
 // car
 import Addcar from './pages/admin/car/add.jsx';
@@ -99,22 +100,32 @@ const appRouter = createBrowserRouter([
     element: <AdminLayout />,
     children: [
       { path: "dashboard", element: <Dashboard /> },
+
       { path: "users", element: <Userindex /> },
       { path: "add-user", element: <Adduser /> },
-      { path: "edit-user/:id", element: <EditUser /> },
-      { path: "view-menus", element: <Menuindex /> },
-      { path: "add-menu", element: <Addmenu /> },
+      { path: "edit-user/:id", element: <EditUser /> }
+      ,
+
       { path: "view-categories", element: <Category /> },
       { path: "add-category", element: <Addcategory /> },
       { path: "edit-category/:id", element: <EditCategory /> },
+
+
       { path: "view-make", element: <Make /> },
       { path: "add-make", element: <Addmake /> },
       { path: "edit-make/:id", element: <EditMake /> },
+
+
       { path: "view-model", element: <Model /> },
       { path: "add-model", element: <Addmodel /> },
       { path: "edit-model/:id", element: <EditModel /> },
+
+
       { path: "view-version", element: <Version /> },
       { path: "add-version", element: <Addversion /> },
+      { path: "edit-version/:id", element: <EditVersion /> },
+
+
       { path: "view-cars", element: <Car /> },
       { path: "add-car", element: <Addcar /> },
       { path: "settings/general", element: <General /> },

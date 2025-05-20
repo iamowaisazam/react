@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { getCategories } from '../category/categoyFeature';
 import { createModel, getAllMake } from './modelFeature';
+import CategoryDropdown from '../components/dropdowns/CategoryDropdown';
+import MakeDropDown from '../components/dropdowns/makeDropdown';
+
 
 export default function AddModel() {
     const [state, setState] = useState({
@@ -108,31 +111,21 @@ export default function AddModel() {
                         <form onSubmit={handleSubmit}>
                             <div className="row">
                                 <div className="col-md-6 mb-4">
-                                    <label className="form-label fw-semibold">Selected Category</label>
-                                    <select
-                                        className={`form-select ${error && !catId ? 'is-invalid' : ''}`}
+                                    <label className="form-label fw-semibold">Category</label>
+                                    <CategoryDropdown
                                         value={catId}
-                                        onChange={(e) => setCatId(e.target.value)}
-                                    >
-                                        <option value="">Select Category</option>
-                                        {categories.map((cat) => (
-                                            <option key={cat._id} value={cat._id}>{cat.name}</option>
-                                        ))}
-                                    </select>
+                                        error={state.errors.catId}
+                                        setValue={(val) => setCatId(val)}
+                                    />
                                 </div>
 
                                 <div className="col-md-6 mb-4">
-                                    <label className="form-label fw-semibold">Select Make</label>
-                                    <select
-                                        className={`form-select ${error && !makeId ? 'is-invalid' : ''}`}
+                                    <label className="form-label fw-semibold">Make</label>
+                                    <MakeDropDown
                                         value={makeId}
-                                        onChange={(e) => setMakeId(e.target.value)}
-                                    >
-                                        <option value="">Select Make</option>
-                                        {makes.map((mk) => (
-                                            <option key={mk._id} value={mk._id}>{mk.name}</option>
-                                        ))}
-                                    </select>
+                                        error={state.errors.makeId}
+                                        setValue={(val) => setMakeId(val)}
+                                    />
                                 </div>
 
 

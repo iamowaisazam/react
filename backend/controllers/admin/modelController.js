@@ -1,6 +1,6 @@
 import Category from '../../models/category.js';
 import Make from '../../models/make.js';
-import Model  from '../../models/model.js';
+import Model from '../../models/model.js';
 import { body, param, validationResult } from "express-validator";
 import Version from '../../models/version.js';
 import Post from '../../models/post.js';
@@ -29,6 +29,10 @@ const List = async (req, res) => {
 
     //Records
     let data = await Model.find(query)
+        .populate([
+            { path: 'catId', select: 'name' },
+            { path: 'makeId', select: 'name' }
+        ])
         .select()
         .skip(skip)
         .limit(limit);
@@ -59,12 +63,12 @@ const Create = async (req, res) => {
     await Promise.all([
         body('name').notEmpty().withMessage('Name is required').run(req),
         body('catId').notEmpty().withMessage('Select a Category').isMongoId()
-        .withMessage('Invalid Category ID').run(req),
+            .withMessage('Invalid Category ID').run(req),
         body('makeId').notEmpty().withMessage('Select a Make').isMongoId()
-        .withMessage('Invalid Make ID').run(req),
+            .withMessage('Invalid Make ID').run(req),
     ]);
 
-      const errors = validationResult(req);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
             success: false,
@@ -76,32 +80,32 @@ const Create = async (req, res) => {
         });
     }
 
-    const { name, catId, makeId} = req.body;
+    const { name, catId, makeId } = req.body;
 
-    const category = await Category.find({id:req.body.catId});
+    const category = await Category.find({ id: req.body.catId });
     if (!category) {
         return res.status(404).json({
             success: false,
             message: 'Validation errors',
             errors: {
-                catId:'Invalid Cat Id',
+                catId: 'Invalid Cat Id',
             }
         });
     }
 
-    const make = await Make.find({id:req.body.makeId});
+    const make = await Make.find({ id: req.body.makeId });
     if (!make) {
         return res.status(404).json({
             success: false,
             message: "Make not found",
             errors: {
-                makeId:'Invalid Make Id',
+                makeId: 'Invalid Make Id',
             }
         });
     }
-    
-    
-    const insertMake = new Model({ name, catId, makeId});
+
+
+    const insertMake = new Model({ name, catId, makeId });
     await insertMake.save();
 
     return res.status(201).json({
@@ -136,13 +140,13 @@ const Find = async (req, res) => {
 
 
 const Update = async (req, res) => {
-   
+
     await Promise.all([
         body('name').notEmpty().withMessage('Name is required').run(req),
         body('catId').notEmpty().withMessage('Select a Category').isMongoId()
-        .withMessage('Invalid Category ID').run(req),
+            .withMessage('Invalid Category ID').run(req),
         body('makeId').notEmpty().withMessage('Select a Make').isMongoId()
-        .withMessage('Invalid Make ID').run(req),
+            .withMessage('Invalid Make ID').run(req),
     ]);
 
     const errors = validationResult(req);
@@ -158,27 +162,27 @@ const Update = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { name, catId,makeId} = req.body;
+    const { name, catId, makeId } = req.body;
 
 
-    const category = await Model.find({id:req.body.catId});
+    const category = await Model.find({ id: req.body.catId });
     if (!category) {
         return res.status(404).json({
             success: false,
             message: 'Validation errors',
             errors: {
-                catId:'Invalid Cat Id',
+                catId: 'Invalid Cat Id',
             }
         });
     }
 
-    const make = await Make.find({id:req.body.makeId});
+    const make = await Make.find({ id: req.body.makeId });
     if (!make) {
         return res.status(404).json({
             success: false,
             message: "Make not found",
             errors: {
-                makeId:'Invalid Make Id',
+                makeId: 'Invalid Make Id',
             }
         });
     }
@@ -186,7 +190,7 @@ const Update = async (req, res) => {
 
 
     const model = await Model.findByIdAndUpdate(id,
-        { name, catId,makeId},
+        { name, catId, makeId },
         { new: true }
     );
 
@@ -210,7 +214,6 @@ const Update = async (req, res) => {
 const Delete = async (req, res) => {
 
     const { id } = req.params;
-   
 
     const version = await Version.find({modelId:id});
     if (version.length > 0) {
@@ -220,6 +223,7 @@ const Delete = async (req, res) => {
         })
     }
 
+
      const checkinProduct = await Post.find({modelId:id});
     if (checkinProduct.length > 0) {
         return res.status(400).json({
@@ -227,7 +231,7 @@ const Delete = async (req, res) => {
             message: "Can Not Delete Model It Used In Post",
         })
     }
-   
+
     const model = await Model.findByIdAndDelete(id);
     if (!model) {
         return res.status(404).json({
@@ -240,7 +244,7 @@ const Delete = async (req, res) => {
         success: true,
         message: "Model deleted successfully",
     });
-    
+
 }
 
 export default {

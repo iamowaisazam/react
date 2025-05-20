@@ -10,7 +10,7 @@ export default function EditUser() {
 
     const [formData, setFormData] = useState({
         name: '',
-        slug: '',
+
     });
 
     const [state, setState] = useState({
@@ -26,7 +26,7 @@ export default function EditUser() {
 
                 setFormData({
                     name: res.data.data.name,
-                    slug: res.data.data.slug,
+
                 });
                 setState(prev => ({ ...prev, loading: false }));
             })
@@ -103,33 +103,6 @@ export default function EditUser() {
                                     />
                                     {state.errors.name && <div className="invalid-feedback">{state.errors.name}</div>}
                                 </div>
-
-                                <div className="col-md-6 mb-4">
-                                    <label className="form-label fw-semibold">Slug</label>
-                                    <input
-                                        type="text"
-                                        className={`form-control ${state.errors.slug ? 'is-invalid' : ''}`}
-                                        placeholder="category-slug"
-                                        value={formData.slug}
-                                        readOnly
-                                    />
-                                    {state.errors.slug && <div className="invalid-feedback">{state.errors.slug}</div>}
-                                </div>
-
-
-
-
-                                {/* <div className="col-md-6 mb-4">
-                                    <label className="form-label fw-semibold">Category Image</label>
-                                    <input
-                                        type="file"
-                                        className={`form-control ${error && !image ? 'is-invalid' : ''}`}
-                                        onChange={(e) => setImage(e.target.files[0])}
-                                        accept="image/*"
-                                    />
-                                    <div className="form-text text-muted">Upload a category image</div>
-                                    {error && !image && <div className="invalid-feedback">Image is required</div>}
-                                </div> */}
                             </div>
 
                             <div className="d-flex justify-content-between pt-3 border-top mt-3">

@@ -28,6 +28,7 @@ const List = async (req, res) => {
     //Records
     let data = await Make.find(query)
         .select()
+        .populate('catId', 'name')
         .skip(skip)
         .limit(limit);
 
@@ -59,7 +60,7 @@ const Create = async (req, res) => {
         body('catId').notEmpty().withMessage('Select a Category').run(req),
     ]);
 
-      const errors = validationResult(req);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
             success: false,
@@ -71,8 +72,8 @@ const Create = async (req, res) => {
         });
     }
 
-    const { name, catId} = req.body;
-    const insertMake = new Make({ name, catId});
+    const { name, catId } = req.body;
+    const insertMake = new Make({ name, catId });
     await insertMake.save();
 
     return res.status(201).json({
@@ -106,7 +107,7 @@ const Find = async (req, res) => {
 
 
 const Update = async (req, res) => {
-   
+
     await Promise.all([
         body('name').optional().notEmpty().withMessage('Name cannot be empty').run(req),
         body('catId').optional().notEmpty().withMessage('Select a category').run(req),
@@ -125,9 +126,9 @@ const Update = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { name, catId} = req.body;
+    const { name, catId } = req.body;
     const getMake = await make.findByIdAndUpdate(id,
-        { name, catId},
+        { name, catId },
         { new: true }
     );
 
@@ -150,9 +151,8 @@ const Update = async (req, res) => {
 const Delete = async (req, res) => {
 
     const { id } = req.params;
-
-
     const model = await Model.find({makeId:id});
+
     if (model.length > 0) {
         return res.status(400).json({
             success: false,
@@ -182,7 +182,7 @@ const Delete = async (req, res) => {
         success: true,
         message: "Make deleted successfully",
     });
-    
+
 }
 
 export default {
