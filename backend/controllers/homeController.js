@@ -1,14 +1,9 @@
-import { User } from "../models/user.js";
-import bcrypt from "bcryptjs";
-import { generateToken } from "../utils/generateToken.js";
-import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
-import { body, query, validationResult } from "express-validator";
-
 import Post from '../models/post.js';
 import Version from "../models/version.js";
 import Make from "../models/make.js";
 import Model from "../models/model.js";
 import Category from "../models/category.js";
+ const BASE_PATH = process.env.BASE_PATH || '/nodejs';
 
 
 
@@ -74,13 +69,43 @@ const getProducts = async (req, res) => {
         //Pages 
         const pages = Math.ceil(total / limit);
 
+        await data.map(async (item) => {
 
-       await data.map(async (item) => {
+            item.image = `${BASE_PATH}/public/uploads/car-five.jpg`;
+            item.images = [
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+            ];
 
-            item.image = 'test';
-            item.images = 'test';
+            item.tags = ['A/C: Front','Backup Camera','Cruise Control','Navigation'];
+            item.country = 'Pakistan';
+            item.state = 'Sindh';
+            item.city  = 'Karachi';          
+            item.description = 'Descrition';
+            item.price = 100;
+            longitude = '123';
+            latitude = '123';
+
+            item.user = {
+                id:1,
+                name:'David Johnson',
+                email:'user@gmail.com',
+                phone:'03112239342'
+            };
+            item.features = {
+                body:'Truck',
+                fuel_type:'Petrol',
+                transmission:'Automatic',
+                door:2,
+                color:'red',
+                condition:'used',
+            };
 
             return item;
+
         });
 
         return res.status(200).json({
@@ -302,6 +327,48 @@ const getCategories = async (req, res) => {
         const pages = Math.ceil(total / limit);
 
 
+         await data.map(async (item) => {
+
+            item.image = `${BASE_PATH}/public/uploads/car-five.jpg`;
+            item.images = [
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+                `${BASE_PATH}/public/uploads/car-five.jpg`,
+            ];
+
+            item.tags = ['A/C: Front','Backup Camera','Cruise Control','Navigation'];
+            item.country = 'Pakistan';
+            item.state = 'Sindh';
+            item.city  = 'Karachi';
+
+            item.description = 'Descrition';
+            item.price = 100;
+            longitude = '123';
+            latitude = '123';
+
+            item.user = {
+                id:1,
+                name:'David Johnson',
+                email:'user@gmail.com',
+                phone:'03112239342'
+            };
+            
+            item.features = {
+                body:'Truck',
+                fuel_type:'Petrol',
+                transmission:'Automatic',
+                door:2,
+                color:'red',
+                condition:'used',
+            };
+
+            return item;
+
+        });
+
+        
         return res.status(200).json({
             success: true,
             data: {
@@ -313,6 +380,7 @@ const getCategories = async (req, res) => {
                 skip: skip,
             }
         });
+
 
 };
 
