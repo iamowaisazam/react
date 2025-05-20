@@ -86,8 +86,8 @@ const getProducts = async (req, res) => {
             item.city  = 'Karachi';          
             item.description = 'Descrition';
             item.price = 100;
-            longitude = '123';
-            latitude = '123';
+            item.longitude = '123';
+            item.latitude = '123';
 
             item.user = {
                 id:1,
@@ -95,6 +95,7 @@ const getProducts = async (req, res) => {
                 email:'user@gmail.com',
                 phone:'03112239342'
             };
+
             item.features = {
                 body:'Truck',
                 fuel_type:'Petrol',
@@ -326,44 +327,8 @@ const getCategories = async (req, res) => {
         //Pages 
         const pages = Math.ceil(total / limit);
 
-
          await data.map(async (item) => {
-
             item.image = `${BASE_PATH}/public/uploads/car-five.jpg`;
-            item.images = [
-                `${BASE_PATH}/public/uploads/car-five.jpg`,
-                `${BASE_PATH}/public/uploads/car-five.jpg`,
-                `${BASE_PATH}/public/uploads/car-five.jpg`,
-                `${BASE_PATH}/public/uploads/car-five.jpg`,
-                `${BASE_PATH}/public/uploads/car-five.jpg`,
-            ];
-
-            item.tags = ['A/C: Front','Backup Camera','Cruise Control','Navigation'];
-            item.country = 'Pakistan';
-            item.state = 'Sindh';
-            item.city  = 'Karachi';
-
-            item.description = 'Descrition';
-            item.price = 100;
-            longitude = '123';
-            latitude = '123';
-
-            item.user = {
-                id:1,
-                name:'David Johnson',
-                email:'user@gmail.com',
-                phone:'03112239342'
-            };
-            
-            item.features = {
-                body:'Truck',
-                fuel_type:'Petrol',
-                transmission:'Automatic',
-                door:2,
-                color:'red',
-                condition:'used',
-            };
-
             return item;
 
         });
