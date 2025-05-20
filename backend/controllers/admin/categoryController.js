@@ -184,8 +184,9 @@ const deleteCategory = async (req, res) => {
     
        const { id } = req.params;
 
+       
        const getmake = await Make.find({catId:id});
-        if (getmake) {
+        if (getmake.length > 0) {
             return res.status(400).json({
                 success: false,
                 message: "Can Not Delete Category It Used In Make",
@@ -193,7 +194,7 @@ const deleteCategory = async (req, res) => {
         }
 
          const checkinProduct = await Post.find({catId:id});
-        if (checkinProduct) {
+        if (checkinProduct.length > 0) {
             return res.status(400).json({
                 success: false,
                 message: "Can Not Delete Category It Used In Post",

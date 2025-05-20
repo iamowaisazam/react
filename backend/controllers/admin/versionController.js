@@ -1,6 +1,7 @@
 import Category from '../../models/category.js';
 import Make from '../../models/make.js';
 import Model  from '../../models/model.js';
+import Post from '../../models/post.js';
 import Version  from '../../models/version.js';
 import { body, param, validationResult } from "express-validator";
 
@@ -235,6 +236,16 @@ const Update = async (req, res) => {
 const Delete = async (req, res) => {
 
     const { id } = req.params;
+
+    const checkinProduct = await Post.find({verId:id});
+    if (checkinProduct.length > 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Can Not Delete Version It Used In Post",
+        })
+    }
+
+
     const version = await Version.findByIdAndDelete(id);
     if (!version) {
         return res.status(404).json({
@@ -243,13 +254,7 @@ const Delete = async (req, res) => {
         });
     }
 
-     const checkinProduct = await Post.find({verId:id});
-    if (checkinProduct) {
-        return res.status(400).json({
-            success: false,
-            message: "Can Not Delete Version It Used In Post",
-        })
-    }
+   
 
     return res.status(200).json({
         success: true,

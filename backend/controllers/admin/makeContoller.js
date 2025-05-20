@@ -153,20 +153,21 @@ const Delete = async (req, res) => {
 
 
     const model = await Model.find({makeId:id});
-    if (model) {
+    if (model.length > 0) {
         return res.status(400).json({
             success: false,
             message: "Can Not Delete Make It Used In Make",
         })
     }
 
-      const checkinProduct = await Post.find({makeId:id});
-        if (checkinProduct) {
-            return res.status(400).json({
-                success: false,
-                message: "Can Not Delete Make It Used In Post",
-            })
-        }
+    
+    const checkinProduct = await Post.find({makeId:id});
+    if (checkinProduct.length > 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Can Not Delete Make It Used In Post",
+        })
+    }
 
 
     const getmake = await make.findByIdAndDelete(id);

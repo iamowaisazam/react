@@ -213,7 +213,7 @@ const Delete = async (req, res) => {
    
 
     const version = await Version.find({modelId:id});
-    if (version) {
+    if (version.length > 0) {
         return res.status(400).json({
             success: false,
             message: "Can Not Delete Model It Used In Make",
@@ -221,7 +221,7 @@ const Delete = async (req, res) => {
     }
 
      const checkinProduct = await Post.find({modelId:id});
-    if (checkinProduct) {
+    if (checkinProduct.length > 0) {
         return res.status(400).json({
             success: false,
             message: "Can Not Delete Model It Used In Post",
