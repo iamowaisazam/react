@@ -182,8 +182,8 @@ export default function Sidebar({ collapsed }) {
                 title="Cars"
                 icon={FaCar}
                 links={[
-                    { label: "Add Car", icon: FaUserPlus, to: "/admin/add-car" },
-                    { label: "View Cars", icon: FaCar, to: "/admin/view-cars" }
+                    { label: "Add Car", icon: FaUserPlus, to: "/admin/add-post" },
+                    { label: "View Cars", icon: FaCar, to: "/admin/view-post" }
                 ]}
                 collapsed={collapsed}
             />

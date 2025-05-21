@@ -50,9 +50,10 @@ import Version from './pages/admin/version/index.jsx';
 import Addversion from './pages/admin/version/add.jsx';
 import EditVersion from './pages/admin/version/edit.jsx';
 
-// car
-import Addcar from './pages/admin/car/add.jsx';
-import Car from './pages/admin/car/index.jsx';
+// Post
+import AddPost from './pages/admin/post/add.jsx';
+import Post from './pages/admin/post/index.jsx';
+import EditPost from './pages/admin/post/edit.jsx';
 
 // Setting
 import General from './pages/admin/setting/index.jsx';
@@ -126,8 +127,9 @@ const appRouter = createBrowserRouter([
       { path: "edit-version/:id", element: <EditVersion /> },
 
 
-      { path: "view-cars", element: <Car /> },
-      { path: "add-car", element: <Addcar /> },
+      { path: "view-post", element: <Post /> },
+      { path: "add-post", element: <AddPost /> },
+      { path: "edit-post/:id", element: <EditPost /> },
       { path: "settings/general", element: <General /> },
     ]
   }
