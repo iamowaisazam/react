@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { increment, decrement, incrementByAmount } from '../../../../store/slices/counterSlice.js';
 import Search from "./search";
 import Slider from './slider/index.jsx';
+import MyComponent from './test.jsx';
 
 
 export default function Home() {
@@ -26,7 +27,7 @@ export default function Home() {
 
       <Search showTop={true} />
 
-
+      <MyComponent />
     </div>
 
 
