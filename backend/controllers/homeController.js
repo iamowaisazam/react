@@ -23,7 +23,7 @@ const getProducts = async (req, res) => {
     let query = {};
 
     if (req.query.id) {
-        query.id = req.query.id;
+        query._id = req.query.id;
     }
 
     if (req.query.catId) {
@@ -44,9 +44,9 @@ const getProducts = async (req, res) => {
 
 
 
-    if (req.query.id) {
-        query.id = req.query.id;
-    }
+    // if (req.query.id) {
+    //     query.id = req.query.id;
+    // }
 
     //Search
     if (req.query.search) {

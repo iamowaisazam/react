@@ -43,7 +43,7 @@ export default function CarCard({ car }) {
 
         <div className="d-flex align-items-center justify-content-between mt-3">
           <small className="text-muted text-truncate" style={{ maxWidth: '70%' }}>👤 {car.user.name}</small>
-          <button onClick={() => navigate(`/detail/${car.slug}`)} className="btn btn-outline-warning btn-sm">View More</button>
+          <button onClick={() => navigate(`/detail/${car._id}`)} className="btn btn-outline-warning btn-sm">View More</button>
         </div>
       </div>
     </div>
