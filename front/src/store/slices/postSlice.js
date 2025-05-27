@@ -1,17 +1,35 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getPost } from '../../data/post';
-
+import axios from 'axios';
+const url = import.meta.env.VITE_API_URL || "";
 export const fetchPosts = createAsyncThunk(
     'posts/fetchAll',
     async (_, thunkAPI) => {
         try {
-            const response = await getPost();
-            return response;
+            const state = thunkAPI.getState();
+            const filters = state.postState.filters;
+
+            const params = new URLSearchParams();
+
+            if (filters.catId) params.append('catId', filters.catId);
+            if (filters.makeId) params.append('makeId', filters.makeId);
+            if (filters.modelId) params.append('modelId', filters.modelId);
+            if (filters.verId) params.append('verId', filters.verId);
+
+
+            const response = await axios.get(`${url}posts?${params.toString()}`);
+            if (response.data.data.data) {
+                return response.data.data.data;
+
+            } else {
+                return "not found a single product";
+            }
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
         }
     }
 );
+
 
 export const fetchPostById = createAsyncThunk(
     'posts/fetchById',
@@ -30,9 +48,30 @@ const postSlice = createSlice({
     initialState: {
         posts: [],
         loading: false,
-        error: null
+        error: null,
+        filters: {
+            catId: '',
+            makeId: '',
+            modelId: '',
+            verId: '',
+            year: '',
+        },
     },
-    reducers: {},
+    reducers: {
+        setFilter: (state, action) => {
+            const { filter, value } = action.payload;
+            state.filters[filter] = value;
+        },
+        clearFilters: (state) => {
+            state.filters = {
+                catId: '',
+                makeId: '',
+                modelId: '',
+                verId: '',
+                year: '',
+            };
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchPosts.pending, (state) => {
@@ -47,19 +86,19 @@ const postSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
-
             .addCase(fetchPostById.fulfilled, (state, action) => {
                 const post = action.payload;
                 const exists = state.posts.find(p => p._id === post?._id);
                 if (!exists && post) {
                     state.posts.push(post);
                 }
-            })
-    }
+            });
+    },
 });
 
 export const selectPostById = (state, postId) => {
     return state.postState.posts.find(post => post._id === postId);
 };
 
+export const { setFilter, clearFilters } = postSlice.actions;
 export default postSlice.reducer;

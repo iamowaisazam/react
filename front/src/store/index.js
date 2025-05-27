@@ -4,6 +4,10 @@ import productReducer from './slices/productSlice';
 import sliderReducer from './slices/sliderSlice';
 import colorReducer from './slices/colorSlice';
 import postSlice from './slices/postSlice';
+import makesReducer from './slices/makeSlice';
+import categoriesSlice from './slices/categorySlice';
+import modelsSlice from './slices/modelSlice';
+import versionReducer from './slices/versionSlice';
 import uiReducer from './slices/globalSlice';
 import popupReducer from './slices/reportpopupslice';
 import { userApi } from '../features/usersApi';
@@ -17,6 +21,10 @@ export const store = configureStore({
     color: colorReducer,
     ui: uiReducer,
     postState: postSlice,
+    makes: makesReducer,
+    categories: categoriesSlice,
+    models: modelsSlice,
+    versions: versionReducer,
     popup: popupReducer,
     [userApi.reducerPath]: userApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
