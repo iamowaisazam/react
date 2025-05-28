@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { getModel } from '../../model/modelFeature';
 
 export default function ModelDropDown(props) {
-    const { value, setValue, error, disabled = false } = props;
+    const { value, setValue, error, disabled = false, onModelSelect } = props;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
