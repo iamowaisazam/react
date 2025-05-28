@@ -88,7 +88,6 @@ export default function Model() {
                 </h5>
 
                 <Link to="/admin/add-model" className="admin_add_btn">
-                    <FaUserPlus style={{ marginRight: "8px" }} />
                     Add Model
                 </Link>
             </div>

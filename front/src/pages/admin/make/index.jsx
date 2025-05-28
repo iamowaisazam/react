@@ -88,7 +88,6 @@ export default function Make() {
                 </h5>
 
                 <Link to="/admin/add-make" className="admin_add_btn">
-                    <FaUserPlus style={{ marginRight: "8px" }} />
                     Add Make
                 </Link>
             </div>

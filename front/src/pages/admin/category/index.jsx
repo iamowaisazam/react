@@ -88,7 +88,6 @@ export default function Users() {
                 </h5>
 
                 <Link to="/admin/add-category" className="admin_add_btn">
-                    <FaUserPlus style={{ marginRight: "8px" }} />
                     Add Category
                 </Link>
             </div>
