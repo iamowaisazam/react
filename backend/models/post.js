@@ -21,7 +21,11 @@ const postSchema = new mongoose.Schema(
         city: {type: String},
         tags:{type: String},
         features: {type: Object,default: {}},
-        
+        specs:{type:[{
+          title: { type: String },
+          value: { type: String },
+          icon: { type: String },
+        }],default: []},
         date: {type: Date,default: Date.now},
     },
     {timestamps: true}

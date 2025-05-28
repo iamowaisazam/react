@@ -5,6 +5,8 @@ import DB from './database/mongodb.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import authMiddleware from './middlewares/authMiddleware.js'
+import multer from 'multer';
+
 
 // Controllers
 import loginController from './controllers/loginController.js';
@@ -24,18 +26,20 @@ const __dirname = path.dirname(__filename);
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-
+const upload = multer();
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 const PORT = process.env.PORT || 3000;
 
 DB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 
 
@@ -97,9 +101,9 @@ app.delete('/admin/versions/:id', Version.Delete);
 
 // Car
 app.get('/admin/posts',Post.List);
-app.post('/admin/posts/create', Post.Create);
+app.post('/admin/posts/create',upload.none(), Post.Create);
 app.get('/admin/posts/:id', Post.Find);
-app.put('/admin/posts/:id', Post.Update);
+app.put('/admin/posts/:id',upload.none(),Post.Update);
 app.delete('/admin/posts/:id', Post.Delete);
 
 

@@ -78,10 +78,10 @@ const Create = async (req, res) => {
         .withMessage('Invalid Version ID').run(req),
         body('userId').notEmpty().withMessage('Select a User').isMongoId()
         .withMessage('Invalid Version ID').run(req),
-         body('country').notEmpty().withMessage('Country Is Required').run(req), 
-         body('city').notEmpty().withMessage('City Is Required').run(req),    
-         body('state').notEmpty().withMessage('State Is Required').run(req),
-         body('tags').notEmpty().withMessage('Tags Is Required').run(req), 
+        body('country').notEmpty().withMessage('Country Is Required').run(req), 
+        body('city').notEmpty().withMessage('City Is Required').run(req),    
+        body('state').notEmpty().withMessage('State Is Required').run(req),
+        body('tags').notEmpty().withMessage('Tags Is Required').run(req), 
     ]);
 
 
@@ -171,7 +171,8 @@ const Create = async (req, res) => {
          state:req.body.state,
          city:req.body.city,
          tags:req.body.tags,
-         features:req.body.features,
+         features:req.body.features ? JSON.parse(req.body.features) : {},
+         specs:req.body.specs ? JSON.parse(req.body.specs) : [],
          latitude:req.body.latitude,
          longitude:req.body.longitude,
          description:req.body.description,
@@ -226,6 +227,7 @@ const Update = async (req, res) => {
     await Promise.all([
         body('title').notEmpty().withMessage('Title is required').run(req),
         body('slug').notEmpty().withMessage('Slug is required').run(req),
+        body('price').notEmpty().withMessage('Price is required').run(req),
         body('catId').notEmpty().withMessage('Select a Category').isMongoId()
         .withMessage('Invalid Category ID').run(req),
         body('makeId').notEmpty().withMessage('Select a Make').isMongoId()
@@ -313,18 +315,20 @@ const Update = async (req, res) => {
 
     const post = await Post.findByIdAndUpdate(req.params.id,
         { 
-         title:title,
-         slug:slug, 
-         catId:catId, 
-         makeId:makeId,
-         modelId:modelId,
-         verId:verId,
+         title:req.body.title,
+         slug:req.body.slug, 
+         price:req.body.price, 
+         catId:req.body.catId, 
+         makeId:req.body.makeId,
+         modelId:req.body.modelId,
+         verId:req.body.verId,
          userId:req.body.userId,
          country:req.body.country,
          state:req.body.state,
          city:req.body.city,
          tags:req.body.tags,
-         features:req.body.features,
+         features:req.body.features ? JSON.parse(req.body.features) : {},
+         specs:req.body.specs ? JSON.parse(req.body.specs) : [],
          latitude:req.body.latitude,
          longitude:req.body.longitude,
          description:req.body.description,

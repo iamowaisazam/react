@@ -75,42 +75,6 @@ const getProducts = async (req, res) => {
     const pages = Math.ceil(total / limit);
 
      data.map(async (item) => {
-        
-        item.features = JSON.parse(item.features) ?? '';
-
-        // item.image = `public/uploads/car-five.jpg`;
-        // item.images = [
-        //     `${BASE_PATH}/public/uploads/car-five.jpg`,
-        //     `${BASE_PATH}/public/uploads/car-five.jpg`,
-        //     `${BASE_PATH}/public/uploads/car-five.jpg`,
-        //     `${BASE_PATH}/public/uploads/car-five.jpg`,
-        //     `${BASE_PATH}/public/uploads/car-five.jpg`,
-        // ];
-
-        // item.tags = ['A/C: Front', 'Backup Camera', 'Cruise Control', 'Navigation'];
-        // item.country = 'Pakistan';
-        // item.state = 'Sindh';
-        // item.city = 'Karachi';
-        // item.description = 'Descrition';
-        // item.price = 100;
-        // item.longitude = '123';
-        // item.latitude = '123';
-
-        // item.user = {
-        //     id: 1,
-        //     name: 'David Johnson',
-        //     email: 'user@gmail.com',
-        //     phone: '03112239342'
-        // };
-
-        // item.features = {
-        //     body: 'Truck',
-        //     fuel_type: 'Petrol',
-        //     transmission: 'Automatic',
-        //     door: 2,
-        //     color: 'red',
-        //     condition: 'used',
-        // };
 
     //     return item;
 
