@@ -35,10 +35,15 @@ export default function EditVersion() {
     }, [id]);
 
     const fetchVersion = async () => {
-        try {
+        // try {
             const res = await getSinglePost(id);
             if (res.data.success) {
                 const { catId, makeId, modelId, verId, title, slug } = res.data.data;
+
+                // console.log(JSON.parse("'{\"feature1\":1,\"feature2\":2}'"));
+                console.log(JSON.parse(res.data.data.features));
+
+                
                 setFormData({
                     catId: catId?._id || '',
                     makeId: makeId?._id || '',
@@ -51,10 +56,10 @@ export default function EditVersion() {
                 toast.error("Failed to fetch post details");
                 navigate('/admin/view-post');
             }
-        } catch (error) {
-            toast.error("Error fetching post data");
-            navigate('/admin/view-post');
-        }
+        // } catch (error) {
+            // toast.error("Error fetching post data");
+            // navigate('/admin/view-post');
+        // }
     };
 
     const handleInputChange = (field, value) => {

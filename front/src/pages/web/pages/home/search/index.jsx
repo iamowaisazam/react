@@ -7,6 +7,7 @@ import TopFilter from './TopFilter';
 import './style.css';
 
 export default function Search({ showTop = false }) {
+
   const dispatch = useDispatch();
   const { posts, loading, error } = useSelector((state) => state.postState);
 
@@ -18,8 +19,14 @@ export default function Search({ showTop = false }) {
   });
 
   useEffect(() => {
+
+    // fetchPosts(filters);
+    // fetchPosts(filters);
+
     dispatch(fetchPosts(filters));
-  }, [dispatch, filters]);
+ 
+    
+  }, [filters]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -41,13 +48,19 @@ export default function Search({ showTop = false }) {
           <div className="col-md-9">
             {loading && <p>Loading...</p>}
             {error && <p>Error: {error}</p>}
-            <div className="row">
-              {posts.map((car, index) => (
-                <div className="col-md-4" key={index}>
-                  <CarCard car={car} />
-                </div>
-              ))}
-            </div>
+           
+
+             <div className="row">
+                {posts &&
+                  posts.map((car, index) => (
+                    <div className="col-md-4" key={index}>
+                      <CarCard car={car} />
+                    </div>
+                  ))
+                }
+            </div> 
+          
+
           </div>
         </div>
       </div>

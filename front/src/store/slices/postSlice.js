@@ -2,31 +2,24 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getPost } from '../../data/post';
 import axios from 'axios';
 const url = import.meta.env.VITE_API_URL || "";
+
+
+
 export const fetchPosts = createAsyncThunk(
     'posts/fetchAll',
     async (_, thunkAPI) => {
-        try {
-            const state = thunkAPI.getState();
-            const filters = state.postState.filters;
 
-            const params = new URLSearchParams();
+            // const state = thunkAPI.getState();
+            // const filters = state.postState.filters;
+            // const params = new URLSearchParams();
+            // if (filters.catId) params.append('catId', filters.catId);
+            // if (filters.makeId) params.append('makeId', filters.makeId);
+            // if (filters.modelId) params.append('modelId', filters.modelId);
+            // if (filters.verId) params.append('verId', filters.verId);
 
-            if (filters.catId) params.append('catId', filters.catId);
-            if (filters.makeId) params.append('makeId', filters.makeId);
-            if (filters.modelId) params.append('modelId', filters.modelId);
-            if (filters.verId) params.append('verId', filters.verId);
-
-
-            const response = await axios.get(`${url}posts?${params.toString()}`);
-            if (response.data.data.data) {
-                return response.data.data.data;
-
-            } else {
-                return "not found a single product";
-            }
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
-        }
+            return axios.get(`${url}posts`)
+            .then( response => response.data)
+            .catch(( response) => response)
     }
 );
 
@@ -42,6 +35,10 @@ export const fetchPostById = createAsyncThunk(
         }
     }
 );
+
+
+
+
 
 const postSlice = createSlice({
     name: 'posts',
@@ -80,7 +77,8 @@ const postSlice = createSlice({
             })
             .addCase(fetchPosts.fulfilled, (state, action) => {
                 state.loading = false;
-                state.posts = action.payload;
+                state.posts = action.payload.data.data;
+
             })
             .addCase(fetchPosts.rejected, (state, action) => {
                 state.loading = false;

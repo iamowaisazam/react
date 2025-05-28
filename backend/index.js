@@ -116,7 +116,7 @@ router.get('*', (req, res) => {
   res.status(404).send('404 Not Found');
 });
 
-app.use(BASE_PATH, router);
+app.use(BASE_PATH+'/', router);
 
 
 app.listen(PORT, () => {

@@ -77,7 +77,7 @@ export default function Model() {
 
 
     return (
-        <main style={{ width: '1200px', margin: '0 auto' }}>
+        <main >
 
             <div
                 className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom"
@@ -139,7 +139,6 @@ export default function Model() {
                                 </thead>
                                 <tbody>
                                     {
-
                                         state.loading ? (
                                             <tr>
                                                 <td colSpan={5} className="text-center py-4">
@@ -147,40 +146,25 @@ export default function Model() {
                                                     <div className="loading-text">Please wait...</div>
                                                 </td>
                                             </tr>
-
                                         ) :
-
-
-
                                             data.map((retunData, index) => (
                                                 <tr key={retunData._id}>
                                                     <td>{index + 1}</td>
                                                     <td>{retunData.title}</td>
                                                     <td>{retunData.slug}</td>
-                                                    <td>{retunData.catId || 'N/A'}</td>
-                                                    <td>{retunData.makeId || 'N/A'}</td>
-                                                    <td>{retunData.modelId || 'N/A'}</td>
-                                                    <td>{retunData.verId || 'N/A'}</td>
+                                                    <td>{retunData?.catId?.name}</td>
+                                                    <td>{retunData?.makeId?.name}</td>
+                                                    <td>{retunData?.modelId?.name}</td>
+                                                    <td>{retunData?.verId?.name}</td>
                                                     <td>
                                                         <div className="d-flex gap-2">
-                                                            <button
-                                                                className="btn btn-sm btn-outline-primary"
-                                                                onClick={() => navigate(`/admin/edit-post/${retunData._id}`)}
-                                                            >
-                                                                ✎ Edit
+                                                            <button className="btn btn-sm btn-outline-primary" onClick={() => navigate(`/admin/edit-post/${retunData._id}`)} >Edit
                                                             </button>
-                                                            <button
-                                                                className="btn btn-sm btn-outline-danger"
-                                                                onClick={() => handleDelete(retunData._id)}
-                                                            >
-                                                                🗑 Delete
-                                                            </button>
+                                                            <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(retunData._id)}>Delete</button>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             ))
-
-
                                     }
                                 </tbody>
                             </table>
