@@ -1,7 +1,20 @@
 import { useState } from 'react'
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const path = import.meta.env.VITE_PATH || "";
 export default () => {
+
+
   const bgImage = path + '/images/banner.jpg';
+
+       const auth = useSelector(state => state.auth);
+       const navigate = useNavigate();
+
+       if(!auth.user){
+        navigate("/"); 
+       }
+
+       
   return (
     <div className="bg-black text-white">
 

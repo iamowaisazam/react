@@ -30,9 +30,10 @@ const register = async (req, res) => {
             return res.status(400).json({
               success: false,
               message: 'Validation failed',
-              errors: errors.array().map(err => ({
-                [err.path]: err.msg
-              }))
+              errors: errors.array().reduce((acc, err) => {
+                acc[err.path] = err.msg;
+                return acc;
+            }, {})
             });
           }
 
@@ -93,9 +94,10 @@ const login = async (req, res) => {
             return res.status(400).json({
             success: false,
             message: 'Validation failed',
-            errors: errors.array().map(err => ({
-                [err.path]: err.msg
-            }))
+            errors: errors.array().reduce((acc, err) => {
+                acc[err.path] = err.msg;
+                return acc;
+            }, {})
             });
         }
 
@@ -122,9 +124,13 @@ const login = async (req, res) => {
             success: true,
             message: "Logged In",
             data:{
-                name:updatedUser.name,
-                email:updatedUser.email,
-                token:updatedUser.token,
+                user:{
+                    name:updatedUser.name,
+                    email:updatedUser.email,
+                    permission:updatedUser.permission,
+                    role:updatedUser.role,
+                    token:updatedUser.token,
+                }
             }
         });
 
@@ -137,26 +143,24 @@ const login = async (req, res) => {
 // **
  const logout = async (req, res) => {
 
-            const user = await User.findOne({ token: req.params.token });
-            if(!user){
-                return res.status(500).json({
-                    success: false,
-                    message: "Failed to logout"
-                })
-            }
+    const user = await User.findOne({ token: req.params.token });
+    if(!user){
+        return res.status(500).json({
+            success: false,
+            message: "Failed to logout"
+        })
+    }
 
-            const updatedUser = await User.findByIdAndUpdate(
-                user._id,
-                { token:null },
-                { new: true }
-              );
+    const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { token:null },
+        { new: true }
+        );
 
-        
-            return res.status(200).json({
-                message: "Logged out successfully.",
-                success: true
-            });
-
+    return res.status(200).json({
+        message: "Logged out successfully.",
+        success: true
+    });
 
 }
 
@@ -180,7 +184,13 @@ const login = async (req, res) => {
             success: true,
             message: "Success",
             data:{
-                user
+                user:{
+                    name:user.name,
+                    email:user.email,
+                    permission:user.permission,
+                    role:user.role,
+                    token:user.token,
+                }
             }
         });
 

@@ -10,6 +10,7 @@ import modelsSlice from './slices/modelSlice';
 import versionReducer from './slices/versionSlice';
 import uiReducer from './slices/globalSlice';
 import popupReducer from './slices/reportpopupslice';
+import AuthReducer from './slices/AuthSlice';
 import { userApi } from '../features/usersApi';
 import { categoryApi } from '../features/categoryApi';
 
@@ -26,6 +27,7 @@ export const store = configureStore({
     models: modelsSlice,
     versions: versionReducer,
     popup: popupReducer,
+    auth: AuthReducer,
     [userApi.reducerPath]: userApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
   },

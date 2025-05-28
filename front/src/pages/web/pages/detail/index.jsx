@@ -106,17 +106,21 @@ export default function Detail() {
 
               <div className="border-top border-white mt-4 pt-3">
                 <h5 className="text-warning mb-3">{post.title}</h5>
-                <div className="row text-center text-white">
-                    { 
-                      post.specs.map((spec, i) => (
-                      <div className="col-3">
-                        <FaTachometerAlt size={24} />
-                        <p className="fw-bold mb-0">{post.value}</p>
-                        <small>{spec.title}</small>
+                  {
+                    post.specs ?
+                  
+                      <div className="row text-center text-white">
+                            { 
+                              post.specs.map((spec, i) => (
+                              <div className="col-3">
+                                <FaTachometerAlt size={24} />
+                                <p className="fw-bold mb-0">{post.value}</p>
+                                <small>{spec.title}</small>
+                              </div>
+                            ))
+                          }
                       </div>
-                    ))
-                  }
-                </div>
+                 : ''}
               </div>
 
                   {
@@ -138,14 +142,17 @@ export default function Detail() {
               <div className="border-top border-white mt-4 pt-3">
                 <h5 className="text-warning mb-3">Overview</h5>
                 <div className="row g-3">
-                     {Object.entries(post.features).map(([key, value]) => (
+                  {post.features ?
+                     Object.entries(post.features).map(([key, value]) => (
                     <div className="col-12 col-sm-6 col-md-4" key={key}>
                       <div className="border border-light rounded p-3 d-flex justify-content-between h-100">
                         <span className="fw-bold">{key}:</span>
                         <span>{value}</span>
                       </div>
                     </div>
-                  ))}
+                  )) : ''
+
+                 }
                 </div>
               </div>
 
@@ -170,7 +177,7 @@ export default function Detail() {
                   onClick={() => setShowPhone(!showPhone)}
                 >
                   <FaPhone className="me-2" />
-                  {showPhone ? phoneNumber : "Show Number"}
+                  {showPhone ? post?.user?.phone  : "Show Number"}
                 </button>
 
                 <button
@@ -178,7 +185,7 @@ export default function Detail() {
                   onClick={() => setShowEmail(!showEmail)}
                 >
                   <FaEnvelope className="me-2" />
-                  {showEmail ? email : "Email Now"}
+                  {showEmail ? post?.user?.email : "Email Now"}
                 </button>
 
                 <button className="btn btn-danger w-100 mb-3">

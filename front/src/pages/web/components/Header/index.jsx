@@ -4,11 +4,14 @@ import LoginModal from '../login/index';
 import RegisterModal from '../register/index';
 import ForgotPasswordModal from '../forgot/index';
 import { toggleMenu, setModalState } from '../../../../store/slices/globalSlice';
+import { logout } from '../../../../store/slices/AuthSlice';
 const path = import.meta.env.VITE_PATH || "";
 
 export default function Header() {
   const dispatch = useDispatch();
   const { isMenuOpen, showLoginModal, showResModal, showForgetModal } = useSelector(state => state.ui);
+  const auth  = useSelector(state => state.auth);
+
   const height100 = { height: '50px' };
 
   return (
@@ -60,21 +63,20 @@ export default function Header() {
               </nav>
             </div>
 
-            {/* Desktop CTA */}
-            <div className="d-none d-md-flex">
-              <button
-                onClick={() => dispatch(setModalState({ modal: 'showLoginModal', value: true }))}
-                className="btn btn-outline-warning btn-sm me-2"
-              >Login</button>
-              <button
-                onClick={() => dispatch(setModalState({ modal: 'showResModal', value: true }))}
-                className="btn btn-outline-warning btn-sm me-2"
-              >Register</button>
-              {/* <Link className="btn btn-warning btn-sm">Add Listing</Link> */}
-              <Link to="/admin/dashboard" className="btn btn-warning btn-sm">
-                Add Listing
-              </Link>
-            </div>
+            {
+              !auth.user ?
+                <div className="d-none d-md-flex">
+                  <button onClick={() => dispatch(setModalState({ modal: 'showLoginModal', value: true }))}
+                    className="btn btn-outline-warning btn-sm me-2">Login</button>
+                  <button onClick={() => dispatch(setModalState({ modal: 'showResModal', value: true }))}
+                    className="btn btn-outline-warning btn-sm me-2">Register</button>
+                </div> :
+                <div className="d-none d-md-flex">
+                  <Link to="/admin/dashboard" className="btn btn-warning btn-sm">Add Listing</Link>
+                  <button onClick={() => dispatch(logout())} className="btn btn-outline-warning btn-sm me-2">Logout</button>
+                </div> 
+            }
+            
           </div>
 
           {/* Mobile Drawer */}
@@ -88,17 +90,19 @@ export default function Header() {
                 <li className="mb-2"><Link to="/contact" className="text-white" onClick={() => dispatch(toggleMenu())}>Contact</Link></li>
               </ul>
             </nav>
-            <div className="mt-3">
-              <button
-                onClick={() => dispatch(setModalState({ modal: 'showLoginModal', value: true }))}
-                className="btn btn-outline-warning btn-sm me-2"
-              >Login</button>
-              <button
-                onClick={() => dispatch(setModalState({ modal: 'showResModal', value: true }))}
-                className="btn btn-outline-warning btn-sm me-2"
-              >Register</button>
-              <Link className="btn btn-warning btn-sm">Add Listing</Link>
-            </div>
+            {
+              !auth.user ? <div className="mt-3">
+                  <button onClick={() => dispatch(setModalState({ modal: 'showLoginModal', value: true }))} className="btn btn-outline-warning btn-sm me-2">Login</button>
+
+                  <button onClick={() => dispatch(setModalState({ modal: 'showResModal', value: true }))} className="btn btn-outline-warning btn-sm me-2">Register</button>
+                </div> :
+                
+                <div className="mt-3">
+                  <Link className="btn btn-warning btn-sm">Add Listing</Link>
+                  <button onClick={() => dispatch(logout())} className="btn btn-outline-warning btn-sm me-2">Logout</button>
+                </div>
+            }
+            
           </div>
         </div>
       </header>

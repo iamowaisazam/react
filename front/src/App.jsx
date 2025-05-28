@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from './pages/web/components/Layout';
 
@@ -57,6 +57,8 @@ import EditPost from './pages/admin/post/edit.jsx';
 
 // Setting
 import General from './pages/admin/setting/index.jsx';
+import { useDispatch } from 'react-redux';
+import { getuser } from './store/slices/AuthSlice.js';
 
 
 const appRouter = createBrowserRouter([
@@ -144,6 +146,25 @@ const appRouter = createBrowserRouter([
 
 
 function App() {
+
+ 
+      const dispatch = useDispatch();
+
+        const  getAuth = async () => {
+        let token = await localStorage.getItem('token');
+        if(token){
+          dispatch(getuser(token));
+        }
+        
+    }
+
+    useEffect(() => {
+
+        getAuth();
+
+    }, [dispatch]);
+
+
 
   return (
     <main>
