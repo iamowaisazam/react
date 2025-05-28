@@ -5,67 +5,60 @@ import { createModel, getAllMake } from './modelFeature';
 import CategoryDropdown from '../components/dropdowns/CategoryDropdown';
 import MakeDropDown from '../components/dropdowns/makeDropdown';
 
-
 export default function AddModel() {
     const [state, setState] = useState({
         loading: false,
         errors: {},
     });
 
-    const [categories, setCategories] = useState([]);
-    const [makes, setMakes] = useState([]);
-
     const [catId, setCatId] = useState('');
     const [makeId, setMakeId] = useState('');
     const [name, setName] = useState('');
-
     const [error, setError] = useState(false);
 
     useEffect(() => {
         getCategories()
             .then(res => {
-                if (res.data.success) {
-                    setCategories(res.data.data.data);
-                } else {
-                    toast.error("Failed to load categories.");
-                }
+                if (!res.data.success) toast.error("Failed to load categories.");
             })
-            .catch(err => {
-                console.error("Failed to fetch categories:", err);
-                toast.error("Error loading categories.");
-            });
+            .catch(() => toast.error("Error loading categories."));
 
         getAllMake()
             .then(res => {
-                if (res.data.success) {
-                    setMakes(res.data.data.data);
-                } else {
-                    toast.error("Failed to load makes.");
-                }
+                if (!res.data.success) toast.error("Failed to load makes.");
             })
-            .catch(err => {
-                console.error("Failed to fetch makes:", err);
-                toast.error("Error loading makes.");
-            });
+            .catch(() => toast.error("Error loading makes."));
     }, []);
+
+    function handleInputChange(field, value) {
+        switch (field) {
+            case 'catId':
+                setCatId(value);
+                break;
+            case 'makeId':
+                setMakeId(value);
+                break;
+            case 'name':
+                setName(value);
+                break;
+            default:
+                break;
+        }
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setError(false);
-        setState({ ...state, loading: true });
+        setState(prev => ({ ...prev, loading: true }));
 
         if (!catId || !makeId || !name) {
             setError(true);
-            setState({ ...state, loading: false });
+            setState(prev => ({ ...prev, loading: false }));
             toast.error("Please fill all required fields.");
             return;
         }
 
-        const payload = {
-            catId,
-            makeId,
-            name,
-        };
+        const payload = { catId, makeId, name };
 
         createModel(payload)
             .then(res => {
@@ -74,15 +67,16 @@ export default function AddModel() {
                     setCatId('');
                     setMakeId('');
                     setName('');
+                    setState(prev => ({ ...prev, errors: {} }));
                 } else {
                     toast.error("Failed to create model.");
                 }
             })
             .catch(error => {
-                setState({
-                    ...state,
+                setState(prev => ({
+                    ...prev,
                     errors: error.response?.data?.errors || {},
-                });
+                }));
                 toast.error("Validation failed. Please check the fields.");
             })
             .finally(() => {
@@ -90,10 +84,10 @@ export default function AddModel() {
             });
     };
 
-
     return (
         <main>
-            <div className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom" style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}>
+            <div className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom"
+                style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}>
                 <h5 className="fw-semibold mb-0" style={{ color: "#2c3e50" }}>Model</h5>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb mb-0 small">
@@ -115,7 +109,8 @@ export default function AddModel() {
                                     <CategoryDropdown
                                         value={catId}
                                         error={state.errors.catId}
-                                        setValue={(val) => setCatId(val)}
+                                        setValue={(val) => handleInputChange('catId', val)}
+                                        disabled={true}
                                     />
                                 </div>
 
@@ -124,10 +119,10 @@ export default function AddModel() {
                                     <MakeDropDown
                                         value={makeId}
                                         error={state.errors.makeId}
-                                        setValue={(val) => setMakeId(val)}
+                                        setValue={(val) => handleInputChange('makeId', val)}
+                                        setCatFromMake={(val) => handleInputChange('catId', val)}
                                     />
                                 </div>
-
 
                                 <div className="col-md-6 mb-4">
                                     <label className="form-label fw-semibold">Name</label>
@@ -136,10 +131,9 @@ export default function AddModel() {
                                         className={`form-control ${error && !name ? 'is-invalid' : ''}`}
                                         placeholder="Enter name"
                                         value={name}
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) => handleInputChange('name', e.target.value)}
                                     />
                                 </div>
-
                             </div>
 
                             <div className="d-flex justify-content-between pt-3 border-top mt-3">

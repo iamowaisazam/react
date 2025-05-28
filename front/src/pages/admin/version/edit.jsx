@@ -82,6 +82,14 @@ export default function EditVersion() {
         }
     };
 
+    const handleModelSelect = ({ makeId, catId }) => {
+        setFormData((prev) => ({
+            ...prev,
+            makeId,
+            catId,
+        }));
+    };
+
     return (
         <main>
 
@@ -107,6 +115,7 @@ export default function EditVersion() {
                                         value={formData.catId}
                                         error={state.errors.catId}
                                         setValue={(val) => handleInputChange('catId', val)}
+                                        disabled={true}
                                     />
                                 </div>
 
@@ -116,6 +125,8 @@ export default function EditVersion() {
                                         value={formData.makeId}
                                         error={state.errors.makeId}
                                         setValue={(val) => handleInputChange('makeId', val)}
+                                        setCatFromMake={(val) => handleInputChange('catId', val)}
+                                        disabled={true}
                                     />
                                 </div>
 
@@ -125,6 +136,7 @@ export default function EditVersion() {
                                         value={formData.modelId}
                                         error={state.errors.modelId}
                                         setValue={(val) => handleInputChange('modelId', val)}
+                                        onModelSelect={handleModelSelect}
                                     />
                                 </div>
 

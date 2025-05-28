@@ -12,6 +12,7 @@ export default function EditUser() {
         email: '',
         password: '',
         role: '',
+        phone: '', // ✅ Added phone field
     });
 
     const [state, setState] = useState({
@@ -28,6 +29,7 @@ export default function EditUser() {
                     email: res.data.data.email,
                     password: '',
                     role: res.data.data.role || '',
+                    phone: res.data.data.phone || '', // ✅ Get phone from response
                 });
                 setState(prev => ({ ...prev, loading: false }));
             })
@@ -93,6 +95,18 @@ export default function EditUser() {
                     </div>
 
                     <div className="mb-3">
+                        <label className="form-label fw-bold">Phone</label> {/* ✅ New field */}
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter phone number"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        />
+                        {state.errors?.phone && <small className="text-danger">{state.errors.phone}</small>}
+                    </div>
+
+                    <div className="mb-3">
                         <label className="form-label fw-bold">Role</label>
                         <select
                             className="form-control"
@@ -102,11 +116,9 @@ export default function EditUser() {
                             <option value="">Select role</option>
                             <option value="admin">Admin</option>
                             <option value="user">User</option>
-
                         </select>
                         {state.errors?.role && <small className="text-danger">{state.errors.role}</small>}
                     </div>
-
 
                     <div className="mb-3">
                         <label className="form-label fw-bold">Password</label>
@@ -119,7 +131,6 @@ export default function EditUser() {
                         />
                         {state.errors?.password && <small className="text-danger">{state.errors.password}</small>}
                     </div>
-
 
                     <div className="d-flex">
                         <button

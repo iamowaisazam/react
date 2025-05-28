@@ -25,6 +25,14 @@ export default function AddVersion() {
         }));
     };
 
+    const handleModelSelect = ({ makeId, catId }) => {
+        setFormData((prev) => ({
+            ...prev,
+            makeId,
+            catId,
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setState({ loading: true, errors: {} });
@@ -32,7 +40,7 @@ export default function AddVersion() {
         try {
             const res = await createVersions(formData);
             if (res.data.success) {
-                toast.success("Make created successfully!");
+                toast.success("Version created successfully!");
                 setFormData({
                     catId: '',
                     makeId: '',
@@ -40,7 +48,7 @@ export default function AddVersion() {
                     name: '',
                 });
             } else {
-                toast.error("Failed to create make!");
+                toast.error("Failed to create version!");
             }
         } catch (error) {
             setState({
@@ -77,6 +85,7 @@ export default function AddVersion() {
                                         value={formData.catId}
                                         error={state.errors.catId}
                                         setValue={(val) => handleInputChange('catId', val)}
+                                        disabled={true}
                                     />
                                 </div>
 
@@ -86,6 +95,8 @@ export default function AddVersion() {
                                         value={formData.makeId}
                                         error={state.errors.makeId}
                                         setValue={(val) => handleInputChange('makeId', val)}
+                                        setCatFromMake={(val) => handleInputChange('catId', val)}
+                                        disabled={true}
                                     />
                                 </div>
 
@@ -95,6 +106,7 @@ export default function AddVersion() {
                                         value={formData.modelId}
                                         error={state.errors.modelId}
                                         setValue={(val) => handleInputChange('modelId', val)}
+                                        onModelSelect={handleModelSelect}
                                     />
                                 </div>
 
@@ -115,7 +127,7 @@ export default function AddVersion() {
 
                             <div className="d-flex justify-content-between pt-3 border-top mt-3">
                                 <button type="submit" className="btn btn-dark px-4" disabled={state.loading}>
-                                    {state.loading ? 'Adding...' : 'Add Versions'}
+                                    {state.loading ? 'Adding...' : 'Add Version'}
                                 </button>
                             </div>
                         </form>

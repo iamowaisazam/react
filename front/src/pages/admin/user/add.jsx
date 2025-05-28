@@ -17,6 +17,7 @@ export default function adduser() {
         email: '',
         password: '',
         role: '',
+        phone: '',
     });
 
 
@@ -85,6 +86,19 @@ export default function adduser() {
                             />
                             {state.errors?.email && <small className="text-danger">{state.errors.email}</small>}
                         </div>
+
+                        <div className="mb-3">
+                            <label className="form-label fw-bold">Phone</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Enter phone number"
+                                value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            />
+                            {state.errors?.phone && <small className="text-danger">{state.errors.phone}</small>}
+                        </div>
+
 
                         <div className="mb-3">
                             <label className="form-label fw-bold">Role</label>

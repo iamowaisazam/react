@@ -122,6 +122,7 @@ export default function EditModel() {
                                         value={catId}
                                         error={state.errors.catId}
                                         setValue={(val) => setCatId(val)}
+                                        disabled={true}
                                     />
                                 </div>
 
@@ -131,6 +132,7 @@ export default function EditModel() {
                                         value={makeId}
                                         error={state.errors.makeId}
                                         setValue={(val) => setMakeId(val)}
+                                        setCatFromMake={(catId) => setCatId(catId)}
                                     />
                                 </div>
 

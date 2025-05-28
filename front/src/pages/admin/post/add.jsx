@@ -55,6 +55,27 @@ export default function Addcar() {
         }
     };
 
+
+    const handleVersionChange = (version) => {
+        if (version) {
+            setFormData((prev) => ({
+                ...prev,
+                verId: version._id,
+                modelId: version.modelId?._id || '',
+                makeId: version.makeId?._id || '',
+                catId: version.catId?._id || '',
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                verId: '',
+                modelId: '',
+                makeId: '',
+                catId: '',
+            }));
+        }
+    };
+
     return (
         <main>
             <div className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom" style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}>
@@ -118,6 +139,7 @@ export default function Addcar() {
                                             value={formData.catId}
                                             error={state.errors.catId}
                                             setValue={(val) => handleInputChange('catId', val)}
+                                            disabled={true}
                                         />
                                     </div>
 
@@ -127,6 +149,7 @@ export default function Addcar() {
                                             value={formData.makeId}
                                             error={state.errors.makeId}
                                             setValue={(val) => handleInputChange('makeId', val)}
+                                            disabled={true}
                                         />
                                     </div>
 
@@ -136,6 +159,7 @@ export default function Addcar() {
                                             value={formData.modelId}
                                             error={state.errors.modelId}
                                             setValue={(val) => handleInputChange('modelId', val)}
+                                            disabled={true}
                                         />
                                     </div>
                                     <div className="mb-3">
@@ -144,6 +168,7 @@ export default function Addcar() {
                                             value={formData.verId}
                                             error={state.errors.verId}
                                             setValue={(val) => handleInputChange('verId', val)}
+                                            onVersionChange={handleVersionChange}
                                         />
                                     </div>
                                 </div>

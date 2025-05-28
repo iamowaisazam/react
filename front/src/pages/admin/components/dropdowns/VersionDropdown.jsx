@@ -4,9 +4,7 @@ import { getVersions } from '../../version/versionFeature';
 
 
 export default function VersionsDropdown(props) {
-
-    const { value, setValue, error } = props;
-
+    const { value, setValue, error, onVersionChange } = props;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
@@ -32,23 +30,34 @@ export default function VersionsDropdown(props) {
         }
     }
 
+    const handleChange = (e) => {
+        const selectedId = e.target.value;
+        setValue(selectedId);
 
-    return (<div>
-        {loading ? 'Loading' :
-            <select name="verId"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                className={`form-select ${error ? 'is-invalid' : ''}`}>
-
-                <option value="99">Select Category</option>
-                {data.map((Versions) => (
-                    <option key={Versions._id} value={Versions._id}>
-                        {Versions.name}
-                    </option>
-                ))}
-
-            </select>
+        const selectedVersion = data.find(v => v._id === selectedId);
+        if (onVersionChange) {
+            onVersionChange(selectedVersion);
         }
-        {error && <div className="invalid-feedback">{error}</div>}
-    </div>);
+    };
+
+    return (
+        <div>
+            {loading ? 'Loading' :
+                <select
+                    name="verId"
+                    value={value}
+                    onChange={handleChange}
+                    className={`form-select ${error ? 'is-invalid' : ''}`}>
+                    <option value="">Select Versions</option>
+                    {data.map((version) => (
+                        <option key={version._id} value={version._id}>
+                            {version.name}
+                        </option>
+                    ))}
+                </select>
+            }
+            {error && <div className="invalid-feedback">{error}</div>}
+        </div>
+    );
 }
+
