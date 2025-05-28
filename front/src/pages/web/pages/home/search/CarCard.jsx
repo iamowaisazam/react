@@ -24,9 +24,8 @@ export default function CarCard({ car }) {
       </div>
 
       <div className="card-body">
-        <h6 className="text-muted text-truncate" style={{ maxWidth: '100%' }}>{car.slug}</h6>
+        <h6 className="text-muted text-truncate" style={{ maxWidth: '100%' }}>{car?.catId?.name}</h6>
         <h5 className="text-truncate" style={{ maxWidth: '100%' }}>{car.title}</h5>
-
 
         <div className="d-flex flex-wrap justify-content-between text-muted" style={{ fontSize: '14px', marginBottom: '10px', gap: '8px' }}>
           <span className="d-flex align-items-center" style={{ minWidth: '45%', maxWidth: '45%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

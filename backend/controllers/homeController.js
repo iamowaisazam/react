@@ -74,7 +74,9 @@ const getProducts = async (req, res) => {
     //Pages 
     const pages = Math.ceil(total / limit);
 
-    //  data.map(async (item) => {
+     data.map(async (item) => {
+        
+        item.features = JSON.parse(item.features) ?? '';
 
         // item.image = `public/uploads/car-five.jpg`;
         // item.images = [
@@ -112,7 +114,7 @@ const getProducts = async (req, res) => {
 
     //     return item;
 
-    // });
+    });
 
 
     return res.status(200).json({

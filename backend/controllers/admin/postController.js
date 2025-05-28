@@ -172,6 +172,9 @@ const Create = async (req, res) => {
          city:req.body.city,
          tags:req.body.tags,
          features:req.body.features,
+         latitude:req.body.latitude,
+         longitude:req.body.longitude,
+         description:req.body.description,
          image: `public/uploads/car-five.jpg`,
          images: [
             `public/uploads/car-five.jpg`,
@@ -310,7 +313,7 @@ const Update = async (req, res) => {
 
     const post = await Post.findByIdAndUpdate(req.params.id,
         { 
-              title:title,
+         title:title,
          slug:slug, 
          catId:catId, 
          makeId:makeId,
@@ -322,6 +325,9 @@ const Update = async (req, res) => {
          city:req.body.city,
          tags:req.body.tags,
          features:req.body.features,
+         latitude:req.body.latitude,
+         longitude:req.body.longitude,
+         description:req.body.description,
          image: `public/uploads/car-five.jpg`,
          images: [
             `public/uploads/car-five.jpg`,

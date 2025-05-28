@@ -8,7 +8,7 @@ import authMiddleware from './middlewares/authMiddleware.js'
 
 // Controllers
 import loginController from './controllers/loginController.js';
-import userController from './controllers/admin/userController.js';
+import User from './controllers/admin/userController.js';
 import Categories from './controllers/admin/categoryController.js';
 import Model from './controllers/admin/modelController.js';
 import Version from './controllers/admin/versionController.js';
@@ -52,17 +52,17 @@ router.get('/', (req, res) => {
 
 
 // Login Routes
-router.post('/register', loginController.register);
-router.post('/login', loginController.login);
-router.get('/logout/:token', loginController.logout);
-router.get('/profile/:token', loginController.getUserProfile);
+app.post('/register', loginController.register);
+app.post('/login', loginController.login);
+app.get('/logout/:token', loginController.logout);
+app.get('/profile/:token', loginController.getUserProfile);
 
 // User Routes
-router.get('/admin/users', userController.getAllUsers);
-router.post('/admin/users/create', userController.createUser);
-router.get('/admin/users/:userId', userController.getSingleUser);
-router.put('/admin/users/:userId', userController.updateUser);
-router.delete('/admin/users/:userId', userController.deleteUser);
+app.get('/admin/users', User.List);
+app.post('/admin/users/create', User.Create);
+app.get('/admin/users/:userId', User.Find);
+app.put('/admin/users/:userId', User.Update);
+app.delete('/admin/users/:userId', User.Delete);
 
 // Categories
 app.get('/admin/categories', Categories.getAllCategories);

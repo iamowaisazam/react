@@ -4,9 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectPostById, fetchPostById } from '../../../../store/slices/postSlice';
 import { FaTachometerAlt, FaCogs, FaGasPump, FaCarSide, FaCheckCircle, FaPhone, FaEnvelope, FaFlag, FaCar, FaClock } from 'react-icons/fa';
 import ReportPopup from './popup';
+
 const path = import.meta.env.VITE_PATH || "";
 const url = import.meta.env.VITE_API_URL || "";
+
 export default function Detail() {
+
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,11 +20,14 @@ export default function Detail() {
 
   const [showPhone, setShowPhone] = useState(false);
   const [showEmail, setShowEmail] = useState(false);
+  const [images,setImages] = useState([]);
 
   useEffect(() => {
+    
     if (id) {
       dispatch(fetchPostById(id));
     }
+
   }, [id, dispatch]);
 
   if (loading) return <div className="p-4">Loading...</div>;
@@ -29,10 +35,7 @@ export default function Detail() {
   if (!post) return <div className="p-4">Post not found.</div>;
 
 
-  const images = [
-    post.image?.replace(/^\/+/, '/') || '',
-    ...(post.images?.map(img => img.replace(/^\/+/, '/')) || [])
-  ].filter(Boolean);
+
 
   const features = post.tags || [];
 
@@ -48,6 +51,7 @@ export default function Detail() {
 
 
   const phoneNumber = post.user?.phone || "N/A";
+
   const email = post.user?.email || "N/A";
 
 
@@ -76,7 +80,7 @@ export default function Detail() {
             <div className="col-md-8">
               <div id="carImagesCarousel" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner">
-                  {images.length ? images.map((img, index) => (
+                  {post.images.split(',').length ? post.images.split(',').map((img, index) => (
                     <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
                       <img
                         src={url + img}
@@ -87,7 +91,7 @@ export default function Detail() {
                     </div>
                   )) : <div>No images available</div>}
                 </div>
-                {images.length > 1 && <>
+                {post.images.split(',').length > 1 && <>
                   <button className="carousel-control-prev" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="prev">
                     <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span className="visually-hidden">Previous</span>
@@ -126,28 +130,30 @@ export default function Detail() {
                 </div>
               </div>
 
-
-              <div className="border-top border-white mt-4 pt-3">
-                <h5 className="text-warning mb-3">Key Features</h5>
-                <div className="row">
-                  {features.length > 0 ? features.map((feature, i) => (
-                    <div className="col-md-6 mb-2" key={i}>
-                      <FaCheckCircle className="text-warning me-2" />
-                      {feature}
-                    </div>
-                  )) : <p>No features available.</p>}
-                </div>
-              </div>
-
+                  {
+                    post.tags ?
+                      <div className="border-top border-white mt-4 pt-3">
+                        <h5 className="text-warning mb-3">Key Features</h5>
+                        <div className="row">
+                          { 
+                            post.tags.split(',').map((feature, i) => (
+                            <div className="col-md-6 mb-2" key={i}>
+                              <FaCheckCircle className="text-warning me-2" />
+                              {feature}
+                            </div>
+                          ))}
+                        </div>
+                      </div> : <p>No features available.</p>
+                }
 
               <div className="border-top border-white mt-4 pt-3">
                 <h5 className="text-warning mb-3">Overview</h5>
                 <div className="row g-3">
-                  {specs.map((item, index) => (
-                    <div className="col-12 col-sm-6 col-md-4" key={index}>
+                     {Object.entries(post.features).map(([key, value]) => (
+                    <div className="col-12 col-sm-6 col-md-4" key={key}>
                       <div className="border border-light rounded p-3 d-flex justify-content-between h-100">
-                        <span className="fw-bold">{item.label}:</span>
-                        <span>{item.value}</span>
+                        <span className="fw-bold">{key}:</span>
+                        <span>{value}</span>
                       </div>
                     </div>
                   ))}
@@ -159,12 +165,11 @@ export default function Detail() {
                 <div className="mt-5">
                   <h5 className="text-warning fw-bold border-bottom pb-2 mb-3">Contact Us</h5>
                   <p className="text-white-50" style={{ maxWidth: '90%' }}>
-                    {post.description || "Please contact us for more information about this vehicle."}
+                     {post.description}
                   </p>
                 </div>
               </div>
             </div>
-
 
             <div className="col-md-4">
               <div
