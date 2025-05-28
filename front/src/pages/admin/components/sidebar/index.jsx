@@ -179,11 +179,11 @@ export default function Sidebar({ collapsed }) {
 
 
             <SidebarSection
-                title="Cars"
+                title="Posts"
                 icon={FaCar}
                 links={[
-                    { label: "Add Car", icon: FaUserPlus, to: "/admin/add-post" },
-                    { label: "View Cars", icon: FaCar, to: "/admin/view-post" }
+                    { label: "Add Post", icon: FaUserPlus, to: "/admin/add-post" },
+                    { label: "View Posts", icon: FaCar, to: "/admin/view-post" }
                 ]}
                 collapsed={collapsed}
             />
