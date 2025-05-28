@@ -107,26 +107,15 @@ export default function Detail() {
               <div className="border-top border-white mt-4 pt-3">
                 <h5 className="text-warning mb-3">{post.title}</h5>
                 <div className="row text-center text-white">
-                  <div className="col-3">
-                    <FaTachometerAlt size={24} />
-                    <p className="fw-bold mb-0">{post.kms || "N/A"}</p>
-                    <small>Mileage</small>
-                  </div>
-                  <div className="col-3">
-                    <FaCogs size={24} />
-                    <p className="fw-bold mb-0">{post.features?.engine || "N/A"}</p>
-                    <small>Engine</small>
-                  </div>
-                  <div className="col-3">
-                    <FaGasPump size={24} />
-                    <p className="fw-bold mb-0">{post.features?.fuel_type || "N/A"}</p>
-                    <small>Fuel Type</small>
-                  </div>
-                  <div className="col-3">
-                    <FaCarSide size={24} />
-                    <p className="fw-bold mb-0">{post.features?.condition || "N/A"}</p>
-                    <small>Condition</small>
-                  </div>
+                    { 
+                      post.specs.map((spec, i) => (
+                      <div className="col-3">
+                        <FaTachometerAlt size={24} />
+                        <p className="fw-bold mb-0">{post.value}</p>
+                        <small>{spec.title}</small>
+                      </div>
+                    ))
+                  }
                 </div>
               </div>
 
@@ -163,7 +152,7 @@ export default function Detail() {
               {/* Contact Us Text */}
               <div className="border-top border-white mt-4 pt-3">
                 <div className="mt-5">
-                  <h5 className="text-warning fw-bold border-bottom pb-2 mb-3">Contact Us</h5>
+                  <h5 className="text-warning fw-bold border-bottom pb-2 mb-3">Description</h5>
                   <p className="text-white-50" style={{ maxWidth: '90%' }}>
                      {post.description}
                   </p>
