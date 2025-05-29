@@ -67,23 +67,7 @@ const Create = async (req, res) => {
     await Promise.all([
         body('title').notEmpty().withMessage('Title is required').run(req),
         body('slug').notEmpty().withMessage('Slug is required').run(req),
-        body('price').notEmpty().withMessage('Price is required').run(req),
-        body('catId').notEmpty().withMessage('Select a Category').isMongoId()
-        .withMessage('Invalid Category ID').run(req),
-        body('makeId').notEmpty().withMessage('Select a Make').isMongoId()
-        .withMessage('Invalid Make ID').run(req),
-        body('modelId').notEmpty().withMessage('Select a Model').isMongoId()
-        .withMessage('Invalid Model ID').run(req),
-        body('verId').notEmpty().withMessage('Select a Version').isMongoId()
-        .withMessage('Invalid Version ID').run(req),
-        body('userId').notEmpty().withMessage('Select a User').isMongoId()
-        .withMessage('Invalid Version ID').run(req),
-        body('country').notEmpty().withMessage('Country Is Required').run(req), 
-        body('city').notEmpty().withMessage('City Is Required').run(req),    
-        body('state').notEmpty().withMessage('State Is Required').run(req),
-        body('tags').notEmpty().withMessage('Tags Is Required').run(req), 
     ]);
-
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -96,95 +80,12 @@ const Create = async (req, res) => {
             }, {})
         });
     }
-
-    const { title, slug, verId, catId, makeId, modelId} = req.body;
-
-
-    const user = await User.find({id:req.body.userId});
-    if (!user) {
-        return res.status(404).json({
-            success: false,
-            message: 'Validation errors',
-            errors: {
-                catId:'Invalid User',
-            }
-        });
-    }
-
-
-    const category = await Category.find({id:req.body.catId});
-    if (!category) {
-        return res.status(404).json({
-            success: false,
-            message: 'Validation errors',
-            errors: {
-                catId:'Invalid Cat Id',
-            }
-        });
-    }
-
-
-    const make = await Make.find({id:req.body.makeId});
-    if (!make) {
-        return res.status(404).json({
-            success: false,
-            message: "Make not found",
-            errors: {
-                makeId:'Invalid Make Id',
-            }
-        });
-    }
-
-
-    const model = await Model.find({id:req.body.modelId});
-    if (!model) {
-        return res.status(404).json({
-            success: false,
-            message: "Model not found",
-            errors: {
-                verId:'Invalid Model Id',
-            }
-        });
-    }
-
-    const version = await Version.find({id:req.body.verId});
-    if (!version) {
-        return res.status(404).json({
-            success: false,
-            message: "Version not found",
-            errors: {
-                verId:'Invalid Model Id',
-            }
-        });
-    }
         
     const insertMake = new Post({
-         title:title,
-         slug:slug, 
-         price:req.body.price, 
-         catId:catId, 
-         makeId:makeId,
-         modelId:modelId,
-         verId:verId,
-         userId:req.body.userId,
-         country:req.body.country,
-         state:req.body.state,
-         city:req.body.city,
-         tags:req.body.tags,
-         features:req.body.features ? JSON.parse(req.body.features) : {},
-         specs:req.body.specs ? JSON.parse(req.body.specs) : [],
-         latitude:req.body.latitude,
-         longitude:req.body.longitude,
-         description:req.body.description,
-         image: `public/uploads/car-five.jpg`,
-         images: [
-            `public/uploads/car-five.jpg`,
-            `public/uploads/car-five.jpg`,
-            `public/uploads/car-five.jpg`,
-            `public/uploads/car-five.jpg`,
-            `public/uploads/car-five.jpg`].toString()
+         title:req.body.title,
+         slug:req.body.slug, 
+         status:0,
     });
-
 
     await insertMake.save();
 
@@ -227,7 +128,9 @@ const Update = async (req, res) => {
     await Promise.all([
         body('title').notEmpty().withMessage('Title is required').run(req),
         body('slug').notEmpty().withMessage('Slug is required').run(req),
+        
         body('price').notEmpty().withMessage('Price is required').run(req),
+        
         body('catId').notEmpty().withMessage('Select a Category').isMongoId()
         .withMessage('Invalid Category ID').run(req),
         body('makeId').notEmpty().withMessage('Select a Make').isMongoId()
@@ -236,12 +139,14 @@ const Update = async (req, res) => {
         .withMessage('Invalid Model ID').run(req),
         body('verId').notEmpty().withMessage('Select a Version').isMongoId()
         .withMessage('Invalid Version ID').run(req),
-        body('userId').notEmpty().withMessage('Select a User').isMongoId()
-        .withMessage('Invalid Version ID').run(req),
-        body('country').notEmpty().withMessage('Country Is Required').run(req), 
-        body('city').notEmpty().withMessage('City Is Required').run(req),    
-        body('state').notEmpty().withMessage('State Is Required').run(req),
-        body('tags').notEmpty().withMessage('Tags Is Required').run(req), 
+       
+        // body('userId').notEmpty().withMessage('Select a User').isMongoId()
+        // .withMessage('UserID Invalid Version ID').run(req),
+
+        // body('country').notEmpty().withMessage('Country Is Required').run(req), 
+        // body('city').notEmpty().withMessage('City Is Required').run(req),    
+        // body('state').notEmpty().withMessage('State Is Required').run(req),
+        // body('tags').notEmpty().withMessage('Tags Is Required').run(req), 
     ]);
 
     const errors = validationResult(req);
@@ -326,9 +231,10 @@ const Update = async (req, res) => {
          country:req.body.country,
          state:req.body.state,
          city:req.body.city,
-         tags:req.body.tags,
-         features:req.body.features ? JSON.parse(req.body.features) : {},
-         specs:req.body.specs ? JSON.parse(req.body.specs) : [],
+         tags: req.body.tags ? req.body.tags : [],
+         features:req.body.features ? req.body.features : [],
+         status:req.body.status ? req.body.status : 0,
+        //  specs:req.body.specs ? JSON.parse(req.body.specs) : [],
          latitude:req.body.latitude,
          longitude:req.body.longitude,
          description:req.body.description,

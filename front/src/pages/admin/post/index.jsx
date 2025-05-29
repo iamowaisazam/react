@@ -133,6 +133,7 @@ export default function Model() {
                                         <th style={{ cursor: "pointer" }}>Make</th>
                                         <th style={{ cursor: "pointer" }}>Model</th>
                                         <th style={{ cursor: "pointer" }}>Version</th>
+                                        <th style={{ cursor: "pointer" }}>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -155,6 +156,7 @@ export default function Model() {
                                                     <td>{retunData?.makeId?.name}</td>
                                                     <td>{retunData?.modelId?.name}</td>
                                                     <td>{retunData?.verId?.name}</td>
+                                                    <td>{retunData.status == 1 ? 'Active' : 'Deactive'}</td>
                                                     <td>
                                                         <div className="d-flex gap-2">
                                                             <button className="btn btn-sm btn-outline-primary" onClick={() => navigate(`/admin/edit-post/${retunData._id}`)} >Edit

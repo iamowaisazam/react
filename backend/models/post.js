@@ -6,6 +6,7 @@ const postSchema = new mongoose.Schema(
         title: {type: String,required: true},
         slug: {type: String,required: true},
         price: {type: String},
+        status:{type: String},
         description: {type: String},
         longitude: {type: String},
         latitude: {type: String},
@@ -19,8 +20,11 @@ const postSchema = new mongoose.Schema(
         country: {type: String,},
         state: {type: String},
         city: {type: String},
-        tags:{type: String},
-        features: {type: Object,default: {}},
+        tags:{type: Array,default: []},
+        features:{type:[{
+          title: { type: String },
+          value: { type: String },
+        }],default: []},
         specs:{type:[{
           title: { type: String },
           value: { type: String },

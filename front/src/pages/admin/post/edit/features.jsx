@@ -1,22 +1,21 @@
-import { useState } from 'react';
 
-export default function Features({ value = [], onChange }) {
-    const [features, setFeatures] = useState(value.length ? value : [{ key: '', value: '' }]);
+
+export default function Features({ features, onChange }) {
 
     const handleFeatureChange = (index, field, newVal) => {
         const updated = [...features];
         updated[index][field] = newVal;
-        setFeatures(updated);
-        onChange(updated); // return as array of objects
+        onChange(updated);
     };
 
     const addNewFeature = () => {
-        setFeatures((prev) => [...prev, { key: '', value: '' }]);
+        let modifyfeatures = features;
+        modifyfeatures.push({title:'',value:''});
+        onChange(modifyfeatures);
     };
 
     const removeFeature = (index) => {
         const updated = features.filter((_, i) => i !== index);
-        setFeatures(updated);
         onChange(updated);
     };
 
@@ -28,14 +27,14 @@ export default function Features({ value = [], onChange }) {
                         Features
                     </h5>
 
-                    {features.map((feature, index) => (
+                    {features && features.map((feature, index) => (
                         <div className="mb-3 d-flex" key={index}>
                             <input
                                 type="text"
                                 className="form-control me-2"
                                 placeholder="Key"
-                                value={feature.key}
-                                onChange={(e) => handleFeatureChange(index, 'key', e.target.value)}
+                                value={feature.title}
+                                onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
                             />
                             <input
                                 type="text"
@@ -53,14 +52,13 @@ export default function Features({ value = [], onChange }) {
                             </button>
                         </div>
                     ))}
-
-                    <button
-                        type="button"
-                        className="btn btn-sm btn-dark mt-2"
-                        onClick={addNewFeature}
-                    >
-                        + Add Feature
-                    </button>
+                    <div className="text-center" >  
+                        <button type="button"
+                            className="btn btn-sm btn-dark mt-2"
+                            onClick={addNewFeature}>
+                            + Add Feature
+                        </button>
+                    </div>  
                 </div>
             </div>
         </div>

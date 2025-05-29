@@ -185,6 +185,7 @@ const login = async (req, res) => {
             message: "Success",
             data:{
                 user:{
+                    id:user._id,
                     name:user.name,
                     email:user.email,
                     permission:user.permission,

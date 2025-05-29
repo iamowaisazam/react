@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
+
 const path = import.meta.env.VITE_PATH || "";
 export default () => {
 
@@ -21,20 +22,16 @@ export default () => {
       <div
         className="text-center text-white py-5"
         style={{
-
           backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-        }}
-      >
-        <h2 className="fw-bold text-warning" style={{ fontSize: '3rem' }}>
-          Our Brief History
-        </h2>
-        <p className="mt-3 px-3" style={{ maxWidth: '600px', margin: 'auto' }}>
-          Explore our journey and discover insights about our mission, vision, and values.
+        }}>
+        <h2 className="fw-bold text-warning" style={{ fontSize: '3rem' }}>Our Brief History</h2>
+        <p className="mt-3 px-3" style={{ maxWidth: '600px', margin: 'auto' }}> Explore our journey and discover insights about our mission, vision, and values.
         </p>
-        <button className="btn btn-outline-light mt-3 px-4">See More</button>
+           <Link to="/" className="btn btn-outline-light mt-3 px-4">See More</Link>
       </div>
+  
 
       {/* Welcome Text Section */}
       <div className="text-center py-5 px-3">

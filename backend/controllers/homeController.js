@@ -105,6 +105,8 @@ const getModels = async (req, res) => {
 
     let query = {};
 
+    query.status = 1;
+
     if (req.query.makeId) {
         query.makeId = req.query.makeId;
     }

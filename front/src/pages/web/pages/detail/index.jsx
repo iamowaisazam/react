@@ -177,7 +177,7 @@ export default function Detail() {
                   onClick={() => setShowPhone(!showPhone)}
                 >
                   <FaPhone className="me-2" />
-                  {showPhone ? post?.user?.phone  : "Show Number"}
+                  {showPhone ? post?.userId?.phone  : "Show Number"}
                 </button>
 
                 <button
@@ -185,7 +185,7 @@ export default function Detail() {
                   onClick={() => setShowEmail(!showEmail)}
                 >
                   <FaEnvelope className="me-2" />
-                  {showEmail ? post?.user?.email : "Email Now"}
+                  {showEmail ? post?.userId?.email : "Email Now"}
                 </button>
 
                 <button className="btn btn-danger w-100 mb-3">

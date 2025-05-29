@@ -1,42 +1,30 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { createPost } from './postFeature';
+import { useNavigate } from 'react-router-dom';
+
 import CategoryDropdown from '../components/dropdowns/CategoryDropdown';
 import MakeDropDown from '../components/dropdowns/makeDropdown';
 import ModelDropDown from '../components/dropdowns/modelDropdown';
 import VersionsDropdown from '../components/dropdowns/VersionDropdown';
-import Tags from './innerpages/tags'
-import Location from './innerpages/location'
-import Features from './innerpages/features'
-import MapLocation from './innerpages/maplocation'
-import Description from './innerpages/description'
+import Tags from './edit/tags'
+import Location from './edit/location'
+import Features from './edit/features'
+import MapLocation from './edit/maplocation'
+import Description from './edit/description'
 
 export default function Addpost() {
+
+    const navigate = useNavigate();
+
     const [state, setState] = useState({
         loading: false,
         errors: {},
     });
 
     const [formData, setFormData] = useState({
-        catId: '',
-        makeId: '',
-        modelId: '',
         title: '',
         slug: '',
-        price: '',
-        verId: '',
-        tags: '',
-        description: '',
-        features: [],
-        location: {
-            country: '',
-            city: '',
-            state: '',
-        },
-        mapLocation: {
-            latitude: '',
-            longitude: '',
-        }
     });
 
     const handleInputChange = (field, value) => {
@@ -47,6 +35,7 @@ export default function Addpost() {
     };
 
     const handleSubmit = async (e) => {
+    
         e.preventDefault();
         setState({ loading: true, errors: {} });
 
@@ -54,12 +43,8 @@ export default function Addpost() {
             const res = await createPost(formData);
             if (res.data.success) {
                 toast.success("Post created successfully!");
-                setFormData({
-                    catId: '',
-                    makeId: '',
-                    modelId: '',
-                    name: '',
-                });
+                navigate('/admin/view-post');
+                
             } else {
                 toast.error("Failed to create Post!");
             }
@@ -70,28 +55,7 @@ export default function Addpost() {
             });
             toast.error("Validation failed. Please check the fields.");
         } finally {
-            setState((prev) => ({ ...prev, loading: false }));
-        }
-    };
-
-
-    const handleVersionChange = (version) => {
-        if (version) {
-            setFormData((prev) => ({
-                ...prev,
-                verId: version._id,
-                modelId: version.modelId?._id || '',
-                makeId: version.makeId?._id || '',
-                catId: version.catId?._id || '',
-            }));
-        } else {
-            setFormData((prev) => ({
-                ...prev,
-                verId: '',
-                modelId: '',
-                makeId: '',
-                catId: '',
-            }));
+            // setState((prev) => ({ ...prev, loading: false }));
         }
     };
 
@@ -108,11 +72,11 @@ export default function Addpost() {
                     </ol>
                 </nav>
             </div>
-            <div className="container mt-5 p-4" style={{ backgroundColor: 'rgba(162, 204, 253, 0.15)', borderRadius: '15px', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' }}>
+            <div className="container-fluid mt-3" style={{ backgroundColor: 'rgba(162, 204, 253, 0.15)', borderRadius: '15px', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <form onSubmit={handleSubmit}>
-                    <div className="row g-4">
-                        {/* Left Section - Basic Information */}
-                        <div className="col-md-8">
+                    <div className="row ">
+                        
+                        <div className="col-md-12">
                             <div className="card border-0 shadow-sm h-100">
                                 <div className="card-body" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                                     <h5 className="fw-bold mb-4 sticky-top bg-white py-3 px-2 border-bottom" style={{ zIndex: 1 }}>
@@ -128,6 +92,7 @@ export default function Addpost() {
                                             value={formData.title}
                                             onChange={(e) => handleInputChange('title', e.target.value)}
                                         />
+                                        <p className='text-danger' >{state.errors?.title}</p>
                                     </div>
 
                                     <div className="mb-3">
@@ -139,103 +104,19 @@ export default function Addpost() {
                                             value={formData.slug}
                                             onChange={(e) => handleInputChange('slug', e.target.value)}
                                         />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label fw-semibold">Price</label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            placeholder="Enter price"
-                                            value={formData.price || ''}
-                                            onChange={(e) => handleInputChange('price', e.target.value)}
-                                        />
+                                        <p className='text-danger' >{state.errors?.slug}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
-                        {/* Right Section - Dropdowns */}
-                        <div className="col-md-4">
-                            <div className="card border-0 shadow-sm h-100">
-                                <div className="card-body">
-                                    <h5 className="fw-bold mb-4 sticky-top bg-white py-3 px-2 border-bottom" style={{ zIndex: 1 }}>
-                                        Fuel & Transmission
-                                    </h5>
-
-                                    <div className="mb-3">
-                                        <label className="form-label fw-semibold">Category</label>
-                                        <CategoryDropdown
-                                            value={formData.catId}
-                                            error={state.errors.catId}
-                                            setValue={(val) => handleInputChange('catId', val)}
-                                            disabled={true}
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label fw-semibold">Make</label>
-                                        <MakeDropDown
-                                            value={formData.makeId}
-                                            error={state.errors.makeId}
-                                            setValue={(val) => handleInputChange('makeId', val)}
-                                            disabled={true}
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label fw-semibold">Model</label>
-                                        <ModelDropDown
-                                            value={formData.modelId}
-                                            error={state.errors.modelId}
-                                            setValue={(val) => handleInputChange('modelId', val)}
-                                            disabled={true}
-                                        />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label fw-semibold">Versions</label>
-                                        <VersionsDropdown
-                                            value={formData.verId}
-                                            error={state.errors.verId}
-                                            setValue={(val) => handleInputChange('verId', val)}
-                                            onVersionChange={handleVersionChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <Tags />
-                        <Location />
-                        <Features />
-                        <MapLocation />
-                        <Description />
-
-
-
-
                     </div>
-
-
-                    <div className="d-flex justify-content-between pt-3 border-top mt-3">
+                    <div className="text-center my-3 pb-3">
                         <button type="submit" className="btn btn-dark px-4" disabled={state.loading}>
-                            {state.loading ? 'Adding...' : 'Add Post'}
+                            {state.loading ? 'Loading..' : 'Submit'}
                         </button>
                     </div>
                 </form>
             </div>
-
-
-
-
-
-
-
-
-
-
         </main>
     );
 }

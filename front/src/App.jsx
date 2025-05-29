@@ -25,9 +25,6 @@ import Userindex from './pages/admin/user';
 import Adduser from './pages/admin/user/add.jsx';
 import EditUser from './pages/admin/user/edit.jsx';
 
-// Menu
-import Menuindex from './pages/admin/menu';
-import Addmenu from './pages/admin/menu/add.jsx';
 
 // category
 import Addcategory from './pages/admin/category/addcategory.jsx';
@@ -53,7 +50,7 @@ import EditVersion from './pages/admin/version/edit.jsx';
 // Post
 import AddPost from './pages/admin/post/add.jsx';
 import Post from './pages/admin/post/index.jsx';
-import EditPost from './pages/admin/post/edit.jsx';
+import EditPost from './pages/admin/post/edit';
 
 // Setting
 import General from './pages/admin/setting/index.jsx';
