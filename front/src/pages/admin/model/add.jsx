@@ -16,6 +16,7 @@ export default function AddModel() {
     const [name, setName] = useState('');
     const [error, setError] = useState(false);
 
+    // Fetch categories and makes on mount
     useEffect(() => {
         getCategories()
             .then(res => {
@@ -29,6 +30,7 @@ export default function AddModel() {
             })
             .catch(() => toast.error("Error loading makes."));
     }, []);
+
 
     function handleInputChange(field, value) {
         switch (field) {

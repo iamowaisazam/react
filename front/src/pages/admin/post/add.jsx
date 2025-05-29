@@ -5,7 +5,13 @@ import CategoryDropdown from '../components/dropdowns/CategoryDropdown';
 import MakeDropDown from '../components/dropdowns/makeDropdown';
 import ModelDropDown from '../components/dropdowns/modelDropdown';
 import VersionsDropdown from '../components/dropdowns/VersionDropdown';
-export default function Addcar() {
+import Tags from './innerpages/tags'
+import Location from './innerpages/location'
+import Features from './innerpages/features'
+import MapLocation from './innerpages/maplocation'
+import Description from './innerpages/description'
+
+export default function Addpost() {
     const [state, setState] = useState({
         loading: false,
         errors: {},
@@ -17,7 +23,20 @@ export default function Addcar() {
         modelId: '',
         title: '',
         slug: '',
+        price: '',
         verId: '',
+        tags: '',
+        description: '',
+        features: [],
+        location: {
+            country: '',
+            city: '',
+            state: '',
+        },
+        mapLocation: {
+            latitude: '',
+            longitude: '',
+        }
     });
 
     const handleInputChange = (field, value) => {
@@ -34,7 +53,7 @@ export default function Addcar() {
         try {
             const res = await createPost(formData);
             if (res.data.success) {
-                toast.success("Make created successfully!");
+                toast.success("Post created successfully!");
                 setFormData({
                     catId: '',
                     makeId: '',
@@ -42,7 +61,7 @@ export default function Addcar() {
                     name: '',
                 });
             } else {
-                toast.error("Failed to create make!");
+                toast.error("Failed to create Post!");
             }
         } catch (error) {
             setState({
@@ -79,13 +98,13 @@ export default function Addcar() {
     return (
         <main>
             <div className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom" style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}>
-                <h5 className="fw-semibold mb-0" style={{ color: "#2c3e50" }}>Add Product</h5>
+                <h5 className="fw-semibold mb-0" style={{ color: "#2c3e50" }}>Add Post</h5>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb mb-0 small">
                         <li className="breadcrumb-item">
                             <a href="#" className="text-muted text-decoration-none">Home</a>
                         </li>
-                        <li className="breadcrumb-item active text-primary" aria-current="page">Add Car</li>
+                        <li className="breadcrumb-item active text-primary" aria-current="page">Add Post</li>
                     </ol>
                 </nav>
             </div>
@@ -121,9 +140,21 @@ export default function Addcar() {
                                             onChange={(e) => handleInputChange('slug', e.target.value)}
                                         />
                                     </div>
+
+                                    <div className="mb-3">
+                                        <label className="form-label fw-semibold">Price</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Enter price"
+                                            value={formData.price || ''}
+                                            onChange={(e) => handleInputChange('price', e.target.value)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
 
                         {/* Right Section - Dropdowns */}
                         <div className="col-md-4">
@@ -174,12 +205,23 @@ export default function Addcar() {
                                 </div>
                             </div>
                         </div>
+
+
+                        <Tags />
+                        <Location />
+                        <Features />
+                        <MapLocation />
+                        <Description />
+
+
+
+
                     </div>
 
 
                     <div className="d-flex justify-content-between pt-3 border-top mt-3">
                         <button type="submit" className="btn btn-dark px-4" disabled={state.loading}>
-                            {state.loading ? 'Adding...' : 'Add Car'}
+                            {state.loading ? 'Adding...' : 'Add Post'}
                         </button>
                     </div>
                 </form>
