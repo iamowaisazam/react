@@ -1,45 +1,105 @@
 import { useState, useEffect } from 'react';
+import { getPost, deletePost } from './hook';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from "react-router-dom";
-import useDatatable from '../../../hooks/datatable';
-import usePost from './hook';
+import { FaUserPlus } from "react-icons/fa";
 
 export default function Model() {
 
-    const navigate = useNavigate();    
-    const {datatable,getRecords,changeDatatable} = useDatatable({
-        url:'admin/posts'
-    });
-    const {data,loading,total,page,pages,skip,search} = datatable;
-    const {handleDelete} = usePost();
+    const navigate = useNavigate();
 
     
+    const [data, setData] = useState([]);
+    const [state, setState] = useState({
+        search: '',
+        page: 1,
+        pages: 0,
+        loading: true,
+        total: 0,
+        skip: 0,
+        limit: 10,
+    });
+
+
+
     useEffect(() => {
 
-        getRecords()
+        getRecords(state)
 
     }, []);
 
 
+
+    const handleOption = (name, value) => {
+        const newState = { ...state, [name]: value };
+        setState(newState);
+        getRecords(newState);
+    }
+
+    const getRecords = async (options) => {
+        setState({ ...state, loading: true });
+        getPost(options)
+            .then((res) => {
+
+                res = res.data.data;
+                console.log(res.data)
+                setData(res.data);
+                setState({
+                    ...state,
+                    loading: false,
+                    page: res.page,
+                    pages: res.pages,
+                    total: res.total,
+                    skip: res.skip
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+                setData([]);
+                setState({ ...state, loading: false });
+            });
+    };
+
+
+
+    const handleDelete = async (id) => {
+        if (confirm("Are you sure you want to delete this Post?")) {
+            try {
+                await deletePost(id);
+                toast.success("Post deleted successfully!");
+                getRecords(state);
+            } catch (error) {
+                console.error("Delete error:", error);
+                toast.error("Failed to delete Post.");
+            }
+        }
+    };
+
+
     return (
-        <main>
+        <main >
+
             <div
                 className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom"
-                style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}>
+                style={{ borderTop: "3px solid #03a9f4", background: "#fff" }}
+            >
                 <h5 className="fw-semibold mb-0" style={{ color: "#2c3e50" }}>
                     Post
                 </h5>
-                <Link to="/admin/add-post" className="admin_add_btn">Add Post</Link>
+
+                <Link to="/admin/add-post" className="admin_add_btn">
+                    Add Post
+                </Link>
             </div>
+
             <main className="flex-grow-1 p-4" style={{ background: "#f3f7fa", minHeight: "100vh" }}>
                 <div className="card border-0 shadow-sm rounded-3">
                     <div className="card-body">
-                        
                         <div className="d-flex justify-content-between flex-wrap align-items-center mb-3">
                             <div className="d-flex align-items-center mb-2 mb-md-0">
                                 <label className="me-2 mb-0">Show </label>
-                                <select onChange={(e) => {  changeDatatable('limit', e.target.value) }}
+                                <select onChange={(e) => { handleOption('limit', e.target.value) }}
                                     className="form-select form-select-sm"
                                     style={{ width: "80px" }}>
                                     <option>10</option>
@@ -57,12 +117,13 @@ export default function Model() {
                                     type="text"
                                     className="form-control form-control-sm"
                                     style={{ width: "200px" }}
-                                    value={search}
-                                    onChange={(e) => { changeDatatable('search', e.target.value) }}
+                                    onChange={(e) => { handleOption('search', e.target.value) }}
                                 />
                             </div>
                         </div>
+
                         <div className="table-responsive" style={{ overflowX: 'auto', width: '95%' }}>
+
                             <table className="table table-hover align-middle mb-0 custom-table">
                                 <thead className="table-light text-uppercase text-secondary small">
                                     <tr>
@@ -79,7 +140,7 @@ export default function Model() {
                                 </thead>
                                 <tbody>
                                     {
-                                        loading ? (
+                                        state.loading ? (
                                             <tr>
                                                 <td colSpan={5} className="text-center py-4">
                                                     <div className="loading-spinner"></div>
@@ -87,50 +148,38 @@ export default function Model() {
                                                 </td>
                                             </tr>
                                         ) :
-                                        
-                                        data.map((retunData, index) => (
-                                            <tr key={retunData._id}>
-                                                <td>{index + 1}</td>
-                                                <td>{retunData.title}</td>
-                                                <td>{retunData.slug}</td>
-                                                <td>{retunData?.catId?.name}</td>
-                                                <td>{retunData?.makeId?.name}</td>
-                                                <td>{retunData?.modelId?.name}</td>
-                                                <td>{retunData?.verId?.name}</td>
-                                                <td>{retunData.status == 1 ? 'Active' : 'Deactive'}</td>
-                                                <td>
-                                                    <div className="d-flex gap-2">
-                                                        <button className="btn btn-sm btn-outline-primary" onClick={() => navigate(`/admin/edit-post/${retunData._id}`)} >Edit
-                                                        </button>
-                                                        <button className="btn btn-sm btn-outline-danger" onClick={() =>{ 
-                                                             if (confirm("Are you sure you want to delete this Post?")) {
-                                                                handleDelete(retunData._id).then(() =>{
-                                                                    toast.success("Post deleted successfully!");
-                                                                    getRecords();
-                                                                }).catch(() => {
-                                                                    toast.warning("Failed");
-                                                                })
-                                                            }
-                                                        
-                                                        }} >Delete</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
+                                            data.map((retunData, index) => (
+                                                <tr key={retunData._id}>
+                                                    <td>{index + 1}</td>
+                                                    <td>{retunData.title}</td>
+                                                    <td>{retunData.slug}</td>
+                                                    <td>{retunData?.catId?.name}</td>
+                                                    <td>{retunData?.makeId?.name}</td>
+                                                    <td>{retunData?.modelId?.name}</td>
+                                                    <td>{retunData?.verId?.name}</td>
+                                                    <td>{retunData.status == 1 ? 'Active' : 'Deactive'}</td>
+                                                    <td>
+                                                        <div className="d-flex gap-2">
+                                                            <button className="btn btn-sm btn-outline-primary" onClick={() => navigate(`/admin/edit-post/${retunData._id}`)} >Edit
+                                                            </button>
+                                                            <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(retunData._id)}>Delete</button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
                                     }
                                 </tbody>
                             </table>
                         </div>
 
                         <div className="d-flex justify-content-between mt-3">
-                            <span className="small text-muted"
-                            >Showing {skip + 1} to {Math.min(skip + data.length,total)} of {total} entries</span>
+                            <span className="small text-muted">Showing {state.skip + 1} to {Math.min(state.skip + data.length, state.total)} of {state.total} entries</span>
                             <nav>
                                 <ul className="pagination pagination-sm mb-0">
-                                    {Array.from({ length:pages }, (_, index) => (
+                                    {Array.from({ length: state.pages }, (_, index) => (
                                         <li
                                             key={index}
-                                            className={`page-item ${page === index + 1 ? 'active' : ''}`}
+                                            className={`page-item ${state.page === index + 1 ? 'active' : ''}`}
                                         >
                                             <button
                                                 className="page-link"
@@ -141,11 +190,13 @@ export default function Model() {
                                         </li>
                                     ))}
                                 </ul>
+
                             </nav>
                         </div>
                     </div>
                 </div>
             </main>
+
         </main>
     );
 

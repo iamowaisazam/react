@@ -11,9 +11,7 @@ export default function Description({ value = '', onChange }) {
                         style={{ zIndex: 1 }}>
                         Description
                     </h5>
-
                     <div className="mb-3">
-                        <label className="form-label fw-semibold">Description</label>
                         <textarea
                             className="form-control"
                             rows="6"

@@ -50,7 +50,7 @@ import EditVersion from './pages/admin/version/edit.jsx';
 // Post
 import AddPost from './pages/admin/post/add.jsx';
 import Post from './pages/admin/post/index.jsx';
-import EditPost from './pages/admin/post/edit';
+import EditPost from './pages/admin/post/edit/edit.jsx';
 
 // Setting
 import General from './pages/admin/setting/index.jsx';
@@ -145,7 +145,7 @@ const appRouter = createBrowserRouter([
 function App() {
 
  
-      const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
         const  getAuth = async () => {
         let token = await localStorage.getItem('token');

@@ -1,17 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { createPost } from './postFeature';
+import { createPost } from './hook';
 import { useNavigate } from 'react-router-dom';
 
-import CategoryDropdown from '../components/dropdowns/CategoryDropdown';
-import MakeDropDown from '../components/dropdowns/makeDropdown';
-import ModelDropDown from '../components/dropdowns/modelDropdown';
-import VersionsDropdown from '../components/dropdowns/VersionDropdown';
-import Tags from './edit/tags'
-import Location from './edit/location'
-import Features from './edit/features'
-import MapLocation from './edit/maplocation'
-import Description from './edit/description'
 
 export default function Addpost() {
 

@@ -1,37 +1,40 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getPost } from '../../data/post';
 import axios from 'axios';
+import api from '../../utils/apiClient';
 const url = import.meta.env.VITE_API_URL || "";
 
 
 export const fetchPosts = createAsyncThunk(
     'posts/fetchAll',
     async (_, thunkAPI) => {
-
         const state = thunkAPI.getState();
         return axios.get(`${url}posts`,{params:state.postState.filters})
         .then( response => response.data)
         .catch(( error) => thunkAPI.rejectWithValue(error.response.data))
-
     }
 );
 
 
 export const fetchPostById = createAsyncThunk(
     'posts/fetchById',
-    async (id, thunkAPI) => {
-        try {
-            const response = await getPost(id);
-            return response;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
-        }
-    }
+    async (id, thunkAPI) => {    
+       return api.get('admin/posts/'+id).then(({data}) => {
+            return data.data;
+        }).catch((error) => {
+            return thunkAPI.rejectWithValue(error.response.data)
+        });
+    }        
 );
+
+
 
 const postSlice = createSlice({
     name: 'posts',
     initialState: {
+        postLoading:false,
+        postError:'',
+        post:null,
         posts: [],
         loading: false,
         error: null,
@@ -70,17 +73,26 @@ const postSlice = createSlice({
             })
             .addCase(fetchPosts.rejected, (state, action) => {
                 state.loading = false;
-                //Use Toast
+                
             })
 
-
+            // 
+            .addCase(fetchPostById.pending, (state, action) => {
+                state.postLoading = true;
+                state.post = null;
+                state.postError = '';
+            })
             .addCase(fetchPostById.fulfilled, (state, action) => {
-                const post = action.payload;
-                const exists = state.posts.find(p => p._id === post?._id);
-                if (!exists && post) {
-                    state.posts.push(post);
-                }
+                state.post = action.payload;
+                state.postLoading = false;
+                state.postError = '';
+            })
+            .addCase(fetchPostById.rejected, (state, action) => {
+                state.postLoading = false;
+                state.post = null;
+                state.postError = 'Post Not Found';
             });
+
     },
 });
 

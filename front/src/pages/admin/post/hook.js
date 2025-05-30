@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { getSinglePost, editPost } from '../postFeature';
-import apiClient from '../../../../utils/apiClient';
+import apiClient from '../../../utils/apiClient';
 import { useSelector } from 'react-redux';
 
+export default function useEditPost(id = null){
 
+   const navigate = useNavigate();
+   const auth = useSelector(state => state.auth); 
+   const [loading, setLoading] = useState(false);
+   const [errors, setErrors] = useState({});
+   const [form, setForm] = useState({
 
-export default function useEditPost(id){
-
-      const navigate = useNavigate();
-      const auth = useSelector(state => state.auth);
-
-    
-   const [state, setState] = useState({ loading: false, errors: {} });
-   const [formData, setFormData] = useState({
         title:'',
         slug:'',
         price:'',
@@ -43,10 +40,8 @@ export default function useEditPost(id){
    });
 
 
-
-
    const handleInputChange = (field, value) => {
-        setFormData((prev) => ({
+        setForm((prev) => ({
         ...prev,
         [field]: value,
         }));
@@ -55,7 +50,7 @@ export default function useEditPost(id){
 
    const handleVersionChange = (version) => {
         if (version) {
-            setFormData((prev) => ({
+            setForm((prev) => ({
                 ...prev,
                 verId: version._id,
                 modelId: version.modelId?._id || '',
@@ -63,7 +58,7 @@ export default function useEditPost(id){
                 catId: version.catId?._id || '',
             }));
         } else {
-            setFormData((prev) => ({
+            setForm((prev) => ({
                 ...prev,
                 verId: '',
                 modelId: '',
@@ -74,16 +69,14 @@ export default function useEditPost(id){
     };
 
 
-
     const fetchVersion = async () => {
 
         apiClient.get(`admin/posts/${id}`)
         .then(({data}) =>{
 
              const record = data.data;
-                
-                
-                setFormData({
+
+                setForm({
                     title: record.title ?? '',
                     slug: record?.slug ?? '',
                     price:record?.price ?? '',
@@ -110,59 +103,76 @@ export default function useEditPost(id){
              toast.error("Failed to fetch post details");
              navigate('/admin/view-post');
         }); 
+
     };
 
 
-
+    
     const handleSubmit = async (e) => {
 
-        e.preventDefault();
+          e.preventDefault();
 
-        formData.userId = auth.user.id;
-        setState({ loading: true, errors: {} });
-          apiClient.put(`admin/posts/${id}`,formData)
+          form.userId = auth.user.id;
+          setErrors({});
+          setLoading(false);
+
+          apiClient.put(`admin/posts/${id}`,form)
           .then(({data}) =>{
-        
-             setState((prev) => ({
-                ...prev,
-                loading: false,
-                errors: {}
-            }));    
+            
+            setErrors({});
+            setLoading(false);
             toast.success("Record Created Successfull");
             
           }).catch(({response}) => {
 
             if(response.data?.errors){
-                 setState({
-                    loading: false,
-                    errors: response.data?.errors || {},
-                });
+                 setErrors(response.data?.errors || {});
+                 setLoading(false);
                  toast.error("Validation failed. Please check the fields.");
             }else{
 
-                setState((prev) => ({
-                    ...prev,
-                    loading: false,
-                    errors: {}
-                }));
-                 toast.error(response.data?.message ?? "Something Went Wrong");
+                setErrors({});
+                setLoading(false);
+                toast.error(response.data?.message ?? "Something Went Wrong");
             }
         }); 
 
     };
 
 
+    const handleDelete = async (id) => {
+                return apiClient.delete(`admin/posts/${id}`);
+    };
+
 
     return {
-        state,
+        errors,
+        loading,
         fetchVersion,
         handleInputChange,
         handleVersionChange,
-        formData,
-        setFormData,
-        handleSubmit
+        form,
+        setForm,
+        handleSubmit,
+        handleDelete
     };
 
-}
+ }
+ 
+    export const getPost = (data) => {
+     return apiClient.get(`admin/posts`, { params: data });
+    };
 
+    export const createPost = (data) => {
+        return apiClient.post("admin/posts/create", data);
+    };
+
+    export const editPost = (id, data) => {
+
+        return apiClient.put(`admin/posts/${id}`, data);
+    };
+
+    export const deletePost = (id) => {
+        return apiClient.delete(`admin/posts/${id}`);
+    };
 

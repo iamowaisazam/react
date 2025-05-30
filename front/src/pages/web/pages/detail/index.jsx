@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectPostById, fetchPostById } from '../../../../store/slices/postSlice';
 import { FaTachometerAlt, FaCogs, FaGasPump, FaCarSide, FaCheckCircle, FaPhone, FaEnvelope, FaFlag, FaCar, FaClock } from 'react-icons/fa';
 import ReportPopup from './popup';
+import api from "../../../../utils/apiClient";
 
 const path = import.meta.env.VITE_PATH || "";
 const url = import.meta.env.VITE_API_URL || "";
@@ -14,46 +15,41 @@ export default function Detail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const post = useSelector(state => selectPostById(state, id));
-  const loading = useSelector(state => state.postState.loading);
-  const error = useSelector(state => state.postState.error);
-
+  const post = useSelector(state => state.postState.post);
+  const loading = useSelector(state => state.postState.postLoading);
+  const error = useSelector(state => state.postState.postError);
+  
   const [showPhone, setShowPhone] = useState(false);
   const [showEmail, setShowEmail] = useState(false);
-  const [images,setImages] = useState([]);
+  
 
   useEffect(() => {
     
-    if (id) {
-      dispatch(fetchPostById(id));
-    }
+      if(id) {
+         
+         
+         dispatch(fetchPostById(id));
+        
+      }
+
+    
 
   }, [id, dispatch]);
 
-  if (loading) return <div className="p-4">Loading...</div>;
-  if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
-  if (!post) return <div className="p-4">Post not found.</div>;
+
+   useEffect(() => {
+    
+      console.log(post);
+      
+
+  }, [post]);
 
 
 
 
-  const features = post.tags || [];
-
-
-  const specs = [
-    { label: "Body Type", value: post.features?.body || "N/A" },
-    { label: "Fuel Type", value: post.features?.fuel_type || "N/A" },
-    { label: "Transmission", value: post.features?.transmission || "N/A" },
-    { label: "Doors", value: post.features?.door || "N/A" },
-    { label: "Color", value: post.features?.color || "N/A" },
-    { label: "Condition", value: post.features?.condition || "N/A" },
-  ];
-
-
-  const phoneNumber = post.user?.phone || "N/A";
-
-  const email = post.user?.email || "N/A";
-
+  if (loading) return <div className="p-4 text-white text-center">Loading...</div>;
+  if (error) return <div className="p-4 text-white text-center">Error: {error}</div>;
+  if (!post) return <div className="p-4 text-white text-center ">Post not found.</div>;
 
   const bgImage = path + '/images/banner.jpg';
 
@@ -66,10 +62,9 @@ export default function Detail() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
-        }}
-      >
-        <h2 className="text-warning fw-bold display-5">{post.title || "Vehicle Details"}</h2>
-        <p className="mt-3 text-light">{post.description || "Discover the performance, features, and luxury of your dream car."}</p>
+        }}>
+        <h2 className="text-warning fw-bold display-5">{"Vehicle Details"}</h2>
+        <p className="mt-3 text-light">{"Discover the performance, features, and luxury of your dream car."}</p>
         <button className="btn btn-outline-light mt-3 px-4">Explore More Cars</button>
       </div>
 
@@ -106,7 +101,7 @@ export default function Detail() {
 
               <div className="border-top border-white mt-4 pt-3">
                 <h5 className="text-warning mb-3">{post.title}</h5>
-                  {
+                  {/* {
                     post.specs ?
                   
                       <div className="row text-center text-white">
@@ -120,16 +115,16 @@ export default function Detail() {
                             ))
                           }
                       </div>
-                 : ''}
+                 : ''} */}
               </div>
 
-                  {
-                    post.tags ?
+                   {
+                    Array.isArray(post.tags) ?
                       <div className="border-top border-white mt-4 pt-3">
                         <h5 className="text-warning mb-3">Key Features</h5>
                         <div className="row">
                           { 
-                            post.tags.split(',').map((feature, i) => (
+                            post.tags.map((feature, i) => (
                             <div className="col-md-6 mb-2" key={i}>
                               <FaCheckCircle className="text-warning me-2" />
                               {feature}
@@ -139,32 +134,32 @@ export default function Detail() {
                       </div> : <p>No features available.</p>
                 }
 
-              <div className="border-top border-white mt-4 pt-3">
-                <h5 className="text-warning mb-3">Overview</h5>
-                <div className="row g-3">
-                  {post.features ?
-                     Object.entries(post.features).map(([key, value]) => (
-                    <div className="col-12 col-sm-6 col-md-4" key={key}>
-                      <div className="border border-light rounded p-3 d-flex justify-content-between h-100">
-                        <span className="fw-bold">{key}:</span>
-                        <span>{value}</span>
-                      </div>
-                    </div>
-                  )) : ''
-
-                 }
+                <div className="border-top border-white mt-4 pt-3">
+                  <h5 className="text-warning mb-3">Overview</h5>
+                   {Array.isArray(post.features) ?
+                  <div className="row g-3">
+                    {  post.features.map((value,key) => (
+                      <div className="col-12 col-sm-6 col-md-4" key={key} >
+                        <div className="border border-light rounded p-3 d-flex justify-content-between h-100">
+                          <span className="fw-bold">{value.title}:</span>
+                          <span>{value.value}</span>
+                        </div>
+                      </div>  
+                    ))  
+                  }
+                  </div> : ''
+                  }
                 </div>
-              </div>
 
-              {/* Contact Us Text */}
-              <div className="border-top border-white mt-4 pt-3">
-                <div className="mt-5">
-                  <h5 className="text-warning fw-bold border-bottom pb-2 mb-3">Description</h5>
-                  <p className="text-white-50" style={{ maxWidth: '90%' }}>
-                     {post.description}
-                  </p>
+                {/* Contact Us Text */}
+                <div className="border-top border-white mt-4 pt-3">
+                  <div className="mt-5">
+                    <h5 className="text-warning fw-bold border-bottom pb-2 mb-3">Description</h5>
+                    <p className="text-white-50" style={{ maxWidth: '90%' }}>
+                      {post.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
             </div>
 
             <div className="col-md-4">

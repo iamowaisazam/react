@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { getSinglePost, editPost } from '../postFeature';
-import useEditPost from './hook'; 
+import useEditPost from '../hook'; 
 
 
 
@@ -23,8 +22,9 @@ export default function EditVersion() {
 
     const {
         fetchVersion,
-        state,
-        formData,
+        loading,
+        errors,
+        form,
         handleInputChange,
         handleVersionChange,
         handleSubmit
@@ -59,88 +59,85 @@ export default function EditVersion() {
                         <div className="card border-0 shadow-sm h-100">
                             <div className="card-body">
                                 <h5 className="fw-bold mb-4 sticky-top bg-white py-3 px-2 border-bottom" style={{ zIndex: 1 }}>
-                                    Basic Information
+                                    General Information
                                 </h5>
+                                <div className="row">
+                                    <div className="col-12 mb-3">
+                                        <label className="form-label fw-semibold">Name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Enter title"
+                                            value={form.title}
+                                            onChange={(e) => handleInputChange('title', e.target.value)}
+                                        />
+                                        <p className='text-danger' >{errors?.title}</p>
+                                    </div>
 
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">Name</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Enter title"
-                                        value={formData.title}
-                                        onChange={(e) => handleInputChange('title', e.target.value)}
-                                    />
-                                    <p className='text-danger' >{state.errors?.title}</p>
-                                </div>
+                                    <div className="col-12 mb-3">
+                                        <label className="form-label fw-semibold">Slug</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Enter slug"
+                                            value={form.slug}
+                                            onChange={(e) => handleInputChange('slug', e.target.value)}
+                                        />
+                                        <p className='text-danger'>{errors?.slug}</p>
+                                    </div>
 
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">Slug</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Enter slug"
-                                        value={formData.slug}
-                                        onChange={(e) => handleInputChange('slug', e.target.value)}
-                                    />
-                                    <p className='text-danger'>{state.errors?.slug}</p>
-                                </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label fw-semibold">Price</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Enter price"
+                                            value={form.price || ''}
+                                            onChange={(e) => handleInputChange('price', e.target.value)}
+                                        />
+                                        <p className='text-danger'>{errors?.price}</p>
+                                    </div>
 
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">Price</label>
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        placeholder="Enter price"
-                                        value={formData.price || ''}
-                                        onChange={(e) => handleInputChange('price', e.target.value)}
-                                    />
-                                     <p className='text-danger'>{state.errors?.price}</p>
-                                </div>
-
-                                <div className="mb-3">
-                                    <label className="form-label fw-semibold">Status</label>
-                                    <select value={formData.status} onChange={(e) => handleInputChange('status', e.target.value)} className='form-control'>
-                                        <option value="0">Deactive</option>
-                                        <option value="1">Active</option>
-                                    </select>  
-                                 </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label fw-semibold">Status</label>
+                                        <select value={form.status} onChange={(e) => handleInputChange('status', e.target.value)} className='form-control'>
+                                            <option value="0">Deactive</option>
+                                            <option value="1">Active</option>
+                                        </select>  
+                                    </div>
+                                  </div>
                                 </div>
                             </div>
                         </div>
-
                         <div className="col-md-4">
                                 <div className="card border-0 shadow-sm h-100">
                                     <div className="card-body">
                                         <h5 className="fw-bold mb-4 sticky-top bg-white py-3 px-2 border-bottom" style={{ zIndex: 1 }}>
                                             Mapping
                                         </h5>
-    
                                         <div className="mb-3">
                                             <label className="form-label fw-semibold">Category</label>
                                             <CategoryDropdown
-                                                value={formData.catId}
-                                                error={state.errors.catId}
+                                                value={form.catId}
+                                                error={errors.catId}
                                                 setValue={(val) => handleInputChange('catId', val)}
                                                 disabled={true}
                                             />
                                         </div>
-            
                                         <div className="mb-3">
                                             <label className="form-label fw-semibold">Make</label>
                                             <MakeDropDown
-                                                value={formData.makeId}
-                                                error={state.errors.makeId}
+                                                value={form.makeId}
+                                                error={errors.makeId}
                                                 setValue={(val) => handleInputChange('makeId', val)}
                                                 disabled={true}
                                             />
                                         </div>
-    
                                         <div className="mb-3">
                                             <label className="form-label fw-semibold">Model</label>
                                             <ModelDropDown
-                                                value={formData.modelId}
-                                                error={state.errors.modelId}
+                                                value={form.modelId}
+                                                error={errors.modelId}
                                                 setValue={(val) => handleInputChange('modelId', val)}
                                                 disabled={true}
                                             />
@@ -148,32 +145,31 @@ export default function EditVersion() {
                                         <div className="mb-3">
                                             <label className="form-label fw-semibold">Versions</label>
                                             <VersionsDropdown
-                                                value={formData.verId}
-                                                error={state.errors.verId}
+                                                value={form.verId}
+                                                error={errors.verId}
                                                 setValue={(val) => handleInputChange('verId', val)}
-                                                onVersionChange={handleVersionChange}
-                                            />
+                                                onVersionChange={handleVersionChange} />
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <Tags value={formData.tags} 
+                            <Tags value={form.tags} 
                                 onChange={(tags) => handleInputChange('tags', tags)} />
                             
-                            <Location data={formData} onChange={handleInputChange} />
+                            <Location data={form} onChange={handleInputChange} />
                             
-                            <Features features={formData.features} 
+                            <Features features={form.features} 
                                 onChange={(features) => handleInputChange('features', features)} />
                            
-                            <MapLocation data={formData} onChange={handleInputChange}   />
+                            <MapLocation data={form} onChange={handleInputChange}   />
                             
-                            <Description value={formData.description} onChange={(des) => handleInputChange('description', des)} />
+                            <Description value={form.description} onChange={(des) => handleInputChange('description', des)} />
 
                         </div>
-                        <div className="d-flex justify-content-between pt-3 border-top mt-3">
-                            <button type="submit" className="btn btn-dark px-4" disabled={state.loading}>
-                                {state.loading ? 'Adding...' : 'Add Post'}
+                        <div className="text-center mt-3">
+                            <button type="submit" className="btn btn-dark px-4" disabled={loading}>
+                                {loading ? 'Updating...' : 'Update'}
                             </button>
                         </div>
                     </form>
